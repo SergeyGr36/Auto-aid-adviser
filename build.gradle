@@ -32,12 +32,12 @@ repositories {
 }
 
 application {
-    mainClassName = 'com.hillel.evo.adviser.AdvisorStarter'
+    mainClassName = 'com.hillel.evo.adviser.starter.AdviserStarter'
 }
 
 bootJar {
     manifest {
-        attributes 'Start-Class': 'com.hillel.evo.adviser.AdvisorStarter'
+        attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
     }
 }
 
@@ -45,6 +45,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.junit.jupiter:junit-jupiter:$jUnitVersion"
+    implementation 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 pmd {
@@ -68,7 +72,7 @@ jacocoTestReport {
         classDirectories = files(classDirectories.files.collect {
             fileTree(
                     dir: it,
-                    exclude: ['**/dto/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
             )
         })
     }
@@ -79,7 +83,7 @@ jacocoTestCoverageVerification {
         classDirectories = files(classDirectories.files.collect {
             fileTree(
                     dir: it,
-                    exclude: ['**/dto/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
             )
         })
     }
