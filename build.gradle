@@ -1,136 +1,57 @@
-def jSpringBootVersion='2.1.9.RELEASE'
-def jUnitVersion='5.4.2'
-
 buildscript {
-    ext{
-        jSpringBootVersion='2.1.9.RELEASE'
+    apply from: "${rootProject.projectDir}/buildSrc/repositories.gradle"
+    repositories extRepositories
+    apply from: "${rootProject.projectDir}/buildSrc/buildscript-dependencies.gradle"
+    dependencies extDependencies
+}
+
+group 'com.hillel.evo'
+version '1.0-SNAPSHOT'
+
+configure(allprojects) { project ->
+
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply from: "${rootProject.projectDir}/buildSrc/dependencies.gradle"
+    apply from: "${rootProject.projectDir}/buildSrc/analyze.gradle"
+    
+    sourceCompatibility = 11
+
+    repositories extRepositories
+
+    test {
+        useJUnitPlatform {
+            excludeTags 'slow'
+            includeEngines 'junit-jupiter'
+        }
+        testLogging {
+            events 'PASSED', 'FAILED', 'SKIPPED'
+        }
+        failFast = false
     }
 
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+    application {
+        mainClassName = 'com.hillel.evo.adviser.starter.AdviserStarter'
     }
 
+    bootJar {
+        manifest {
+            attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
+        }
+    }
+    
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$jSpringBootVersion")
+        implementation boot.starterWeb
+        implementation boot.starterJpa
+        testImplementation boot.starterTest
+        implementation utils.lombok
+
+        annotationProcessor utils.lombok
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'pmd'
-apply plugin: 'jacoco'
-
-group = 'com.hillel.evo'
-version = '1.0-SNAPSHOT'
-sourceCompatibility = '11'
-
-repositories {
-    mavenCentral()
+wrapper {
+    version = '5.6.2'
 }
-
-application {
-    mainClassName = 'com.hillel.evo.adviser.starter.AdviserStarter'
-}
-
-bootJar {
-    manifest {
-        attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
-    }
-}
-
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.junit.jupiter:junit-jupiter:$jUnitVersion"
-    implementation 'org.projectlombok:lombok'
-
-    annotationProcessor 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-}
-
-pmd {
-    toolVersion = '6.18.0'
-    consoleOutput= true
-    sourceSets = [sourceSets.main]
-    reportsDir = file("build/reports/pmd")
-}
-
-jacoco {
-    toolVersion = '0.8.4'
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.destination file("${buildDir}/jacocoHtml")
-    }
-    afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(
-                    dir: it,
-                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
-            )
-        })
-    }
-}
-
-jacocoTestCoverageVerification {
-    afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(
-                    dir: it,
-                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
-            )
-        })
-    }
-    violationRules {
-
-        rule {
-            //element = 'METHOD'
-            limit {
-                counter = 'METHOD'
-                value = 'COVEREDRATIO'
-                minimum = 0.9
-            }
-        }
-
-        rule {
-            //element = 'CLASS'
-            limit {
-                counter = 'CLASS'
-                value = 'COVEREDRATIO'
-                minimum = 0.9
-            }
-
-        }
-        rule {
-            //element = 'INSTRUCTION'
-            limit {
-                counter = 'INSTRUCTION'
-                value = 'COVEREDRATIO'
-                minimum = 0.9
-            }
-        }
-        rule {
-            //element = 'BRANCH'
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-                minimum = 0.9
-            }
-        }
-    }
-
-}
-
-test {
-    useJUnitPlatform()
-}
-
-check.dependsOn jacocoTestCoverageVerification
-test.finalizedBy jacocoTestReport

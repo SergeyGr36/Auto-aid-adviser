@@ -1,0 +1,92 @@
+apply plugin: 'java'
+apply plugin: 'pmd'
+apply plugin: 'jdepend'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.4'
+}
+
+pmd {
+    toolVersion = "6.14.0"
+    consoleOutput = true
+    sourceSets = [sourceSets.main]
+}
+
+
+jdepend {
+    toolVersion = "2.9.1"
+    sourceSets = [sourceSets.main]
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = false
+        csv.enabled = false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(
+                    dir: it,
+                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+            )
+        })
+    }
+}
+
+jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(
+                    dir: it,
+                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+            )
+        })
+    }
+    violationRules {
+
+        rule {
+            //element = 'METHOD'
+            limit {
+                counter = 'METHOD'
+                value = 'COVEREDRATIO'
+                minimum = 0.9
+            }
+        }
+
+        rule {
+            //element = 'CLASS'
+            limit {
+                counter = 'CLASS'
+                value = 'COVEREDRATIO'
+                minimum = 0.9
+            }
+
+        }
+        rule {
+            //element = 'INSTRUCTION'
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.9
+            }
+        }
+        rule {
+            //element = 'BRANCH'
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.9
+            }
+        }
+    }
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+check.dependsOn jacocoTestCoverageVerification
+test.finalizedBy jacocoTestReport
