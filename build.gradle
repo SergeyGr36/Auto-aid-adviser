@@ -49,9 +49,17 @@ configure(allprojects) { project ->
         implementation utils.lombok
 
         annotationProcessor utils.lombok
+
+        implementation db.postgres
+        testImplementation db.h2
     }
 }
 
 wrapper {
     version = '5.6.2'
+}
+
+project(':auto-aid-adviser-user-registration') {
+    dependencies {
+    }
 }

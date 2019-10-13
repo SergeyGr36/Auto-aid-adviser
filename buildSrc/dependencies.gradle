@@ -63,7 +63,7 @@ ext {
     graphQlBootVersion = '4.0.0'
 
     //SQL Data Base
-    postgresVersion = '42.2.4'
+    postgresVersion = '42.2.8'
 
     //configuration
     lombockVersion = '1.18.4'
