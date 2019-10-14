@@ -1,1 +1,3 @@
 rootProject.name = 'auto-aid-adviser'
+include 'search'
+
