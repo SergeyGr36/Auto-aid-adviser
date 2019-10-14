@@ -47,6 +47,7 @@ ext {
     hibernateVersion = '5.3.4.Final'
     hibernateJpaVersion = '1.0.0.Final'
     hibernateValidatorVersion = '6.0.9.Final'
+    hibernateSearchVersion = '5.11.3.Final'
     atomikosVersion = '4.0.4'
     hikariVersion = '2.7.4'
     ps6SpyVersion = '3.7.0'
@@ -121,6 +122,7 @@ ext {
 
     hibernate = [
             validator: "org.hibernate:hibernate-validator:$hibernateValidatorVersion",
+            search: "org.hibernate:hibernate-search-orm:$hibernateSearchVersion",
             jpaModelGen: "org.hibernate:hibernate-jpamodelgen:$hibernateVersion",
             ehcache: "org.hibernate:hibernate-ehcache:$hibernateVersion",
             em: "org.hibernate:hibernate-entitymanager:$hibernateVersion",
