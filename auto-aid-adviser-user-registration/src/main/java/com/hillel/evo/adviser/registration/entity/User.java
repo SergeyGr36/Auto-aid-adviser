@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.registration.entities;
+package com.hillel.evo.adviser.registration.entity;
 
 import com.hillel.evo.adviser.registration.enums.RoleUser;
 import lombok.AllArgsConstructor;

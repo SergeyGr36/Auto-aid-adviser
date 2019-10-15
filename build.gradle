@@ -61,5 +61,6 @@ wrapper {
 
 project(':auto-aid-adviser-user-registration') {
     dependencies {
+        //implementation 'org.springframework.boot:spring-boot-starter-security'
     }
 }
