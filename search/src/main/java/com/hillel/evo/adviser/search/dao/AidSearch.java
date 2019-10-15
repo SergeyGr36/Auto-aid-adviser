@@ -2,10 +2,12 @@ package com.hillel.evo.adviser.search.dao;
 
 import com.hillel.evo.adviser.search.dto.InputSearchDto;
 import com.hillel.evo.adviser.search.entity.Aid;
+import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.query.dsl.Unit;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +23,21 @@ public class AidSearch {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Aid> searchByType(String type) {
+    FullTextEntityManager fullTextEntityManager;
+    QueryBuilder queryBuilder;
 
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 
-        QueryBuilder queryBuilder =
+    public AidSearch() {
+        fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        queryBuilder =
                 fullTextEntityManager.getSearchFactory()
                         .buildQueryBuilder().forEntity(Aid.class).get();
 
-        org.apache.lucene.search.Query query =
+    }
+
+    public List<Aid> searchByType(String type) {
+
+        Query query =
                 queryBuilder
                         .keyword()
                         .onFields("type")
@@ -44,8 +52,19 @@ public class AidSearch {
         return results;
     }
 
-    public List<Aid> search(InputSearchDto searParams) {
+    public List<Aid> search(double radius, double centerLatitude, double centerLongitude) {
 
-        return null;
+        Query query = queryBuilder.spatial()
+                .within( radius, Unit.KM )
+                .ofLatitude( centerLatitude )
+                .andLongitude( centerLongitude )
+                .createQuery();
+
+        FullTextQuery jpaQuery =
+                fullTextEntityManager.createFullTextQuery(query, Aid.class);
+
+        List results = jpaQuery.getResultList();
+
+        return results;
     }
 }

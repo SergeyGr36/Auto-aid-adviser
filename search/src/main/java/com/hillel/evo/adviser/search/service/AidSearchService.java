@@ -22,6 +22,7 @@ public class AidSearchService {
     public List<Aid> Search(List<String> types, double distance, double curLat, double curLong) {
 
         InputSearchDto searchDto = DistanceUtil.get(types, distance, curLat, curLong);
-        return aidSearch.search(searchDto);
+        //return aidSearch.search(searchDto);
+        return null;
     }
 }

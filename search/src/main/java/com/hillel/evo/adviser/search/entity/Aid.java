@@ -1,16 +1,14 @@
 package com.hillel.evo.adviser.search.entity;
 
 import lombok.Data;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Indexed
 @Data
+@Spatial
 @Table(name = "aid")
 public class Aid {
 
@@ -24,10 +22,10 @@ public class Aid {
     @Field(store = Store.YES)
     private String type;
 
-    @Field(store = Store.YES)
+    @Latitude
     private double latitude;
 
-    @Field(store = Store.YES)
+    @Longitude
     private double longitude;
 
 }

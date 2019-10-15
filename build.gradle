@@ -60,5 +60,8 @@ project(':search') {
     dependencies {
         implementation hibernate.search
         implementation hibernate.em
+        implementation hibernate.infinispan
+        implementation hibernate.analyzers
+        implementation hibernate.spatial
     }
 }
