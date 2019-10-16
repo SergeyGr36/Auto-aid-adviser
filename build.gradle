@@ -16,11 +16,12 @@ configure(allprojects) { project ->
     apply plugin: 'io.spring.dependency-management'
     apply from: "${rootProject.projectDir}/buildSrc/dependencies.gradle"
     apply from: "${rootProject.projectDir}/buildSrc/analyze.gradle"
-    
+
     sourceCompatibility = 11
 
     repositories extRepositories
 
+/*
     test {
         useJUnitPlatform {
             excludeTags 'slow'
@@ -31,6 +32,7 @@ configure(allprojects) { project ->
         }
         failFast = false
     }
+*/
 
     application {
         mainClassName = 'com.hillel.evo.adviser.starter.AdviserStarter'
@@ -41,7 +43,7 @@ configure(allprojects) { project ->
             attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
         }
     }
-    
+
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
@@ -61,6 +63,6 @@ wrapper {
 
 project(':auto-aid-adviser-user-registration') {
     dependencies {
-        //implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation "javax.xml.bind:jaxb-api:2.2.11"
     }
 }

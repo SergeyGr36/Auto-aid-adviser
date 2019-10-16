@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.registration.dto.UserDto;
 import com.hillel.evo.adviser.registration.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -27,7 +28,7 @@ public class UserController {
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> registration(@RequestBody RegistrationDto dto) {
+    public Map<String, Object> registration(@Validated @RequestBody RegistrationDto dto) {
         return userService.registration(dto);
     }
 }

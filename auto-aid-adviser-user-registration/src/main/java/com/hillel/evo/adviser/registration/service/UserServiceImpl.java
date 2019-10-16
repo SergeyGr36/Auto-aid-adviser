@@ -43,17 +43,12 @@ public class UserServiceImpl implements UserService {
         user.setActive(false);
 
         User saveUser = userRepository.save(user);
-
         Map<String, Object> mapResponse = new HashMap<>();
-        if (saveUser != null) {
             //
             // send mail with code for user
             //
-            mapResponse.put("registration", true);
-            mapResponse.put("code", saveUser.getActivationCode());
-        } else {
-            mapResponse.put("registration", false);
-        }
+        mapResponse.put("registration", true);
+        mapResponse.put("code", saveUser.getActivationCode());
         return mapResponse;
     }
 
