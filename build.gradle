@@ -55,3 +55,5 @@ configure(allprojects) { project ->
 wrapper {
     version = '5.6.2'
 }
+
+project(":auto-aid-adviser-main") {}
