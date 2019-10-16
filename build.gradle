@@ -47,7 +47,8 @@ configure(allprojects) { project ->
         implementation boot.starterJpa
         testImplementation boot.starterTest
         implementation utils.lombok
-
+        runtime db.h2
+        
         annotationProcessor utils.lombok
     }
 }
