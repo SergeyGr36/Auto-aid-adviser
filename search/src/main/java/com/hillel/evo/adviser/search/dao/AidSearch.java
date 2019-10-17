@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.search.dao;
 
-import com.hillel.evo.adviser.search.dto.InputSearchDto;
 import com.hillel.evo.adviser.search.entity.Aid;
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -35,24 +34,24 @@ public class AidSearch {
 
     }
 
-    public List<Aid> searchByType(String type) {
+//    public List<Aid> searchByType(String type) {
+//
+//        Query query =
+//                queryBuilder
+//                        .keyword()
+//                        .onFields("type")
+//                        .matching(type)
+//                        .createQuery();
+//
+//        FullTextQuery jpaQuery =
+//                fullTextEntityManager.createFullTextQuery(query, Aid.class);
+//
+//        List results = jpaQuery.getResultList();
+//
+//        return results;
+//    }
 
-        Query query =
-                queryBuilder
-                        .keyword()
-                        .onFields("type")
-                        .matching(type)
-                        .createQuery();
-
-        FullTextQuery jpaQuery =
-                fullTextEntityManager.createFullTextQuery(query, Aid.class);
-
-        List results = jpaQuery.getResultList();
-
-        return results;
-    }
-
-    public List<Aid> search(double radius, double centerLatitude, double centerLongitude) {
+    public List<Aid> search(String type, double radius, double centerLatitude, double centerLongitude) {
 
         Query query = queryBuilder.spatial()
                 .within( radius, Unit.KM )
