@@ -41,6 +41,10 @@ configure(allprojects) { project ->
             attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
         }
     }
+
+    bootRun {
+        systemProperties = System.properties
+    }
     
     dependencies {
         implementation boot.starterWeb
