@@ -47,7 +47,9 @@ configure(allprojects) { project ->
         implementation boot.starterJpa
         testImplementation boot.starterTest
         implementation utils.lombok
-
+        runtime db.h2
+        implementation('com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:1.0.2')
+        
         annotationProcessor utils.lombok
 
 //        if (this.name != ':search')
@@ -68,6 +70,4 @@ project(':search') {
         implementation hibernate.spatial
     }
 }
-
-project(":auto-aid-adviser-main") {}
 
