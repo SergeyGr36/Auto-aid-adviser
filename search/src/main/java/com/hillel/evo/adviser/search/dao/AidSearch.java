@@ -20,10 +20,10 @@ import java.util.List;
 public class AidSearch {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private transient EntityManager entityManager;
 
-    FullTextEntityManager fullTextEntityManager;
-    QueryBuilder queryBuilder;
+    private transient FullTextEntityManager fullTextEntityManager;
+    private transient QueryBuilder queryBuilder;
 
 
     public AidSearch() {

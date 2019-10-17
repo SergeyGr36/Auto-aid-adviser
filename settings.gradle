@@ -1,4 +1,3 @@
 rootProject.name = 'auto-aid-adviser'
-include 'auto-aid-adviser-main'
-include 'search'
+include 'search', 'auto-aid-adviser-main'
 

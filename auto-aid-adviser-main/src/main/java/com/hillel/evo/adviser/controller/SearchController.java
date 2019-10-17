@@ -12,16 +12,15 @@ import java.util.List;
 @RequestMapping("search")
 public class SearchController {
 
-    private AidSearchService searchService;
+    private transient AidSearchService searchService;
 
     @Autowired
     public void setSearchService(AidSearchService searchService) {
-
+        this.searchService = searchService;
     }
 
     @GetMapping
-    public @ResponseBody
-    List<Aid> findAid(
+    public List<Aid> findAid(
             @RequestParam @NotBlank String serviceType,
             @RequestParam @NotBlank double lat,
             @RequestParam @NotBlank double lon,

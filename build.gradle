@@ -11,6 +11,7 @@ version '1.0-SNAPSHOT'
 configure(allprojects) { project ->
 
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'application'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -52,16 +53,12 @@ configure(allprojects) { project ->
         
         annotationProcessor utils.lombok
 
-//        if (this.name != ':search')
-//            implementation project(':search')
     }
 }
 
 wrapper {
     version = '5.6.2'
 }
-
-project(":auto-aid-adviser-main") {}
 
 project(':search') {
     dependencies {
@@ -70,4 +67,12 @@ project(':search') {
         implementation hibernate.spatial
     }
 }
+
+project(":auto-aid-adviser-main") {
+
+    dependencies {
+        implementation project(':search')
+    }
+}
+
 

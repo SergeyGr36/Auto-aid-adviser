@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class AidSearchService {
 
-    private AidSearch aidSearch;
+    private transient AidSearch aidSearch;
 
     @Autowired
     public void setAidSearch(AidSearch aidSearch) {
