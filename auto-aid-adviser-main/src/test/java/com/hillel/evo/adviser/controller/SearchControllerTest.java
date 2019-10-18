@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //@RunWith(JUnitPlatform.class)
-@SpringBootTest(classes = AdviserStarter.class)
+//@SpringBootTest(classes = AdviserStarter.class)
 public class SearchControllerTest {
 
     private MockMvc mockMvc;
