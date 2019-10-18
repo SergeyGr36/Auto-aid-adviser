@@ -54,6 +54,8 @@ configure(allprojects) { project ->
         runtimeOnly db.h2
         runtimeOnly  db.postgres
         runtimeOnly db.awsSecretsmanager
+        implementation misc.swagger
+        implementation misc.swaggerUI
         
         annotationProcessor utils.lombok
     }

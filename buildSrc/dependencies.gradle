@@ -93,6 +93,7 @@ ext {
     jmhCore = '1.19'
 
     secretsManagerVersion = '1.0.2'
+    swaggerVersion = '2.9.2'
 
     spring = [
             context: "org.springframework:spring-context:$springVersion",
@@ -201,6 +202,8 @@ ext {
             jacksonDatatypeJoda: "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion",
             poi: "org.apache.poi:poi:$poiVersion",
             io: "commons-io:commons-io:2.6",
+            swagger: "io.springfox:springfox-swagger2:$swaggerVersion",
+            swaggerUI: "io.springfox:springfox-swagger-ui:$swaggerVersion",
     ]
 
     web = [
