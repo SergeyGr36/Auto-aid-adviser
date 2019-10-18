@@ -42,14 +42,19 @@ configure(allprojects) { project ->
             attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
         }
     }
+
+    bootRun {
+        systemProperties = System.properties
+    }
     
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
         testImplementation boot.starterTest
-        implementation utils.lombok
-        runtime db.h2
-        implementation('com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:1.0.2')
+        compileOnly utils.lombok
+        runtimeOnly db.h2
+        runtimeOnly  db.postgres
+        runtimeOnly db.awsSecretsmanager
         
         annotationProcessor utils.lombok
 
