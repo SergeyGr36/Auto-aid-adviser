@@ -18,7 +18,7 @@ public class AuthenticationService {
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(JwtUtils jwtUtils, AutoAidUserDetailsService userDetailsService, AuthenticationManager authenticationManager) {
+    public AuthenticationService(JwtUtils jwtUtils, AuthenticationManager authenticationManager) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
     }

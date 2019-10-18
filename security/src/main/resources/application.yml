@@ -1,0 +1,4 @@
+app:
+  jwt:
+    secretKey: super-secret-test-key
+    expiresIn: 3600000
