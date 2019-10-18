@@ -63,7 +63,7 @@ ext {
     graphQlBootVersion = '4.0.0'
 
     //SQL Data Base
-    postgresVersion = '42.2.4'
+    postgresVersion = '42.2.8'
 
     //configuration
     lombockVersion = '1.18.4'
@@ -91,6 +91,8 @@ ext {
 
     //jmh
     jmhCore = '1.19'
+
+    secretsManagerVersion = '1.0.2'
 
     spring = [
             context: "org.springframework:spring-context:$springVersion",
@@ -232,7 +234,8 @@ ext {
             dbcp: "commons-dbcp:commons-dbcp:1.4",
             h2: "com.h2database:h2:$h2Version",
             hsqldb: "org.hsqldb:hsqldb:2.4.0",
-            postgres: "org.postgresql:postgresql:$postgresVersion"
+            postgres: "org.postgresql:postgresql:$postgresVersion",
+            awsSecretsmanager: "com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:$secretsManagerVersion"
     ]
 
     log = [
