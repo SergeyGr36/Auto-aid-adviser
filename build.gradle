@@ -124,7 +124,7 @@ project(":auto-aid-adviser-main") {
     }
 }
 
-project(':security') {
+project(':auto-aid-adviser-security') {
     dependencies {
                 implementation security.jwt
                 implementation boot.starterSecurity
