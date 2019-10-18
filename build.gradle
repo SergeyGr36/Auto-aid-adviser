@@ -44,12 +44,21 @@ configure(allprojects) { project ->
         }
     }
 
+    bootRun {
+        systemProperties = System.properties
+    }
+    
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
         testImplementation boot.starterTest
-        implementation utils.lombok
-
+        compileOnly utils.lombok
+        runtimeOnly db.h2
+        runtimeOnly  db.postgres
+        runtimeOnly db.awsSecretsmanager
+        implementation misc.swagger
+        implementation misc.swaggerUI
+        
         annotationProcessor utils.lombok
 
         implementation db.postgres
@@ -60,6 +69,8 @@ configure(allprojects) { project ->
 wrapper {
     version = '5.6.2'
 }
+
+project(":auto-aid-adviser-main") {}
 
 project(':user-service') {
     dependencies {
