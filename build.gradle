@@ -50,12 +50,18 @@ configure(allprojects) { project ->
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
-        testImplementation boot.starterTest
         compileOnly utils.lombok
         runtimeOnly db.h2
         runtimeOnly  db.postgres
         runtimeOnly db.awsSecretsmanager
-        
+
+        testImplementation boot.starterTest
+
+        testImplementation testing.junit5
+        testImplementation testing.junit5Platform
+        testImplementation testing.junit5Mockhito
+
+
         annotationProcessor utils.lombok
 
     }

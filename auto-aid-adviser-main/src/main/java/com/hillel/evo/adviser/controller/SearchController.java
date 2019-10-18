@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.controller;
 import com.hillel.evo.adviser.search.entity.Aid;
 import com.hillel.evo.adviser.search.service.AidSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -20,11 +21,12 @@ public class SearchController {
     }
 
     @GetMapping
-    public List<Aid> findAid(
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody List<Aid> findAid(
             @RequestParam @NotBlank String serviceType,
             @RequestParam @NotBlank double lat,
             @RequestParam @NotBlank double lon,
-            @RequestParam double distance
+            @RequestParam(required = false) double distance
             ) {
 
 
