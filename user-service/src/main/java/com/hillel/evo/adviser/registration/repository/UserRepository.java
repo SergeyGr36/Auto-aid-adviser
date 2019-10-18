@@ -11,6 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional(readOnly = true)
     UserDto findByMail(String mail);
 
+    User findUserByMail(String mail);
+
     Boolean existsByMail(String mail);
 
     User findByActivationCode(String code);
