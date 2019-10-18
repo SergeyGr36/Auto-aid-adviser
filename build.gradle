@@ -123,3 +123,10 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-email')
     }
 }
+
+project(':security') {
+    dependencies {
+                implementation security.jwt
+                implementation boot.starterSecurity
+    }
+}

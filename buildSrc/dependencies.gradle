@@ -307,6 +307,10 @@ ext {
             jmhCore: "org.openjdk.jmh:jmh-core:$jmhCore",
             jmhGenerator: "org.openjdk.jmh:jmh-generator-annprocess:$jmhCore"
     ]
+    
+    security = [
+            jwt: "io.jsonwebtoken:jjwt:0.9.1"
+    ]
 
 
 }
