@@ -53,16 +53,26 @@ public class AidSearch {
 
     public List<Aid> search(String type, double radius, double centerLatitude, double centerLongitude) {
 
-        Query query = queryBuilder.spatial()
+        var querySpatial = queryBuilder.spatial()
                 .within( radius, Unit.KM )
                 .ofLatitude( centerLatitude )
                 .andLongitude( centerLongitude )
                 .createQuery();
 
-        FullTextQuery jpaQuery =
+        var queryType = queryBuilder.keyword()
+                .onField("type")
+                .matching(type)
+                .createQuery();
+
+        var query = queryBuilder.bool()
+                .must(querySpatial)
+                .must(queryType)
+                .createQuery();
+
+        var jpaQuery =
                 fullTextEntityManager.createFullTextQuery(query, Aid.class);
 
-        List results = jpaQuery.getResultList();
+        var results = jpaQuery.getResultList();
 
         return results;
     }
