@@ -22,18 +22,6 @@ public class AidSearch {
     @PersistenceContext
     private transient EntityManager entityManager;
 
-    private transient FullTextEntityManager fullTextEntityManager;
-    private transient QueryBuilder queryBuilder;
-
-
-    public AidSearch() {
-        fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        queryBuilder =
-                fullTextEntityManager.getSearchFactory()
-                        .buildQueryBuilder().forEntity(Aid.class).get();
-
-    }
-
 //    public List<Aid> searchByType(String type) {
 //
 //        Query query =
@@ -52,6 +40,12 @@ public class AidSearch {
 //    }
 
     public List<Aid> search(String type, double radius, double centerLatitude, double centerLongitude) {
+
+        var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+
+        var queryBuilder =
+                fullTextEntityManager.getSearchFactory()
+                        .buildQueryBuilder().forEntity(Aid.class).get();
 
         var querySpatial = queryBuilder.spatial()
                 .within( radius, Unit.KM )

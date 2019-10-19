@@ -23,13 +23,16 @@ public class SearchController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody List<Aid> findAid(
-            @RequestParam @NotBlank String serviceType,
-            @RequestParam @NotBlank double lat,
-            @RequestParam @NotBlank double lon,
-            @RequestParam(required = false) double distance
+            @RequestParam @NotBlank String type,
+            @RequestParam @NotBlank Double lat,
+            @RequestParam @NotBlank Double lon,
+            @RequestParam(required = false) Double distance
             ) {
 
+        if (distance == null) {
+            distance = 5.0;
+        }
 
-        return searchService.search(serviceType, distance, lat, lon);
+        return searchService.search(type, distance, lat, lon);
     }
 }

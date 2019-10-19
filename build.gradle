@@ -61,7 +61,6 @@ configure(allprojects) { project ->
         testImplementation testing.junit5Platform
         testImplementation testing.junit5Mockhito
 
-
         annotationProcessor utils.lombok
 
     }
