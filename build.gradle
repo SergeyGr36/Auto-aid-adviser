@@ -66,4 +66,4 @@ wrapper {
 }
 
 project(":auto-aid-adviser-main") {}
-project(":business") {}
+project(':business') {}
