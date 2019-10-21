@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.entity;
+package com.hillel.evo.adviser.userprofile.entity;
 
-import com.hillel.evo.adviser.enums.RoleUser;
+import com.hillel.evo.adviser.userprofile.enums.RoleUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +21,8 @@ public class AdviserUserDetails {
 
     @Email
     @NotNull
-    @Column(name = "mail", unique = true, nullable = false)
-    private String mail;
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
     @NotNull
     private String password;

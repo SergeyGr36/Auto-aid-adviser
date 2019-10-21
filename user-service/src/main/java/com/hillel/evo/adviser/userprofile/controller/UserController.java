@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.userprofile.controller;
 
-import com.hillel.evo.adviser.userprofile.dto.UserDto;
 import com.hillel.evo.adviser.userprofile.service.SimpleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ public class UserController {
 
     @GetMapping("/activation/{code}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto activation(@PathVariable String code) {
-        return null;
+    public void activation(@PathVariable String code) {
+
     }
 }

@@ -1,23 +1,16 @@
+/*
 package com.hillel.evo.adviser.userprofile.controller;
 
-import com.hillel.evo.adviser.userprofile.dto.UserDto;
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.HashMap;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserControllerIntegrationTest {
-/*
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -61,5 +54,5 @@ public class UserControllerIntegrationTest {
         Assert.assertEquals(responseEntity.getStatusCodeValue(), 208);
     }
 
- */
-}
+
+} */

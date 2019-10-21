@@ -4,3 +4,6 @@ spring:
     platform: h2
     username: adviser
     password: arbitrary
+
+server:
+  port: 8081

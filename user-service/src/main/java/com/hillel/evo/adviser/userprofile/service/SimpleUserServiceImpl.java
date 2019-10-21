@@ -1,9 +1,9 @@
 package com.hillel.evo.adviser.userprofile.service;
 
-import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
-import com.hillel.evo.adviser.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillel.evo.adviser.enums.RoleUser;
+import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.userprofile.entity.SimpleUser;
+import com.hillel.evo.adviser.userprofile.enums.RoleUser;
 import com.hillel.evo.adviser.userprofile.exception.ResourceAlreadyExistsException;
 import com.hillel.evo.adviser.userprofile.message.Message;
 import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
@@ -26,14 +26,14 @@ public class SimpleUserServiceImpl implements SimpleUserService {
 
     @Override
     public AdviserUserDetails registration(SimpleUserRegistrationDto dto) {
-        Boolean existUser = userDetailRepository.existsByMail(dto.getEmail());
+        Boolean existUser = userDetailRepository.existsByEmail(dto.getEmail());
         if (existUser) {
             throw new ResourceAlreadyExistsException(String.format(Message.USER_ALREADY_EXISTS.getDiscript(), dto.getEmail()));
         }
 
         AdviserUserDetails userDetails = new AdviserUserDetails();
         userDetails.setRole(RoleUser.ROLE_USER);
-        userDetails.setMail(dto.getEmail());
+        userDetails.setEmail(dto.getEmail());
         userDetails.setPassword(dto.getPassword());
         userDetails.setActive(false);
         userDetails.setActivationCode(UUID.randomUUID().toString());
