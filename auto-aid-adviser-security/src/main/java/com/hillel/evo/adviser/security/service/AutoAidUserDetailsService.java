@@ -14,8 +14,6 @@ import java.util.Collection;
 @Service
 public class AutoAidUserDetailsService implements UserDetailsService {
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -27,7 +25,7 @@ public class AutoAidUserDetailsService implements UserDetailsService {
 
             @Override
             public String getPassword() {
-                return encoder.encode("testtest");
+                return new BCryptPasswordEncoder().encode("testtest");
             }
 
             @Override

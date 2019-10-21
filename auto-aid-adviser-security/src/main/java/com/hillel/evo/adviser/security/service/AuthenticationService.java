@@ -15,8 +15,8 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 public class AuthenticationService {
 
-    private final JwtUtils jwtUtils;
-    private final AuthenticationManager authenticationManager;
+    private final transient JwtUtils jwtUtils;
+    private final transient AuthenticationManager authenticationManager;
 
     public AuthenticationService(JwtUtils jwtUtils, AuthenticationManager authenticationManager) {
         this.jwtUtils = jwtUtils;
