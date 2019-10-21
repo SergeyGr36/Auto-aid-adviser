@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.registration.enums;
+package com.hillel.evo.adviser.enums;
 
 public enum RoleUser {
     ROLE_USER,

@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.registration;
+package com.hillel.evo.adviser.userprofile;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

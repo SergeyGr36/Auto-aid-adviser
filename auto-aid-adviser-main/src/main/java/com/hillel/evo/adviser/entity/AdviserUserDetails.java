@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.registration.entity;
+package com.hillel.evo.adviser.entity;
 
-import com.hillel.evo.adviser.registration.enums.RoleUser;
+import com.hillel.evo.adviser.enums.RoleUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,18 +10,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "usr")
+@Table(name = "adviser_usr")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class AdviserUserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String firstName;
-
-    private String lastName;
 
     @Email
     @NotNull

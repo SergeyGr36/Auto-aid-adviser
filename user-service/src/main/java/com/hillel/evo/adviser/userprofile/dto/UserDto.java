@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.registration.dto;
+package com.hillel.evo.adviser.userprofile.dto;
 
-import com.hillel.evo.adviser.registration.enums.RoleUser;
+import com.hillel.evo.adviser.enums.RoleUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

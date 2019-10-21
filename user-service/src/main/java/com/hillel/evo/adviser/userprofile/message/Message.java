@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.registration.message;
+package com.hillel.evo.adviser.userprofile.message;
 
 import lombok.AllArgsConstructor;
 

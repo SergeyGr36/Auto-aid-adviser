@@ -74,6 +74,7 @@ project(":auto-aid-adviser-main") {}
 
 project(':user-service') {
     dependencies {
+        compile project(":auto-aid-adviser-main")
         implementation "javax.xml.bind:jaxb-api:2.2.11"
     }
 }
