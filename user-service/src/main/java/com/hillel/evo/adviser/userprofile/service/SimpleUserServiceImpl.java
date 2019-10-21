@@ -26,8 +26,7 @@ public class SimpleUserServiceImpl implements SimpleUserService {
 
     @Override
     public AdviserUserDetails registration(SimpleUserRegistrationDto dto) {
-        Boolean existUser = userDetailRepository.existsByEmail(dto.getEmail());
-        if (existUser) {
+        if (userDetailRepository.existsByEmail(dto.getEmail())) {
             throw new ResourceAlreadyExistsException(String.format(Message.USER_ALREADY_EXISTS.getDiscript(), dto.getEmail()));
         }
 

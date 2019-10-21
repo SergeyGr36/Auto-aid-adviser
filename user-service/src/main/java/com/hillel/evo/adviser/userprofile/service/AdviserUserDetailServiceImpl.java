@@ -16,13 +16,10 @@ public class AdviserUserDetailServiceImpl implements AdviserUserDetailService {
 
     @Override
     public AdviserUserDetails activation(String code) {
-        AdviserUserDetails userDetails = repository.findByActivationCode(code);
-        if (userDetails != null) {
+        AdviserUserDetails userDetails = repository.findByActivationCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException(Message.ACTIVE_CODE_NOT_FOUND.getDiscript()));
             userDetails.setActive(true);
             userDetails.setActivationCode(null);
             return repository.save(userDetails);
-        } else {
-            throw new ResourceNotFoundException(Message.ACTIVE_CODE_NOT_FOUND.getDiscript());
-        }
     }
 }

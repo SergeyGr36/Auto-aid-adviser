@@ -25,8 +25,7 @@ public class BusinessUserServiceImpl implements BusinessUserService {
     @Override
     public AdviserUserDetails registration(BusinessUserRegistrationDto dto) {
         //check user to databases
-        Boolean existUser = userDetailRepository.existsByEmail(dto.getEmail());
-        if (existUser) {
+        if (userDetailRepository.existsByEmail(dto.getEmail())) {
             throw new ResourceAlreadyExistsException(String.format(Message.USER_ALREADY_EXISTS.getDiscript(), dto.getEmail()));
         }
         // if not found create user
