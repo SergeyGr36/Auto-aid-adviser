@@ -49,6 +49,7 @@ configure(allprojects) { project ->
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
+        implementation boot.starterMail
         testImplementation boot.starterTest
         compileOnly utils.lombok
         runtimeOnly db.h2
@@ -56,6 +57,7 @@ configure(allprojects) { project ->
         runtimeOnly db.awsSecretsmanager
         implementation misc.swagger
         implementation misc.swaggerUI
+        implementation misc.awsSdk
         
         annotationProcessor utils.lombok
     }
@@ -65,4 +67,8 @@ wrapper {
     version = '5.6.2'
 }
 
-project(":auto-aid-adviser-main") {}
+project(":auto-aid-adviser-main") {
+    dependencies {
+        compile project(":auto-aid-adviser-email")
+    }
+}

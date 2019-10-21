@@ -94,6 +94,7 @@ ext {
 
     secretsManagerVersion = '1.0.2'
     swaggerVersion = '2.9.2'
+    awsSdkVersion = '1.11.656'
 
     spring = [
             context: "org.springframework:spring-context:$springVersion",
@@ -142,6 +143,7 @@ ext {
             springBootPlugin: "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion",
             starter: "org.springframework.boot:spring-boot-starter:$springBootVersion",
             starterWeb: "org.springframework.boot:spring-boot-starter-web:$springBootVersion",
+            starterMail: "org.springframework.boot:spring-boot-starter-mail:$springBootVersion",
             actuator: "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion",
             starterTest: "org.springframework.boot:spring-boot-starter-test:$springBootVersion",
             starterAop: "org.springframework.boot:spring-boot-starter-aop:$springBootVersion",
@@ -204,6 +206,7 @@ ext {
             io: "commons-io:commons-io:2.6",
             swagger: "io.springfox:springfox-swagger2:$swaggerVersion",
             swaggerUI: "io.springfox:springfox-swagger-ui:$swaggerVersion",
+            awsSdk: "com.amazonaws:aws-java-sdk:$awsSdkVersion",
     ]
 
     web = [
