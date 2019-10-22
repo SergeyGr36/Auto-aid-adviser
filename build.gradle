@@ -51,6 +51,11 @@ configure(allprojects) { project ->
         implementation boot.starterJpa
         implementation boot.starterMail
         testImplementation boot.starterTest
+        testImplementation testing.mockito
+        testImplementation testing.junit5Engine
+        testImplementation testing.junit5Api
+        testImplementation testing.junit5Params
+        
         compileOnly utils.lombok
         runtimeOnly db.h2
         runtimeOnly  db.postgres
