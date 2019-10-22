@@ -72,7 +72,7 @@ wrapper {
 
 project(":auto-aid-adviser-main") {
     dependencies {
-        compile project(":user-service")
+        implementation project(":user-service")
     }
 }
 

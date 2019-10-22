@@ -4,12 +4,14 @@ import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.userprofile.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.userprofile.message.Message;
 import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdviserUserDetailServiceImpl implements AdviserUserDetailService {
-    private final AdviserUserDetailRepository repository;
+    private final transient AdviserUserDetailRepository repository;
 
+    @Autowired
     public AdviserUserDetailServiceImpl(AdviserUserDetailRepository repository) {
         this.repository = repository;
     }

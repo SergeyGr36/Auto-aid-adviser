@@ -6,11 +6,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,7 +27,7 @@ public class AdviserUserDetailServiceImplTest {
         AdviserUserDetails aud = service.activation(activeCode);
         //then
         Assert.assertNull(aud.getActivationCode());
-        Assert.assertEquals(aud.isActive(), true);
+        Assert.assertTrue(aud.isActive());
     }
 
     @Test(expected = ResourceNotFoundException.class)

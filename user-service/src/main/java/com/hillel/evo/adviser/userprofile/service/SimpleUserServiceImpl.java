@@ -17,10 +17,10 @@ import java.util.UUID;
 
 @Service
 public class SimpleUserServiceImpl implements SimpleUserService {
-    private final Logger logger = LoggerFactory.getLogger(SimpleUserServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleUserServiceImpl.class);
 
-    private final SimpleUserRepository userRepository;
-    private final AdviserUserDetailRepository userDetailRepository;
+    private transient final SimpleUserRepository userRepository;
+    private transient final AdviserUserDetailRepository userDetailRepository;
 
     @Autowired
     public SimpleUserServiceImpl(SimpleUserRepository userRepository, AdviserUserDetailRepository userDetailRepository) {
@@ -48,9 +48,9 @@ public class SimpleUserServiceImpl implements SimpleUserService {
         /*
          send email to user with code activation
         */
-        logger.info("========================================================");
-        logger.info(saveSimpleUser.getUserDetails().getEmail() + " - " + saveSimpleUser.getUserDetails().getActivationCode());
-        logger.info("========================================================");
+        LOGGER.info("========================================================");
+        LOGGER.info(saveSimpleUser.getUserDetails().getEmail() + " - " + saveSimpleUser.getUserDetails().getActivationCode());
+        LOGGER.info("========================================================");
 
         return saveSimpleUser.getUserDetails();
     }

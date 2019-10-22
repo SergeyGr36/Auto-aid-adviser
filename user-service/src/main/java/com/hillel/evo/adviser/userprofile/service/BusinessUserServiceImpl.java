@@ -10,17 +10,19 @@ import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository
 import com.hillel.evo.adviser.userprofile.repository.BusinessUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class BusinessUserServiceImpl implements BusinessUserService {
-    private final Logger logger = LoggerFactory.getLogger(BusinessUserServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessUserServiceImpl.class);
 
-    private final BusinessUserRepository userRepository;
-    private final AdviserUserDetailRepository userDetailRepository;
+    private final transient BusinessUserRepository userRepository;
+    private final transient AdviserUserDetailRepository userDetailRepository;
 
+    @Autowired
     public BusinessUserServiceImpl(BusinessUserRepository userRepository, AdviserUserDetailRepository userDetailRepository) {
         this.userRepository = userRepository;
         this.userDetailRepository = userDetailRepository;
@@ -47,9 +49,9 @@ public class BusinessUserServiceImpl implements BusinessUserService {
         /*
          send email to user with code activation
         */
-        logger.info("========================================================");
-        logger.info(saveBusinessUser.getUserDetails().getEmail() + " - " + saveBusinessUser.getUserDetails().getActivationCode());
-        logger.info("========================================================");
+        LOGGER.info("========================================================");
+        LOGGER.info(saveBusinessUser.getUserDetails().getEmail() + " - " + saveBusinessUser.getUserDetails().getActivationCode());
+        LOGGER.info("========================================================");
 
         return saveBusinessUser.getUserDetails();
     }
