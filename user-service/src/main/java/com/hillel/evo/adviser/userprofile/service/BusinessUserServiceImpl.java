@@ -8,12 +8,16 @@ import com.hillel.evo.adviser.userprofile.exception.ResourceAlreadyExistsExcepti
 import com.hillel.evo.adviser.userprofile.message.Message;
 import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.userprofile.repository.BusinessUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class BusinessUserServiceImpl implements BusinessUserService {
+    private final Logger logger = LoggerFactory.getLogger(BusinessUserServiceImpl.class);
+
     private final BusinessUserRepository userRepository;
     private final AdviserUserDetailRepository userDetailRepository;
 
@@ -43,6 +47,9 @@ public class BusinessUserServiceImpl implements BusinessUserService {
         /*
          send email to user with code activation
         */
+        logger.info("========================================================");
+        logger.info(saveBusinessUser.getUserDetails().getEmail() + " - " + saveBusinessUser.getUserDetails().getActivationCode());
+        logger.info("========================================================");
 
         return saveBusinessUser.getUserDetails();
     }

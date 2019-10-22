@@ -8,6 +8,8 @@ import com.hillel.evo.adviser.userprofile.exception.ResourceAlreadyExistsExcepti
 import com.hillel.evo.adviser.userprofile.message.Message;
 import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.userprofile.repository.SimpleUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.UUID;
 
 @Service
 public class SimpleUserServiceImpl implements SimpleUserService {
+    private final Logger logger = LoggerFactory.getLogger(SimpleUserServiceImpl.class);
+
     private final SimpleUserRepository userRepository;
     private final AdviserUserDetailRepository userDetailRepository;
 
@@ -44,6 +48,9 @@ public class SimpleUserServiceImpl implements SimpleUserService {
         /*
          send email to user with code activation
         */
+        logger.info("========================================================");
+        logger.info(saveSimpleUser.getUserDetails().getEmail() + " - " + saveSimpleUser.getUserDetails().getActivationCode());
+        logger.info("========================================================");
 
         return saveSimpleUser.getUserDetails();
     }
