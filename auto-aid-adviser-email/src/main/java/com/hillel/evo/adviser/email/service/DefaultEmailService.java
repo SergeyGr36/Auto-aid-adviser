@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.Date;
 
 @Service
+@SuppressWarnings({"PMD.BeanMembersShouldSerialize", "PMD.DataflowAnomalyAnalysis"})
 public class DefaultEmailService implements EmailService {
     private final JavaMailSender javaMailSender;
 
@@ -30,6 +31,7 @@ public class DefaultEmailService implements EmailService {
             helper.setSubject(dto.getSubject());
             helper.setText(dto.getText());
             helper.setSentDate(new Date());
+
             for (String pathToAttachment : dto.getAttachments()) {
                 FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
                 helper.addAttachment("Invoice", file);

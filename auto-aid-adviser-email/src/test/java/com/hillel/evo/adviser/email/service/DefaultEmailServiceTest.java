@@ -12,21 +12,21 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import static org.mockito.Mockito.mock;
 
-@SpringBootTest(classes = {DefaultEmailServiceTest.MyTestConfiguration.class})
-public class DefaultEmailServiceTest {
-    //private static final JavaMailSender mockSender = mock(JavaMailSender.class);
-    @Autowired
-    DefaultEmailService service;// = new DefaultEmailService(new JavaMailSenderImpl());
-    @Test
-    public void sendMessage() {
-        System.out.println("Service: " + service);
-        MessageDto dto = new MessageDto.Builder().setToAddresses("dir2000@ukr.net").build();
-        service.sendMessage(dto);
-    }
-
-    @TestConfiguration
-    @ComponentScan()
-    class MyTestConfiguration {
-
-    }
-}
+//@SpringBootTest(classes = {DefaultEmailServiceTest.MyTestConfiguration.class})
+//public class DefaultEmailServiceTest {
+//    //private static final JavaMailSender mockSender = mock(JavaMailSender.class);
+////    @Autowired
+////    DefaultEmailService service;// = new DefaultEmailService(new JavaMailSenderImpl());
+////    @Test
+////    public void sendMessage() {
+////        System.out.println("Service: " + service);
+////        MessageDto dto = new MessageDto.Builder().setToAddresses("dir2000@ukr.net").build();
+////        service.sendMessage(dto);
+////    }
+////
+//    @TestConfiguration
+//    @ComponentScan()
+//    class MyTestConfiguration {
+//
+//    }
+//}

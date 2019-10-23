@@ -19,6 +19,7 @@ public class MessageDto {
 
     private Set<String> attachments;
 
+    @SuppressWarnings("PMD.BeanMembersShouldSerialize")
     public static class Builder {
         private String toAddresses;
         private String ccAddresses;

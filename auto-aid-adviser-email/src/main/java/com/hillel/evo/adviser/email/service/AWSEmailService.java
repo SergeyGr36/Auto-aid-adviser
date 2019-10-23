@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Primary
 @ConditionalOnProperty(prefix = "email", name = "service", havingValue = "aws")
+@SuppressWarnings("PMD.BeanMembersShouldSerialize")
 public class AWSEmailService implements EmailService {
     @Value("${spring.mail.username}")
     private String userName;
