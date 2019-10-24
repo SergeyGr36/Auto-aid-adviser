@@ -1,20 +1,12 @@
 package com.hillel.evo.adviser.userprofile.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-public class SimpleUserRegistrationDto {
-    @Email
-    @NotNull
-    private String email;
-
-    @Min(8)
-    @NotNull
-    private String password;
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+public class SimpleUserRegistrationDto extends UserRegistrationDto {
+    // здесь в дальнейшем будут поля свойственные только регистрации обычного пользователя
 }
