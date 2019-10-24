@@ -3,18 +3,23 @@ package com.hillel.evo.adviser.userprofile.service;
 import com.hillel.evo.adviser.userprofile.dto.BusinessUserRegistrationDto;
 import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
 import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.userprofile.exception.ResourceAlreadyExistsException;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserServiceImplTest {
@@ -29,8 +34,8 @@ public class UserServiceImplTest {
         //when
         AdviserUserDetails aud = service.activation(activeCode).get();
         //then
-        Assert.assertNull(aud.getActivationCode());
-        Assert.assertTrue(aud.isActive());
+        assertNull(aud.getActivationCode());
+        assertTrue(aud.isActive());
     }
 
     @Test
@@ -40,7 +45,7 @@ public class UserServiceImplTest {
         //when
         AdviserUserDetails aud = service.activation(activeCode).orElse(null);
         //then
-        Assert.assertNull(aud);
+        assertNull(aud);
     }
 
     @Test
@@ -52,10 +57,10 @@ public class UserServiceImplTest {
         //when
         Optional<AdviserUserDetails> optional = service.registration(dto);
         //then
-        Assert.assertTrue(optional.isPresent());
-        Assert.assertEquals(optional.get().getEmail(), dto.getEmail());
-        Assert.assertNotNull(optional.get().getActivationCode());
-        Assert.assertEquals(optional.get().isActive(), false);
+        assertTrue(optional.isPresent());
+        assertEquals(optional.get().getEmail(), dto.getEmail());
+        assertNotNull(optional.get().getActivationCode());
+        assertEquals(optional.get().isActive(), false);
     }
 
     @Test
@@ -67,7 +72,7 @@ public class UserServiceImplTest {
         //when
         Optional<AdviserUserDetails> optional = service.registration(dto);
         //then
-        Assert.assertFalse(optional.isPresent());
+        assertFalse(optional.isPresent());
     }
 
     @Test
@@ -79,10 +84,10 @@ public class UserServiceImplTest {
         //when
         Optional<AdviserUserDetails> optional = service.registration(dto);
         //then
-        Assert.assertTrue(optional.isPresent());
-        Assert.assertEquals(optional.get().getEmail(), dto.getEmail());
-        Assert.assertNotNull(optional.get().getActivationCode());
-        Assert.assertEquals(optional.get().isActive(), false);
+        assertTrue(optional.isPresent());
+        assertEquals(optional.get().getEmail(), dto.getEmail());
+        assertNotNull(optional.get().getActivationCode());
+        assertEquals(optional.get().isActive(), false);
     }
 
     @Test
@@ -94,6 +99,6 @@ public class UserServiceImplTest {
         //when
         Optional<AdviserUserDetails> optional = service.registration(dto);
         //then
-        Assert.assertFalse(optional.isPresent());
+        assertFalse(optional.isPresent());
     }
 }

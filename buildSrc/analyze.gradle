@@ -85,11 +85,9 @@ jacocoTestCoverageVerification {
 
 }
 
-/*
 test {
     useJUnitPlatform()
 }
-*/
 
 check.dependsOn jacocoTestCoverageVerification
 test.finalizedBy jacocoTestReport

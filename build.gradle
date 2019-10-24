@@ -21,7 +21,6 @@ configure(allprojects) { project ->
 
     repositories extRepositories
 
-/*
     test {
         useJUnitPlatform {
             excludeTags 'slow'
@@ -32,7 +31,6 @@ configure(allprojects) { project ->
         }
         failFast = false
     }
-*/
 
     application {
         mainClassName = 'com.hillel.evo.adviser.starter.AdviserStarter'
@@ -78,6 +76,5 @@ project(":auto-aid-adviser-main") {
 
 project(":user-service") {
     dependencies {
-        implementation "javax.xml.bind:jaxb-api:2.2.11"
     }
 }
