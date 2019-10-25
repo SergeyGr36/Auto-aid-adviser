@@ -71,7 +71,7 @@ wrapper {
     version = '5.6.2'
 }
 
-project(':search') {
+project(':search-service') {
     dependencies {
         implementation hibernate.search
         implementation hibernate.em
@@ -82,7 +82,7 @@ project(':search') {
 project(":auto-aid-adviser-main") {
 
     dependencies {
-        implementation project(':search')
+        implementation project(':search-service')
     }
 }
 
