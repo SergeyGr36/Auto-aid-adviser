@@ -3,7 +3,6 @@ package com.hillel.evo.adviser.security.service;
 import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
 import com.hillel.evo.adviser.security.dto.LoginRequestDto;
 import com.hillel.evo.adviser.security.dto.LoginResponseDto;
-import com.hillel.evo.adviser.security.utils.JwtUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,7 +24,7 @@ public class AuthenticationServiceTest {
     private static final String TOKEN = "token";
 
     @Mock private AuthenticationManager authenticationManager;
-    @Mock private JwtUtils jwtUtils;
+    @Mock private JwtService jwtService;
     @Mock private JwtPropertyConfiguration jwtConfig;
     @Mock private Authentication authentication;
 
@@ -35,7 +34,7 @@ public class AuthenticationServiceTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        authenticationService = new AuthenticationService(jwtUtils, authenticationManager, jwtConfig);
+        authenticationService = new AuthenticationService(jwtService, authenticationManager, jwtConfig);
 
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail(USER_MAIL);
@@ -53,7 +52,7 @@ public class AuthenticationServiceTest {
     @Test
     public void whenAuthenticateAndResponce_thenResponceWithBodyIsReturned() {
         //given
-        when(jwtUtils.generateAccessToken(anyLong(), anyLong())).thenReturn(TOKEN);
+        when(jwtService.generateAccessToken(anyLong(), anyLong())).thenReturn(TOKEN);
         //when
         ResponseEntity<LoginResponseDto> responseEntity = authenticationService.authenticateAndResponse(loginRequestDto);
         LoginResponseDto responseDto = responseEntity.getBody();

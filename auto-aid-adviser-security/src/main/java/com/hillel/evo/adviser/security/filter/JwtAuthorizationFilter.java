@@ -3,7 +3,7 @@ package com.hillel.evo.adviser.security.filter;
 
 import com.hillel.evo.adviser.security.handler.JwtEntryPointUnauthorizedHandler;
 import com.hillel.evo.adviser.security.service.SecurityUserDetailsService;
-import com.hillel.evo.adviser.security.utils.JwtUtils;
+import com.hillel.evo.adviser.security.service.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,15 +24,15 @@ import java.io.IOException;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final transient JwtUtils jwtUtils;
+    private final transient JwtService jwtService;
     private final transient SecurityUserDetailsService detailsService;
     private final transient JwtEntryPointUnauthorizedHandler authEntryPoint;
 
     @Autowired
-    public JwtAuthorizationFilter(final JwtUtils jwtUtils,
+    public JwtAuthorizationFilter(final JwtService jwtService,
                                   final SecurityUserDetailsService detailsService,
                                   final JwtEntryPointUnauthorizedHandler authEntryPoint) {
-        this.jwtUtils = jwtUtils;
+        this.jwtService = jwtService;
         this.detailsService = detailsService;
         this.authEntryPoint = authEntryPoint;
     }
@@ -42,11 +42,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                                  final HttpServletResponse response,
                                  final FilterChain filterChain) throws IOException, ServletException {
 
-        final String accessToken = jwtUtils.getTokenFromRequest(request);
+        final String accessToken = jwtService.getTokenFromRequest(request);
 
-        if (StringUtils.hasText(accessToken) && jwtUtils.tokenIsValid(accessToken)) {
+        if (StringUtils.hasText(accessToken) && jwtService.tokenIsValid(accessToken)) {
 
-            Long id = jwtUtils.getUserIdFromToken(accessToken);
+            Long id = jwtService.getUserIdFromToken(accessToken);
             UserDetails userDetails = detailsService.loadUserByUsername("username");
 
             UsernamePasswordAuthenticationToken authToken =

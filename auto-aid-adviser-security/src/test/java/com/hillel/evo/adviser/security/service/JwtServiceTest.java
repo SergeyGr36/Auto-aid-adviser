@@ -1,6 +1,7 @@
-package com.hillel.evo.adviser.security.utils;
+package com.hillel.evo.adviser.security.service;
 
 import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
+import com.hillel.evo.adviser.security.service.JwtService;
 import io.jsonwebtoken.Jwts;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,12 +11,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class JwtUtilsTest {
+public class JwtServiceTest {
 
     private final static String TEST_KEY = "test-key";
     private final static Long USER_ID = 100L;
@@ -23,19 +23,19 @@ public class JwtUtilsTest {
 
     @Mock private JwtPropertyConfiguration jwtProperties;
     @Mock HttpServletRequest request;
-    private JwtUtils jwtUtils;
+    private JwtService jwtService;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        jwtUtils = new JwtUtils(jwtProperties);
+        jwtService = new JwtService(jwtProperties);
         when(jwtProperties.getSecretKey()).thenReturn(TEST_KEY);
     }
 
     @Test
     public void whenGenerateAccessToken_thenTokenWithCorrectUserIdIsGenerated() {
 
-        String token = jwtUtils.generateAccessToken(USER_ID, EXPIRATION);
+        String token = jwtService.generateAccessToken(USER_ID, EXPIRATION);
 
         Long userIdFromToken = Long.parseLong(
                 Jwts.parser()
@@ -50,9 +50,9 @@ public class JwtUtilsTest {
 
     @Test
     public void whenGetUserIdFromToken_thenCorrectUserIdIsReturned() {
-        String token = jwtUtils.generateAccessToken(USER_ID, EXPIRATION);
+        String token = jwtService.generateAccessToken(USER_ID, EXPIRATION);
 
-        assertEquals(USER_ID, jwtUtils.getUserIdFromToken(token));
+        assertEquals(USER_ID, jwtService.getUserIdFromToken(token));
     }
 
     @Test
@@ -60,9 +60,9 @@ public class JwtUtilsTest {
         // given
         final String token = "token";
         // when
-        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(JwtUtils.TOKEN_PREFIX + token);
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(JwtService.TOKEN_PREFIX + token);
         //then
-        assertEquals(token, jwtUtils.getTokenFromRequest(request));
+        assertEquals(token, jwtService.getTokenFromRequest(request));
     }
 
     @Test

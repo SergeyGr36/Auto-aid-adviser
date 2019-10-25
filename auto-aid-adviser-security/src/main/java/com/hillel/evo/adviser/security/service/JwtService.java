@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.security.utils;
+package com.hillel.evo.adviser.security.service;
 
 import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
 import com.hillel.evo.adviser.security.exception.InvalidJwtTokenException;
@@ -18,14 +18,14 @@ import java.util.Date;
 
 @Slf4j
 @Component
-public class JwtUtils {
+public class JwtService {
 
     public static final String TOKEN_PREFIX = "Bearer ";
 
     private final transient JwtPropertyConfiguration jwtProperties;
 
     @Autowired
-    public JwtUtils(final JwtPropertyConfiguration jwtProperties) {
+    public JwtService(final JwtPropertyConfiguration jwtProperties) {
         this.jwtProperties = jwtProperties;
     }
 

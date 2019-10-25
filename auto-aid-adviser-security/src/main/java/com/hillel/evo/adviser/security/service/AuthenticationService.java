@@ -3,14 +3,11 @@ package com.hillel.evo.adviser.security.service;
 import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
 import com.hillel.evo.adviser.security.dto.LoginRequestDto;
 import com.hillel.evo.adviser.security.dto.LoginResponseDto;
-import com.hillel.evo.adviser.security.utils.JwtUtils;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
@@ -18,14 +15,14 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 public class AuthenticationService {
 
-    private final transient JwtUtils jwtUtils;
+    private final transient JwtService jwtService;
     private final transient AuthenticationManager authenticationManager;
     private final transient JwtPropertyConfiguration jwtPropertyConfiguration;
 
-    public AuthenticationService(JwtUtils jwtUtils,
+    public AuthenticationService(JwtService jwtService,
                                  AuthenticationManager authenticationManager,
                                  JwtPropertyConfiguration jwtPropertyConfiguration) {
-        this.jwtUtils = jwtUtils;
+        this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.jwtPropertyConfiguration = jwtPropertyConfiguration;
     }
@@ -51,11 +48,11 @@ public class AuthenticationService {
 
         long userId = 1;
 
-        String accessToken = jwtUtils.generateAccessToken(userId, jwtPropertyConfiguration.getExpirationMillis());
+        String accessToken = jwtService.generateAccessToken(userId, jwtPropertyConfiguration.getExpirationMillis());
 
         return ResponseEntity
                 .status(OK)
-                .header(AUTHORIZATION, JwtUtils.TOKEN_PREFIX + accessToken)
+                .header(AUTHORIZATION, JwtService.TOKEN_PREFIX + accessToken)
                 .body(new LoginResponseDto(accessToken));
     }
 
