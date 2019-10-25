@@ -2,12 +2,11 @@ package com.hillel.evo.adviser.security.filter;
 
 
 import com.hillel.evo.adviser.security.handler.JwtEntryPointUnauthorizedHandler;
-import com.hillel.evo.adviser.security.service.AutoAidUserDetailsService;
+import com.hillel.evo.adviser.security.service.SecurityUserDetailsService;
 import com.hillel.evo.adviser.security.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -26,12 +25,12 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final transient JwtUtils jwtUtils;
-    private final transient AutoAidUserDetailsService detailsService;
+    private final transient SecurityUserDetailsService detailsService;
     private final transient JwtEntryPointUnauthorizedHandler authEntryPoint;
 
     @Autowired
     public JwtAuthorizationFilter(final JwtUtils jwtUtils,
-                                  final AutoAidUserDetailsService detailsService,
+                                  final SecurityUserDetailsService detailsService,
                                   final JwtEntryPointUnauthorizedHandler authEntryPoint) {
         this.jwtUtils = jwtUtils;
         this.detailsService = detailsService;
@@ -47,8 +46,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(accessToken) && jwtUtils.tokenIsValid(accessToken)) {
 
-            String userName = jwtUtils.getUserNameFromToken(accessToken);
-            UserDetails userDetails = detailsService.loadUserByUsername(userName);
+            Long id = jwtUtils.getUserIdFromToken(accessToken);
+            UserDetails userDetails = detailsService.loadUserByUsername("username");
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(

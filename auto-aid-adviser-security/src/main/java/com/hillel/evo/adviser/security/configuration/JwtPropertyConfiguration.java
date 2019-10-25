@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.security.property;
+package com.hillel.evo.adviser.security.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,12 +9,12 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Component
 @ConfigurationProperties(prefix = "app.jwt")
-public class JwtConfigurationProperties {
+public class JwtPropertyConfiguration {
 
     @NotBlank
     private String secretKey;
 
     @NotBlank
-    private Long expiresIn;
+    private Long expirationMillis;
 }
 

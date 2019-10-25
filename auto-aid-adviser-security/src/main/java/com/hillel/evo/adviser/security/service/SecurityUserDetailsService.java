@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @Service
-public class AutoAidUserDetailsService implements UserDetailsService {
+public class SecurityUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

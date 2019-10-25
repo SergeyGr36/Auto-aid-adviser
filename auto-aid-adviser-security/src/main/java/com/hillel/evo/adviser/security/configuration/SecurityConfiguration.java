@@ -2,7 +2,7 @@ package com.hillel.evo.adviser.security.configuration;
 
 import com.hillel.evo.adviser.security.filter.JwtAuthorizationFilter;
 import com.hillel.evo.adviser.security.handler.JwtEntryPointUnauthorizedHandler;
-import com.hillel.evo.adviser.security.service.AutoAidUserDetailsService;
+import com.hillel.evo.adviser.security.service.SecurityUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,16 +25,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         jsr250Enabled = true,
         prePostEnabled = true
 )
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final transient AutoAidUserDetailsService userDetailsService;
+    private final transient SecurityUserDetailsService userDetailsService;
     private final transient JwtEntryPointUnauthorizedHandler authEntryPoint;
     private final transient JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Autowired
-    public SecurityConfig(final AutoAidUserDetailsService geoRentUserDetailsService,
-                          final JwtEntryPointUnauthorizedHandler authEntryPoint,
-                          final JwtAuthorizationFilter jwtAuthorizationFilter) {
+    public SecurityConfiguration(final SecurityUserDetailsService geoRentUserDetailsService,
+                                 final JwtEntryPointUnauthorizedHandler authEntryPoint,
+                                 final JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.userDetailsService = geoRentUserDetailsService;
         this.authEntryPoint = authEntryPoint;
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
