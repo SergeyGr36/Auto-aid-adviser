@@ -10,3 +10,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: /tmp/adviser/indexes/
+          reindex: false

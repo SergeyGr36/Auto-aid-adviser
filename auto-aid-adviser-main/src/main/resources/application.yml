@@ -4,3 +4,21 @@ spring:
     platform: h2
     username: adviser
     password: arbitrary
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: /tmp/adviser/indexes/
+          reindex: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
