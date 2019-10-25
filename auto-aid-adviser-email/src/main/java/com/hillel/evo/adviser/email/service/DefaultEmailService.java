@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.Date;
@@ -28,15 +27,17 @@ public class DefaultEmailService implements EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(dto.getToAddresses());
+            helper.setCc(dto.getCcAddresses());
+            helper.setBcc(dto.getBccAddresses());
             helper.setSubject(dto.getSubject());
-            helper.setText(dto.getText());
+            helper.setText(dto.getText(), dto.getHtml());
             helper.setSentDate(new Date());
 
             for (String pathToAttachment : dto.getAttachments()) {
                 FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
-                helper.addAttachment("Invoice", file);
+                helper.addAttachment(file.getFilename(), file);
             }
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

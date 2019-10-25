@@ -1,29 +1,21 @@
-//package com.hillel.evo.adviser.email.configuration;
+package com.hillel.evo.adviser.email.configuration;
 
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.mail.javamail.JavaMailSenderImpl;
-//
-//import java.util.Properties;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-//@Configuration
-//public class EmailConfiguration {
-//    @Bean
-//    public JavaMailSender getJavaMailSender() {
-//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-//        mailSender.setHost("smtp.gmail.com");
-//        mailSender.setPort(587);
-//
-//        mailSender.setUsername("my.gmail@gmail.com");
-//        mailSender.setPassword("password");
-//
-//        Properties props = mailSender.getJavaMailProperties();
-//        props.put("mail.transport.protocol", "smtp");
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.debug", "true");
-//
-//        return mailSender;
-//    }
-//}
+@Configuration
+public class EmailConfiguration {
+    @Bean
+    public AmazonSimpleEmailService amazonMailService() {
+        AmazonSimpleEmailService client =
+        AmazonSimpleEmailServiceClientBuilder.standard()
+        // Replace US_WEST_2 with the AWS Region you're using for
+        // Amazon SES.
+        //.withRegion(Regions.US_WEST_2)
+        .build();
+
+        return client;
+    }
+}

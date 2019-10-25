@@ -63,7 +63,7 @@ configure(allprojects) { project ->
         implementation misc.swagger
         implementation misc.swaggerUI
         implementation misc.awsSdk
-        
+
         annotationProcessor utils.lombok
     }
 }

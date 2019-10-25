@@ -4,6 +4,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
 import com.hillel.evo.adviser.email.dto.MessageDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
@@ -16,16 +17,16 @@ import org.springframework.stereotype.Service;
 public class AWSEmailService implements EmailService {
     @Value("${spring.mail.username}")
     private String userName;
+    private AmazonSimpleEmailService client;
+
+    @Autowired
+    public AWSEmailService(AmazonSimpleEmailService client) {
+        this.client = client;
+    }
 
     @Override
     public void sendMessage(MessageDto dto) {
         try {
-            AmazonSimpleEmailService client =
-                    AmazonSimpleEmailServiceClientBuilder.standard()
-                            // Replace US_WEST_2 with the AWS Region you're using for
-                            // Amazon SES.
-                            //.withRegion(Regions.US_WEST_2)
-                            .build();
             SendEmailRequest request = new SendEmailRequest()
                     .withDestination(
                             new Destination().withToAddresses(dto.getToAddresses()))
