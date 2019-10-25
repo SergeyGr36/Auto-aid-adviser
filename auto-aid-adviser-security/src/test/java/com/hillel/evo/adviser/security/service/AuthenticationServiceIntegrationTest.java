@@ -28,24 +28,10 @@ public class AuthenticationServiceIntegrationTest {
     private static final String PASSWORD = "testtest123";
 
     @Autowired
-    ApplicationContext context;
-
-//    @Autowired
-//    private JwtService jwtService;
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-//
-//    @Autowired
-//    private JwtPropertyConfiguration jwtPropertyConfiguration;
-
-    @Autowired
     private AuthenticationService authenticationService;
 
     @Test
     public void whenValidCredentialsProvided_thenUserIsAuthenticated() {
-
-        Arrays.stream(context.getBeanDefinitionNames()).forEach(name -> System.out.println(name));
 
     Assertions.assertNotNull(authenticationService);
 
