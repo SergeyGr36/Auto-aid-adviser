@@ -50,6 +50,8 @@ configure(allprojects) { project ->
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
+
+        compileOnly utils.lombok
         runtimeOnly db.h2
         runtimeOnly  db.postgres
         runtimeOnly db.awsSecretsmanager
@@ -78,6 +80,8 @@ project(':search-service') {
         implementation hibernate.search
         implementation hibernate.em
         implementation hibernate.spatial
+
+        implementation project(":user-service")
     }
 }
 

@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.search.config;
+package com.hillel.evo.adviser.search.configuration;
 
 import org.hibernate.Session;
 import org.hibernate.search.Search;
@@ -23,8 +23,8 @@ public class HibernateSearchConfig {
     @PostConstruct
     @Transactional
     public void reindex() {
-        var fullTextEntityManager = Search.getFullTextSession((Session)entityManager.getDelegate());
         if (Boolean.parseBoolean(environment.getProperty("spring.jpa.properties.hibernate.search.reindex", "false"))) {
+            var fullTextEntityManager = Search.getFullTextSession((Session)entityManager.getDelegate());
             try {
                 fullTextEntityManager.createIndexer().startAndWait();
             } catch (InterruptedException e) {
