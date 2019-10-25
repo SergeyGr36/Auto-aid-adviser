@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class AuthenticationServiceTest {
+public class AuthenticationServiceMockTest {
 
     private static final String USER_MAIL = "test@gmail.com";
     private static final String USER_PASSWORD = "testtest123";

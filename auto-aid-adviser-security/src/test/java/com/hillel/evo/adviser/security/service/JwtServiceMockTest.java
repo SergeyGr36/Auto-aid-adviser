@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class JwtServiceTest {
+public class JwtServiceMockTest {
 
     private final static String TEST_KEY = "test-key";
     private final static Long USER_ID = 100L;
