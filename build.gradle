@@ -17,7 +17,7 @@ configure(allprojects) { project ->
     apply plugin: 'io.spring.dependency-management'
     apply from: "${rootProject.projectDir}/buildSrc/dependencies.gradle"
     apply from: "${rootProject.projectDir}/buildSrc/analyze.gradle"
-    
+
     sourceCompatibility = 11
 
     repositories extRepositories
@@ -64,6 +64,8 @@ configure(allprojects) { project ->
         
         annotationProcessor utils.lombok
 
+        implementation db.postgres
+        testImplementation db.h2
     }
 }
 
@@ -83,7 +85,11 @@ project(":auto-aid-adviser-main") {
 
     dependencies {
         implementation project(':search-service')
+        implementation project(":user-service")
     }
 }
 
-
+project(":user-service") {
+    dependencies {
+    }
+}
