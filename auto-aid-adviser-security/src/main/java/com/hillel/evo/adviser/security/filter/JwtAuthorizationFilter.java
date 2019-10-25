@@ -4,6 +4,8 @@ package com.hillel.evo.adviser.security.filter;
 import com.hillel.evo.adviser.security.handler.JwtEntryPointUnauthorizedHandler;
 import com.hillel.evo.adviser.security.service.SecurityUserDetailsService;
 import com.hillel.evo.adviser.security.service.JwtService;
+import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -24,17 +25,18 @@ import java.io.IOException;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    private final transient AdviserUserDetailRepository repository;
     private final transient JwtService jwtService;
     private final transient SecurityUserDetailsService detailsService;
-    private final transient JwtEntryPointUnauthorizedHandler authEntryPoint;
 
     @Autowired
-    public JwtAuthorizationFilter(final JwtService jwtService,
+    public JwtAuthorizationFilter(AdviserUserDetailRepository repository,
+                                  final JwtService jwtService,
                                   final SecurityUserDetailsService detailsService,
                                   final JwtEntryPointUnauthorizedHandler authEntryPoint) {
+        this.repository = repository;
         this.jwtService = jwtService;
         this.detailsService = detailsService;
-        this.authEntryPoint = authEntryPoint;
     }
 
     @Override
@@ -44,21 +46,29 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         final String accessToken = jwtService.getTokenFromRequest(request);
 
-        if (StringUtils.hasText(accessToken) && jwtService.tokenIsValid(accessToken)) {
+        Long id = jwtService.getUserIdFromToken(accessToken);
 
-            Long id = jwtService.getUserIdFromToken(accessToken);
-            UserDetails userDetails = detailsService.loadUserByUsername("username");
+        AdviserUserDetails user = repository.getOne(id);
 
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities()
-                    );
+        UserDetails userDetails = detailsService.loadUserByUsername(user.getEmail());
 
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
+        setSecurityContext(userDetails);
 
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * Creates a trusted Authentication object (isAuthenticated = true) from userDetails
+     * and writes it to the security context.
+     * @param userDetails
+     */
+    private void setSecurityContext(UserDetails userDetails) {
+
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }
