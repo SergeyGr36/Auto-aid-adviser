@@ -8,9 +8,11 @@ import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.userprofile.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@Service
 public class RegistrationService {
 
     final private transient UserService userService;
