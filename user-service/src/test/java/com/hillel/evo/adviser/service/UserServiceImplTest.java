@@ -1,15 +1,14 @@
-package com.hillel.evo.adviser.userprofile.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.userprofile.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
+import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 

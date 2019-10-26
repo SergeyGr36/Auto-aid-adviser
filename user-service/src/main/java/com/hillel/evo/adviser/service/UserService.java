@@ -1,8 +1,8 @@
-package com.hillel.evo.adviser.userprofile.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.userprofile.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
+import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
 
 import java.util.Optional;
 

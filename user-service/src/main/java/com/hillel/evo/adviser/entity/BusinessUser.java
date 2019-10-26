@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.userprofile.entity;
+package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
