@@ -1,11 +1,10 @@
-package com.hillel.evo.adviser.security.service;
+package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.dto.ActivationResponseDto;
 import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
+import com.hillel.evo.adviser.dto.RegistrationResponseDto;
 import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.security.dto.ActivationResponseDto;
-import com.hillel.evo.adviser.security.dto.RegistrationResponseDto;
-import com.hillel.evo.adviser.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +12,12 @@ import org.springframework.stereotype.Service;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-public class RegistrationService {
+public class PasswordEncodingRegistrationService {
 
     final private transient UserService userService;
     final private transient PasswordEncoder encoder;
 
-    public RegistrationService(UserService userService, PasswordEncoder encoder) {
+    public PasswordEncodingRegistrationService(UserService userService, PasswordEncoder encoder) {
         this.userService = userService;
         this.encoder = encoder;
     }

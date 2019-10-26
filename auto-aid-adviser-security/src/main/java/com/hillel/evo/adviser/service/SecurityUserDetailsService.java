@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.security.service;
+package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;

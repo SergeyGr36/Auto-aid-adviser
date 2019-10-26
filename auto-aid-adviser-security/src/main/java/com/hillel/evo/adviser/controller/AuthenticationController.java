@@ -1,8 +1,8 @@
-package com.hillel.evo.adviser.security.controller;
+package com.hillel.evo.adviser.controller;
 
-import com.hillel.evo.adviser.security.dto.LoginRequestDto;
-import com.hillel.evo.adviser.security.dto.LoginResponseDto;
-import com.hillel.evo.adviser.security.service.AuthenticationService;
+import com.hillel.evo.adviser.dto.LoginRequestDto;
+import com.hillel.evo.adviser.dto.LoginResponseDto;
+import com.hillel.evo.adviser.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +26,15 @@ public class AuthenticationController {
     }
 
     /**
+     * Authenticates the user with provided credentials - email and password.
+     * If authentication fails, returns status 403.
      *
-     * @param authRequest
-     * @param response
-     * @return token user
+     * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
+     * Jwt holds user id.
+     * @param loginRequestDTO the request, containing user credentials.
+     * @return An http response with jwt token.
+     *
+     * @throws org.springframework.security.core.AuthenticationException
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> authenticateUser(@Valid @RequestBody final LoginRequestDto loginRequestDTO) {

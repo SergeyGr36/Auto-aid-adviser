@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.security.handler;
+package com.hillel.evo.adviser.handler;
 
 
 import org.springframework.security.core.AuthenticationException;

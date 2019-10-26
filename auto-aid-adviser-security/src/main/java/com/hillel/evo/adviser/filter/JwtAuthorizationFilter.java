@@ -1,11 +1,11 @@
-package com.hillel.evo.adviser.security.filter;
+package com.hillel.evo.adviser.filter;
 
 
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.handler.JwtEntryPointUnauthorizedHandler;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.security.handler.JwtEntryPointUnauthorizedHandler;
-import com.hillel.evo.adviser.security.service.SecurityUserDetailsService;
-import com.hillel.evo.adviser.security.service.JwtService;
+import com.hillel.evo.adviser.service.SecurityUserDetailsService;
+import com.hillel.evo.adviser.service.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

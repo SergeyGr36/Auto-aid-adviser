@@ -1,9 +1,11 @@
-package com.hillel.evo.adviser.security.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
-import com.hillel.evo.adviser.security.dto.LoginRequestDto;
-import com.hillel.evo.adviser.security.dto.LoginResponseDto;
+import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
+import com.hillel.evo.adviser.dto.LoginRequestDto;
+import com.hillel.evo.adviser.dto.LoginResponseDto;
 
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,13 +20,16 @@ public class AuthenticationService {
     private final transient JwtService jwtService;
     private final transient AuthenticationManager authenticationManager;
     private final transient JwtPropertyConfiguration jwtPropertyConfiguration;
+    private final transient AdviserUserDetailRepository userRepository;
 
     public AuthenticationService(JwtService jwtService,
                                  AuthenticationManager authenticationManager,
-                                 JwtPropertyConfiguration jwtPropertyConfiguration) {
+                                 JwtPropertyConfiguration jwtPropertyConfiguration,
+                                 AdviserUserDetailRepository userRepository) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.jwtPropertyConfiguration = jwtPropertyConfiguration;
+        this.userRepository = userRepository;
     }
 
 
@@ -46,7 +51,9 @@ public class AuthenticationService {
 
         authenticateUser(userName, password);
 
-        long userId = 1;
+        AdviserUserDetails user = userRepository.findByEmail(userName).get();
+
+        long userId = user.getId();
 
         String accessToken = jwtService.generateAccessToken(userId, jwtPropertyConfiguration.getExpirationMillis());
 

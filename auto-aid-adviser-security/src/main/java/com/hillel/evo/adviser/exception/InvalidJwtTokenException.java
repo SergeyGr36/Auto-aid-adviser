@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.security.exception;
+package com.hillel.evo.adviser.exception;
 
 public class InvalidJwtTokenException extends RuntimeException {
     public InvalidJwtTokenException() {

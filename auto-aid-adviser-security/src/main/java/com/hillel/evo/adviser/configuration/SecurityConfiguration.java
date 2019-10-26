@@ -1,8 +1,8 @@
-package com.hillel.evo.adviser.security.configuration;
+package com.hillel.evo.adviser.configuration;
 
-import com.hillel.evo.adviser.security.filter.JwtAuthorizationFilter;
-import com.hillel.evo.adviser.security.handler.JwtEntryPointUnauthorizedHandler;
-import com.hillel.evo.adviser.security.service.SecurityUserDetailsService;
+import com.hillel.evo.adviser.handler.JwtEntryPointUnauthorizedHandler;
+import com.hillel.evo.adviser.filter.JwtAuthorizationFilter;
+import com.hillel.evo.adviser.service.SecurityUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

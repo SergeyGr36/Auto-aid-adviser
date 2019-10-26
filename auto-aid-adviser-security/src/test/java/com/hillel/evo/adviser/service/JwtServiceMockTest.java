@@ -1,7 +1,6 @@
-package com.hillel.evo.adviser.security.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
-import com.hillel.evo.adviser.security.service.JwtService;
+import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
 import io.jsonwebtoken.Jwts;
 import org.junit.Assert;
 import org.junit.Before;

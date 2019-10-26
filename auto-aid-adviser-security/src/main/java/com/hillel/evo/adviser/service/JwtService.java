@@ -1,7 +1,7 @@
-package com.hillel.evo.adviser.security.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.security.configuration.JwtPropertyConfiguration;
-import com.hillel.evo.adviser.security.exception.InvalidJwtTokenException;
+import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
+import com.hillel.evo.adviser.exception.InvalidJwtTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -56,7 +56,7 @@ public class JwtService {
      *
      * @throws io.jsonwebtoken.ExpiredJwtException  if the specified JWT is a Claims JWT
      * and the Claims has an expiration time before the time this method is invoked.
-     * <p> {@link com.hillel.evo.adviser.security.exception.InvalidJwtTokenException}
+     * <p> {@link InvalidJwtTokenException}
      * - if the token is null, not a jwt, or invalid for any other reason.
      */
     public Long getUserIdFromToken(final String token) {
@@ -94,7 +94,7 @@ public class JwtService {
      * @return true, if the token is valid. Otherwise exceptions are thrown.
      * @throws io.jsonwebtoken.ExpiredJwtException  if the specified JWT is a Claims JWT
      * and the Claims has an expiration time before the time this method is invoked.
-     * <p> {@link com.hillel.evo.adviser.security.exception.InvalidJwtTokenException}
+     * <p> {@link InvalidJwtTokenException}
      * - if the token is null, not a jwt, or invalid for any other reason.
      */
     public boolean tokenIsValid(final String token) {
@@ -111,7 +111,7 @@ public class JwtService {
      *
      * @throws io.jsonwebtoken.ExpiredJwtException  if the specified JWT is a Claims JWT
      * and the Claims has an expiration time before the time this method is invoked.
-     * <p> {@link com.hillel.evo.adviser.security.exception.InvalidJwtTokenException}
+     * <p> {@link InvalidJwtTokenException}
      * - if the token is null, not a jwt, or invalid for any other reason.
      */
     private Claims parseToken(final String token) {
