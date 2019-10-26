@@ -1,11 +1,11 @@
 package com.hillel.evo.adviser.security.service;
 
+import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
+import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.security.dto.ActivationResponseDto;
 import com.hillel.evo.adviser.security.dto.RegistrationResponseDto;
-import com.hillel.evo.adviser.userprofile.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.userprofile.service.UserService;
+import com.hillel.evo.adviser.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

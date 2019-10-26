@@ -1,7 +1,7 @@
 package com.hillel.evo.adviser.security.service;
 
-import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 

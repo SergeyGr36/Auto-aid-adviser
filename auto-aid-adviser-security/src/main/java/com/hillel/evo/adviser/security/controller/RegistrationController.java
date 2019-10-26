@@ -1,9 +1,9 @@
 package com.hillel.evo.adviser.security.controller;
 
+import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
+import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
 import com.hillel.evo.adviser.security.dto.RegistrationResponseDto;
 import com.hillel.evo.adviser.security.service.RegistrationService;
-import com.hillel.evo.adviser.userprofile.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
