@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.config;
+package com.hillel.evo.adviser.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
