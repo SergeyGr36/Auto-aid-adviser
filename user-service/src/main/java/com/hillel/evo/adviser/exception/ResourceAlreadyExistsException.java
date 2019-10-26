@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.userprofile.exception;
+package com.hillel.evo.adviser.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,15 +1,15 @@
-package com.hillel.evo.adviser.userprofile.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.userprofile.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.dto.SimpleUserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.dto.UserRegistrationDto;
-import com.hillel.evo.adviser.userprofile.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.userprofile.entity.BusinessUser;
-import com.hillel.evo.adviser.userprofile.entity.SimpleUser;
-import com.hillel.evo.adviser.userprofile.enums.RoleUser;
-import com.hillel.evo.adviser.userprofile.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.userprofile.repository.BusinessUserRepository;
-import com.hillel.evo.adviser.userprofile.repository.SimpleUserRepository;
+import com.hillel.evo.adviser.entity.BusinessUser;
+import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
+import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.dto.UserRegistrationDto;
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.entity.SimpleUser;
+import com.hillel.evo.adviser.enums.RoleUser;
+import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.repository.BusinessUserRepository;
+import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

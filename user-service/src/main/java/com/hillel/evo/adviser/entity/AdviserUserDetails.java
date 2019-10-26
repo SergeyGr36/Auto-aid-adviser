@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.userprofile.entity;
+package com.hillel.evo.adviser.entity;
 
-import com.hillel.evo.adviser.userprofile.enums.RoleUser;
+import com.hillel.evo.adviser.enums.RoleUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -10,9 +10,8 @@ version '1.0-SNAPSHOT'
 
 configure(allprojects) { project ->
 
-    apply plugin: 'java'
-    apply plugin: 'java-library'
     apply plugin: 'application'
+    apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply from: "${rootProject.projectDir}/buildSrc/dependencies.gradle"
@@ -33,41 +32,32 @@ configure(allprojects) { project ->
         failFast = false
     }
 
-    application {
-        mainClassName = 'com.hillel.evo.adviser.starter.AdviserStarter'
+    mainClassName = 'com.hillel.evo.adviser.AdviserStarter'
+
+    springBoot {
+        mainClassName = 'com.hillel.evo.adviser.AdviserStarter'
     }
 
-    bootJar {
-        manifest {
-            attributes 'Start-Class': 'com.hillel.evo.adviser.starter.AdviserStarter'
-        }
-    }
-
-    bootRun {
-        systemProperties = System.properties
-    }
-    
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
-
-        compileOnly utils.lombok
-        runtimeOnly db.h2
-        runtimeOnly  db.postgres
-        runtimeOnly db.awsSecretsmanager
-
+        implementation utils.jaxbApi
+        implementation utils.jaxbImpl
+        implementation utils.jaxbCore
         testImplementation boot.starterTest
-        testImplementation testing.junit5
-        testImplementation testing.junit5Platform
-        testImplementation testing.junit5Mockhito
 
+        runtimeOnly db.h2
+        runtimeOnly db.postgres
+        runtimeOnly db.awsSecretsmanager
         implementation misc.swagger
         implementation misc.swaggerUI
-        
+
         annotationProcessor utils.lombok
+        compileOnly utils.lombok
 
         implementation db.postgres
         testImplementation db.h2
+
     }
 }
 
@@ -76,24 +66,38 @@ wrapper {
 }
 
 project(':search-service') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
     dependencies {
         implementation hibernate.search
         implementation hibernate.em
         implementation hibernate.spatial
 
-        implementation project(":user-service")
-    }
-}
-
-project(":auto-aid-adviser-main") {
-
-    dependencies {
-        implementation project(':search-service')
-        implementation project(":user-service")
     }
 }
 
 project(":user-service") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+}
+
+project(":auto-aid-adviser-main") {
+    jar {
+        enabled = true
+    }
+    bootJar {
+        classifier = 'boot'
+    }
     dependencies {
+        implementation project(':user-service')
+        implementation project(':search-service')
     }
 }
