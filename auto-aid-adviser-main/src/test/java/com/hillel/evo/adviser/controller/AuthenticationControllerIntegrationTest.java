@@ -6,34 +6,29 @@ import com.hillel.evo.adviser.configuration.SecurityConfiguration;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.List;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = {SecurityAppStarter.class, SecurityConfiguration.class})
-
+@AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class AuthenticationControllerTest {
+class AuthenticationControllerIntegrationTest {
 
     private static final String EMAIL = "test@gmail.com";
     private static final String PASSWORD = "testtest123";
 
     private LoginRequestDto loginRequestDto;
 
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -52,11 +47,6 @@ class AuthenticationControllerTest {
     public void setUp() {
         encodeTestUserPassword();
         loginRequestDto = createTestLoginRequestDto();
-
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
     }
 
     @Test
@@ -80,9 +70,5 @@ class AuthenticationControllerTest {
         String password = user.getPassword();
         user.setPassword(encoder.encode(password));
         userRepository.save(user);
-        List<AdviserUserDetails> users = userRepository.findAll();
-        users.stream().forEach(usr -> System.out.println(user.toString()));
-        Assertions.assertEquals(1, users.size());
     }
-
 }
