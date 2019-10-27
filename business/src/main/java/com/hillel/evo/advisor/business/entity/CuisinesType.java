@@ -15,5 +15,6 @@ public class CuisinesType {
     @NotNull
     private String type;
     @ManyToOne
+    @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 }
