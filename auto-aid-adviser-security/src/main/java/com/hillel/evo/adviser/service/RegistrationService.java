@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-public class PasswordEncodingRegistrationService {
+public class RegistrationService {
 
     final private transient UserService userService;
     final private transient PasswordEncoder encoder;
 
-    public PasswordEncodingRegistrationService(UserService userService, PasswordEncoder encoder) {
+    public RegistrationService(UserService userService, PasswordEncoder encoder) {
         this.userService = userService;
         this.encoder = encoder;
     }
