@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.email.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.email.dto.MessageDto;
+import com.hillel.evo.adviser.parameters.MessageParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,7 +22,7 @@ public class DefaultEmailService implements EmailService {
     }
 
     @Override
-    public void sendMessage(MessageDto dto) {
+    public void sendMessage(MessageParameters dto) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

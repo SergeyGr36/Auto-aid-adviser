@@ -1,9 +1,8 @@
-package com.hillel.evo.adviser.email.service;
+package com.hillel.evo.adviser.service;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
-import com.hillel.evo.adviser.email.dto.MessageDto;
+import com.hillel.evo.adviser.parameters.MessageParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,7 +24,7 @@ public class AWSEmailService implements EmailService {
     }
 
     @Override
-    public void sendMessage(MessageDto dto) {
+    public void sendMessage(MessageParameters dto) {
         try {
             SendEmailRequest request = new SendEmailRequest()
                     .withDestination(
