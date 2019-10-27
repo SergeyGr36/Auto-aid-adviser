@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
@@ -18,7 +19,8 @@ import javax.persistence.Table;
 public class SimpleUser {
     @Id
     private Long id;
-    @OneToOne
+
+    @OneToOne (fetch = FetchType.LAZY)
     @MapsId
     private AdviserUserDetails userDetails;
 

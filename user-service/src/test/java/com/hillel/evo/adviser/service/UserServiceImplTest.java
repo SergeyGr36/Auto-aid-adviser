@@ -1,8 +1,11 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
+import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.enums.RoleUser;
+import com.hillel.evo.adviser.exception.ResourceAlreadyExistsException;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
@@ -31,73 +36,90 @@ public class UserServiceImplTest {
         //given
         final String activeCode = "asdf-1234-simple";
         //when
-        AdviserUserDetails aud = service.activation(activeCode).get();
+        AdviserUserDetailsDto dto = service.activation(activeCode);
         //then
-        assertNull(aud.getActivationCode());
-        assertTrue(aud.isActive());
+        assertNotNull(dto);
+        assertEquals(dto.getRoleUser(), RoleUser.ROLE_USER);
     }
 
     @Test
-    public void activation_returnNull() {
+    public void activation_returnThrows() {
         //given
         final String activeCode = "asdf-1234-xxxxx";
-        //when
-        AdviserUserDetails aud = service.activation(activeCode).orElse(null);
         //then
-        assertNull(aud);
+        assertThrows(ResourceNotFoundException.class, () -> service.activation(activeCode));
     }
 
     @Test
     public void registration_business_returnAUD() {
         //given
-        BusinessUserRegistrationDto dto = new BusinessUserRegistrationDto();
-        dto.setEmail("test@mail.com");
-        dto.setPassword("12345678");
+        UserRegistrationDto registrationDto = new UserRegistrationDto();
+        registrationDto.setEmail("test@mail.com");
+        registrationDto.setPassword("12345678");
+        registrationDto.setRole(RoleUser.ROLE_BUSINESS);
         //when
-        Optional<AdviserUserDetails> optional = service.registration(dto);
+        AdviserUserDetailsDto returnDto = service.registration(registrationDto);
         //then
-        assertTrue(optional.isPresent());
-        assertEquals(optional.get().getEmail(), dto.getEmail());
-        assertNotNull(optional.get().getActivationCode());
-        assertEquals(optional.get().isActive(), false);
+        assertNotNull(returnDto);
+        assertEquals(returnDto.getRoleUser(), RoleUser.ROLE_BUSINESS);
     }
 
     @Test
-    public void registration_business_returnEmptyOptital() {
+    public void registration_business_returnThrows() {
         //given
-        BusinessUserRegistrationDto dto = new BusinessUserRegistrationDto();
-        dto.setEmail("bvg@mail.com");
-        dto.setPassword( "12345678");
-        //when
-        Optional<AdviserUserDetails> optional = service.registration(dto);
+        UserRegistrationDto registrationDto = new UserRegistrationDto();
+        registrationDto.setEmail("bvg@mail.com");
+        registrationDto.setPassword( "12345678");
+        registrationDto.setRole(RoleUser.ROLE_BUSINESS);
         //then
-        assertFalse(optional.isPresent());
+        assertThrows(ResourceAlreadyExistsException.class, () -> service.registration(registrationDto));
     }
 
     @Test
     public void registration_simple_returnAUD() {
         //given
-        SimpleUserRegistrationDto dto = new SimpleUserRegistrationDto();
-        dto.setEmail("test@mail.com");
-        dto.setPassword("12345678");
+        UserRegistrationDto registrationDto = new UserRegistrationDto();
+        registrationDto.setEmail("test@mail.com");
+        registrationDto.setPassword("12345678");
+        registrationDto.setRole(RoleUser.ROLE_USER);
         //when
-        Optional<AdviserUserDetails> optional = service.registration(dto);
+        AdviserUserDetailsDto returnDto = service.registration(registrationDto);
         //then
-        assertTrue(optional.isPresent());
-        assertEquals(optional.get().getEmail(), dto.getEmail());
-        assertNotNull(optional.get().getActivationCode());
-        assertEquals(optional.get().isActive(), false);
+        assertNotNull(returnDto);
+        assertEquals(returnDto.getRoleUser(), RoleUser.ROLE_USER);
     }
 
     @Test
-    public void registration_simple_returnEmptyOptital() {
+    public void registration_simple_returnThrows() {
         //given
-        SimpleUserRegistrationDto dto = new SimpleUserRegistrationDto();
-        dto.setEmail("svg@mail.com");
-        dto.setPassword( "12345678");
-        //when
-        Optional<AdviserUserDetails> optional = service.registration(dto);
+        UserRegistrationDto registrationDto = new UserRegistrationDto();
+        registrationDto.setEmail("svg@mail.com");
+        registrationDto.setPassword( "12345678");
+        registrationDto.setRole(RoleUser.ROLE_USER);
         //then
-        assertFalse(optional.isPresent());
+        assertThrows(ResourceAlreadyExistsException.class, () -> service.registration(registrationDto));
     }
+
+    @Test
+    public void registration_validationMail() {
+        //given
+        UserRegistrationDto registrationDto = new UserRegistrationDto();
+        registrationDto.setEmail("svg-mail.com");
+        registrationDto.setPassword( "12345678");
+        registrationDto.setRole(RoleUser.ROLE_USER);
+        //then
+        assertThrows(ConstraintViolationException.class, () -> service.registration(registrationDto));
+    }
+
+    @Test
+    public void registration_validationPassword() {
+        //given
+        UserRegistrationDto registrationDto = new UserRegistrationDto();
+        registrationDto.setEmail("svg-mail.com");
+        registrationDto.setPassword( "123");
+        registrationDto.setRole(RoleUser.ROLE_USER);
+        //then
+        assertThrows(ConstraintViolationException.class, () -> service.registration(registrationDto));
+    }
+
 }

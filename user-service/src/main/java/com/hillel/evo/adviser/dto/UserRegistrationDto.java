@@ -1,18 +1,22 @@
 package com.hillel.evo.adviser.dto;
 
+import com.hillel.evo.adviser.enums.RoleUser;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Data
-public abstract class UserRegistrationDto {
+public class UserRegistrationDto {
     @Email
-    @NotNull
+    @NotEmpty
     private String email;
 
-    @Min(8)
-    @NotNull
+    @NotEmpty
+    @Size(min = 8)
     private String password;
+
+    @NotEmpty
+    private RoleUser role;
 }
