@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.search.service;
+package com.hillel.evo.adviser.search;
 
 //import javafx.util.Pair;
 

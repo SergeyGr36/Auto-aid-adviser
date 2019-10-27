@@ -58,6 +58,9 @@ configure(allprojects) { project ->
         implementation db.postgres
         testImplementation db.h2
 
+        testImplementation testing.junit5
+        testImplementation utils.lombok
+
     }
 }
 

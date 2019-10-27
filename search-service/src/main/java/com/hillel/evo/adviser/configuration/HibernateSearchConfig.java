@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.search.configuration;
+package com.hillel.evo.adviser.configuration;
 
 import org.hibernate.Session;
 import org.hibernate.search.Search;
@@ -21,12 +21,18 @@ public class HibernateSearchConfig {
     private transient EntityManager entityManager;
 
     @PostConstruct
-    @Transactional
     public void reindex() {
-        if (Boolean.parseBoolean(environment.getProperty("spring.jpa.properties.hibernate.search.reindex", "false"))) {
+        boolean reindex = Boolean.parseBoolean(environment.getProperty("spring.jpa.properties.hibernate.search.reindex", "false"));
+        reindex(reindex, Object.class);
+    }
+
+    @Transactional
+    public void reindex(boolean reindex, Class clazz) {
+
+        if (reindex) {
             var fullTextEntityManager = Search.getFullTextSession((Session)entityManager.getDelegate());
             try {
-                fullTextEntityManager.createIndexer().startAndWait();
+                fullTextEntityManager.createIndexer(clazz).startAndWait();
             } catch (InterruptedException e) {
                 System.out.println(
                         "An error occurred trying to build the serach index: " +
@@ -34,5 +40,7 @@ public class HibernateSearchConfig {
             }
         }
     }
+
+
 
 }

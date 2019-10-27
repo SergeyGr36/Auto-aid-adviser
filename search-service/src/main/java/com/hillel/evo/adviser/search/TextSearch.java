@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.search.service;
+package com.hillel.evo.adviser.search;
 
 import java.util.AbstractMap;
 import java.util.List;
