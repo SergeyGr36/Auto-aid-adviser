@@ -45,13 +45,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         final String accessToken = jwtService.getTokenFromRequest(request);
 
-        Long id = jwtService.getUserIdFromToken(accessToken);
+        if (accessToken != null) {
+            Long id = jwtService.getUserIdFromToken(accessToken);
 
-        AdviserUserDetails user = repository.getOne(id);
+            AdviserUserDetails user = repository.getOne(id);
 
-        UserDetails userDetails = detailsService.loadUserByUsername(user.getEmail());
+            UserDetails userDetails = detailsService.loadUserByUsername(user.getEmail());
 
-        setSecurityContext(userDetails);
+            setSecurityContext(userDetails);
+        } else {
+            SecurityContextHolder.clearContext();
+        }
 
         filterChain.doFilter(request, response);
     }

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.ResponseEntity.status;
-
 @RestController
 @RequestMapping("/")
 public class AuthenticationController {
@@ -27,17 +25,17 @@ public class AuthenticationController {
 
     /**
      * Authenticates the user with provided credentials - email and password.
-     * If authentication fails, returns status 403.
+     * If authentication fails, returns status 401.
      *
      * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
      * Jwt holds user id.
      * @param loginRequestDTO the request, containing user credentials.
-     * @return An http response with jwt token.
-     *
-     * @throws org.springframework.security.core.AuthenticationException
+     * @return An http response with jwt token, or an error status 401.
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> authenticateUser(@Valid @RequestBody final LoginRequestDto loginRequestDTO) {
+    public ResponseEntity<LoginResponseDto> authenticateUser(
+            @Valid @RequestBody final LoginRequestDto loginRequestDTO) {
+
         return authenticationService.authenticateAndResponse(loginRequestDTO);
     }
 

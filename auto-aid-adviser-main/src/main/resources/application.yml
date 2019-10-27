@@ -42,3 +42,7 @@ server:
 
 email:
   service: default
+app:
+  jwt:
+    secretKey: super-secret-test-key
+    expirationMillis: 3600000
