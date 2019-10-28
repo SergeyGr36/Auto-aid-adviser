@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.email.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.email.dto.MessageDto;
+import com.hillel.evo.adviser.parameters.MessageParameters;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class DefaultEmailServiceTest {
     @Test
     public void sendMessage() {
         System.out.println("Service: " + service);
-        MessageDto dto = new MessageDto.Builder()
+        MessageParameters dto = new MessageParameters.Builder()
                 .setToAddresses("dir2000@ukr.net")
                 .setCcAddresses("formica277@gmail.com")
                 .setBccAddresses("dir2000@ukr.net")

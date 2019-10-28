@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.email.configuration;
+package com.hillel.evo.adviser.configuration;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
