@@ -5,7 +5,6 @@ import com.hillel.evo.adviser.business.entity.Business;
 import com.hillel.evo.adviser.business.entity.BusinessUser;
 import com.hillel.evo.adviser.business.repository.BusinessRepository;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

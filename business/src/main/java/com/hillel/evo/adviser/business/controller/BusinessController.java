@@ -2,10 +2,8 @@ package com.hillel.evo.adviser.business.controller;
 
 
 import com.hillel.evo.adviser.business.dto.BusinessDTO;
-import com.hillel.evo.adviser.business.entity.Business;
 import com.hillel.evo.adviser.business.entity.BusinessUser;
 import com.hillel.evo.adviser.business.services.BusinessCrudService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
