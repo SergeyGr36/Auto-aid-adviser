@@ -4,19 +4,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode(of = {"id"})
 public class BusinessUser {
+//    для пошуку по id треба було ітерабл
+    public Iterable<Long> getId;
     //    user details
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
-    private String type;
     @OneToMany(mappedBy = "businessUser")
     private List<Business> business;
+
 }

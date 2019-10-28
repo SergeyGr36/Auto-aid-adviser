@@ -25,10 +25,7 @@ public class Business {
     @Positive
     private double latitude;
 
-    private String contactPhone;
-//    на рахунок формату уточнить. Можливо timestamp
-    private String workingDays;
-    private String workingHours;
+    private String description; //such as working days, hours, contact phone...
 
     @OneToOne
     @JoinColumn(name = "business_type_id", referencedColumnName = "id")
