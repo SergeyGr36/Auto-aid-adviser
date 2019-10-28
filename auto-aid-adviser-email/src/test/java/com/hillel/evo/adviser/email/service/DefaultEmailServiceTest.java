@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 public class DefaultEmailServiceTest {
     //private static final JavaMailSender mockSender = mock(JavaMailSender.class);
     @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     EmailService service;
     @Test
     public void sendMessage() {

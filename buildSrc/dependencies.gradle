@@ -6,7 +6,7 @@ ext {
     springSecurityVersion = '5.2.0.RELEASE'
     springBatchVersion = '4.2.0.RELEASE'
     springIntegrationVersion = '5.2.0.RELEASE'
-    springBootVersion = '2.1.9.RELEASE'
+    springBootVersion = '2.2.0.RELEASE' //'2.1.9.RELEASE'
 
     //logging libs
     slf4jVersion = '1.7.25'
@@ -155,8 +155,8 @@ ext {
             starterThyme: "org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion",
             starterSecurity: "org.springframework.boot:spring-boot-starter-security:$springBootVersion",
             starterBatch: "org.springframework.boot:spring-boot-starter-batch:$springBootVersion",
-            starterWebflux: "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion"
-
+            starterWebflux: "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion",
+            annotationProcessor: "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"
     ]
 
     testing = [
