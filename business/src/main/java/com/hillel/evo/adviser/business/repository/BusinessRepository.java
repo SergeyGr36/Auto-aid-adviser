@@ -1,6 +1,6 @@
-package com.hillel.evo.advisor.business.repository;
+package com.hillel.evo.adviser.business.repository;
 
-import com.hillel.evo.advisor.business.entity.Business;
+import com.hillel.evo.adviser.business.entity.Business;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

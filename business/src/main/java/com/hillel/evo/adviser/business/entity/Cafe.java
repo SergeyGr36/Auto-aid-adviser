@@ -1,21 +1,27 @@
-package com.hillel.evo.advisor.business.entity;
+package com.hillel.evo.adviser.business.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Entity
+@EqualsAndHashCode(of = {"id"})
 public class Cafe {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @ManyToOne
     @JoinColumn(name = "businessType_id")
     private BusinessType businessType;
-    @OneToMany(mappedBy = "cafe")
+
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<CuisinesType> cuisinesType;
-    @OneToMany(mappedBy = "cafe")
+
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<ServicesForCafe> servicesForCafe;
 }

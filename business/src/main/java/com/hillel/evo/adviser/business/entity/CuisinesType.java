@@ -1,19 +1,19 @@
-package com.hillel.evo.advisor.business.entity;
+package com.hillel.evo.adviser.business.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-public class Transmission {
+@EqualsAndHashCode(of = {"id"})
+public class CuisinesType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(unique = true)
     @NotNull
     private String type;
-    @ManyToOne
-    @JoinColumn(name = "sto_id")
-    private Sto sto;
 }

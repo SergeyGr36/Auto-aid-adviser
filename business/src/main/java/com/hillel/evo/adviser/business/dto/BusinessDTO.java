@@ -1,4 +1,4 @@
-package com.hillel.evo.advisor.business.dto;
+package com.hillel.evo.adviser.business.dto;
 
 import lombok.Data;
 

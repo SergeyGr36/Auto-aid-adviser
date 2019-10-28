@@ -73,6 +73,15 @@ project(":user-service") {
     }
 }
 
+project(':business') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+}
+
 project(":auto-aid-adviser-main") {
     jar {
         enabled = true
@@ -82,7 +91,6 @@ project(":auto-aid-adviser-main") {
     }
     dependencies {
         implementation project(':user-service')
+        implementation project(':business')
     }
 }
-
-project(':business') {}
