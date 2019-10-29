@@ -5,11 +5,11 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "business_point")
+@Table(name = "business")
 @EqualsAndHashCode(of = {"id"})
 public class Business {
     @Id
@@ -19,23 +19,23 @@ public class Business {
     @NotNull
     private String name;
 
-    @Positive
-    private double longitude;
+    @Enumerated
+    private Location localization;
 
-    @Positive
-    private double latitude;
+    @Enumerated
+    private Contact contact;
 
-    private String contactPhone;
-//    на рахунок формату уточнить. Можливо timestamp
     private String workingDays;
     private String workingHours;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "business_type_id", referencedColumnName = "id")
-    private BusinessType businessType;
+    private TypeBusiness businessType;
 
     @ManyToOne
     @JoinColumn(name = "businessUser_id")
     private BusinessUser businessUser;
 
+    @ManyToMany
+    private List<ServiceBusiness> serviceBusinesses;
 }

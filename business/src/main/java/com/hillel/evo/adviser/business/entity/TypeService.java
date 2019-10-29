@@ -9,10 +9,14 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @EqualsAndHashCode(of = {"id"})
-public class Transmission {
+public class TypeService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotNull
     private String type;
+
+    @ManyToOne
+    private TypeBusiness typeBusiness;
 }

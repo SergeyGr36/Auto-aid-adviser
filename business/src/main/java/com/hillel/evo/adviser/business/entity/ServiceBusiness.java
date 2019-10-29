@@ -5,21 +5,17 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
-@Data
 @Entity
+@Data
 @EqualsAndHashCode(of = {"id"})
-public class BusinessType {
+public class ServiceBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @NotNull
     private String type;
-    @OneToOne(mappedBy = "businessType")
-    private Business business;
-    @OneToMany(mappedBy = "businessType")
-    private List<Sto> sto;
-    @OneToMany(mappedBy = "businessType")
-    private List<Cafe> cafe;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private TypeService typeService;
 }
