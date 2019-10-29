@@ -1,2 +1,15 @@
+spring:
+  mail:
+    host: email-smtp.eu-west-1.amazonaws.com
+    port: 587
+    username: xxxxxxxxxxxx@gmail.com
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: email-smtp.eu-west-1.amazonaws.com
+      connectiontimeout: 5000
+      timeout: 3000
+      writetimeout: 5000
+
 email:
   service: aws
