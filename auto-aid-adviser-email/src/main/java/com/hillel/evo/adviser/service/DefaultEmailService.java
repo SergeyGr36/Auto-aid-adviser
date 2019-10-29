@@ -1,7 +1,7 @@
-package com.hillel.evo.adviser.email.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.email.configuration.EmailConfigurationProperties;
-import com.hillel.evo.adviser.email.dto.MessageDto;
+import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
+import com.hillel.evo.adviser.parameters.MessageParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.FileSystemResource;
@@ -31,7 +31,8 @@ public class DefaultEmailService implements EmailService {
     }
 
     @Override
-    public boolean sendMessage(MessageDto dto) {
+    public boolean sendMessage(MessageParameters dto) {
+        System.out.println("DefaultEmailService!!!");
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -49,9 +50,10 @@ public class DefaultEmailService implements EmailService {
             }
             javaMailSender.send(message);
             return true;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            return false;
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+            //return false;
         }
     }
 }

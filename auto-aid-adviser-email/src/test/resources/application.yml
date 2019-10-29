@@ -13,4 +13,4 @@ spring:
       writetimeout: 5000
 
 email:
-  service: aws
+  service: default

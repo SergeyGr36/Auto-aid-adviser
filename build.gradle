@@ -29,6 +29,7 @@ configure(allprojects) { project ->
             events 'PASSED', 'FAILED', 'SKIPPED'
         }
         failFast = false
+        systemProperties = System.properties
     }
 
     mainClassName = 'com.hillel.evo.adviser.AdviserStarter'
@@ -37,6 +38,10 @@ configure(allprojects) { project ->
         mainClassName = 'com.hillel.evo.adviser.AdviserStarter'
     }
 
+    bootRun {
+        systemProperties = System.properties
+    }
+    
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa

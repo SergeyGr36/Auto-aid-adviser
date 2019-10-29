@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest
@@ -26,6 +28,6 @@ public class DefaultEmailServiceTest {
                 .setHtml("<H1>Test</H1>")
                 .addtAttachment("E:/Avant.png")
                 .build();
-        service.sendMessage(dto);
+        assertTrue(service.sendMessage(dto));
     }
 }
