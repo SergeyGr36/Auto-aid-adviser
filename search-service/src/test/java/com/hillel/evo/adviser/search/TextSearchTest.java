@@ -18,8 +18,7 @@ import java.util.List;
 
 @SpringBootTest(classes = SearchApp.class)
 @AutoConfigureTestEntityManager
-//@Sql({"/data-cars.sql"})
-public class EntitySearchTest {
+public class TextSearchTest {
 
     private TextSearch<Car> carTextSearch;
 
@@ -42,44 +41,44 @@ public class EntitySearchTest {
 
     @Test
     //@Transactional
-    @Sql(value = {"/data-cars.sql"})
+    @Sql(value = {"/data-aids.sql"})
     public void TestSearchText() {
 
         hibernateSearchConfig.reindex(true, Car.class);
-        var result = carTextSearch.search(Car.class, new AbstractMap.SimpleEntry<>("name", "BMW"));
+        var result = carTextSearch.search(Car.class, "name", "BMW");
 
         assertEquals(1, result.size());
     }
 
-    @Test
-    //@Transactional
-    @Sql({"/data-cars.sql"})
-    public void TestSearchTextAll() {
-
-        hibernateSearchConfig.reindex(true, Car.class);
-        List<AbstractMap.SimpleEntry<String, String>> list = new ArrayList<>();
-        list.add(new AbstractMap.SimpleEntry<>("name", "Mersedes"));
-        list.add(new AbstractMap.SimpleEntry<>("name", "Mersedes"));
-
-
-        var result = carTextSearch.searchAll(Car.class, list);
-
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    @Sql({"/data-cars.sql"})
-    public void TestSearchTextAny() {
-
-        hibernateSearchConfig.reindex(true, Car.class);
-        List<AbstractMap.SimpleEntry<String, String>> list = new ArrayList<>();
-        list.add(new AbstractMap.SimpleEntry<>("name", "Honda"));
-        list.add(new AbstractMap.SimpleEntry<>("name", "Kia"));
-
-        var result = carTextSearch.searchAny(Car.class, list);
-
-        assertEquals(2, result.size());
-    }
+//    @Test
+//    //@Transactional
+//    @Sql({"/data-cars.sql"})
+//    public void TestSearchTextAll() {
+//
+//        hibernateSearchConfig.reindex(true, Car.class);
+//        List<AbstractMap.SimpleEntry<String, String>> list = new ArrayList<>();
+//        list.add(new AbstractMap.SimpleEntry<>("name", "Mersedes"));
+//        list.add(new AbstractMap.SimpleEntry<>("name", "Mersedes"));
+//
+//
+//        var result = carTextSearch.searchAll(Car.class, list);
+//
+//        assertEquals(1, result.size());
+//    }
+//
+//    @Test
+//    @Sql({"/data-cars.sql"})
+//    public void TestSearchTextAny() {
+//
+//        hibernateSearchConfig.reindex(true, Car.class);
+//        List<AbstractMap.SimpleEntry<String, String>> list = new ArrayList<>();
+//        list.add(new AbstractMap.SimpleEntry<>("name", "Honda"));
+//        list.add(new AbstractMap.SimpleEntry<>("name", "Kia"));
+//
+//        var result = carTextSearch.searchAny(Car.class, list);
+//
+//        assertEquals(2, result.size());
+//    }
 
 
 }

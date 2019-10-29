@@ -2,7 +2,9 @@ package com.hillel.evo.adviser.configuration;
 
 import org.hibernate.Session;
 import org.hibernate.search.Search;
+import org.hibernate.search.jpa.FullTextEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Transactional;
