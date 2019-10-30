@@ -4,9 +4,24 @@ spring:
     url: jdbc-secretsmanager:postgresql://aaa-instance.cekerrljrgxg.eu-west-1.rds.amazonaws.com:5432/adviserdb
     username: dev/aid-adviser/postgres
 
+    mail:
+      host: email-smtp.eu-west-1.amazonaws.com
+      port: 587
+      username: xxxxxxxxxxxx@gmail.com
+      properties.mail.smtp:
+        auth: true
+        starttls.enable: true
+        ssl.trust: email-smtp.eu-west-1.amazonaws.com
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
   jpa:
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
+
+email:
+  service: aws

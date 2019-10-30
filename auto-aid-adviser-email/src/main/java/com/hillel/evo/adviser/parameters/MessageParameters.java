@@ -1,8 +1,5 @@
 package com.hillel.evo.adviser.parameters;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,8 +14,6 @@ public class MessageParameters {
     private String text;
     private String html;
 
-    private Set<String> attachments;
-
     @SuppressWarnings("PMD.BeanMembersShouldSerialize")
     public static class Builder {
         private String toAddresses;
@@ -27,7 +22,6 @@ public class MessageParameters {
         private String subject;
         private String text;
         private String html;
-        private Set<String> attachments = new HashSet<>();
 
         public Builder setToAddresses(String toAddresses) {
             this.toAddresses = toAddresses;
@@ -59,13 +53,8 @@ public class MessageParameters {
             return this;
         }
 
-        public Builder addtAttachment(String attachment) {
-            attachments.add(attachment);
-            return this;
-        }
-
         public MessageParameters build() {
-            return new MessageParameters(toAddresses, ccAddresses, bccAddresses, subject, text, html, attachments);
+            return new MessageParameters(toAddresses, ccAddresses, bccAddresses, subject, text, html);
         }
     }
 }

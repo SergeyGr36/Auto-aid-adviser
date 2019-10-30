@@ -32,7 +32,6 @@ public class DefaultEmailService implements EmailService {
 
     @Override
     public boolean sendMessage(MessageParameters dto) {
-        System.out.println("DefaultEmailService!!!");
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -43,17 +42,11 @@ public class DefaultEmailService implements EmailService {
             helper.setSubject(dto.getSubject());
             helper.setText(dto.getText(), dto.getHtml());
             helper.setSentDate(new Date());
-
-            for (String pathToAttachment : dto.getAttachments()) {
-                FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
-                helper.addAttachment(file.getFilename(), file);
-            }
             javaMailSender.send(message);
             return true;
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-            //return false;
+            return false;
         }
     }
 }

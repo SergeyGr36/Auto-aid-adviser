@@ -26,7 +26,6 @@ public class AWSEmailService implements EmailService {
 
     @Override
     public boolean sendMessage(MessageParameters dto) {
-        System.out.println("AWSEmailService!!!");
         try {
             SendEmailRequest request = new SendEmailRequest()
                     .withDestination(
@@ -40,9 +39,6 @@ public class AWSEmailService implements EmailService {
                             .withSubject(new Content()
                                     .withCharset("UTF-8").withData(dto.getSubject())))
                     .withSource(emailProperties.getUsername());
-            // Comment or remove the next line if you are not using a
-            // configuration set
-            //.withConfigurationSetName(CONFIGSET);
             client.sendEmail(request);
             return true;
         } catch (Exception ex) {
