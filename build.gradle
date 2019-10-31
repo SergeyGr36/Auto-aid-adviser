@@ -29,7 +29,6 @@ configure(allprojects) { project ->
             events 'PASSED', 'FAILED', 'SKIPPED'
         }
         failFast = false
-        systemProperties = System.properties
     }
 
     mainClassName = 'com.hillel.evo.adviser.AdviserStarter'
