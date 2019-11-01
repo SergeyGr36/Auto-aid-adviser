@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.search;
+package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
 import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
