@@ -1,10 +1,12 @@
 package com.hillel.evo.adviser.controller;
 
+import com.hillel.evo.adviser.dto.ActivationResponseDto;
 import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
 import com.hillel.evo.adviser.dto.RegistrationResponseDto;
 import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
 import com.hillel.evo.adviser.service.RegistrationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,18 +24,18 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
-    @PostMapping("/register/user")
-    public ResponseEntity<RegistrationResponseDto> registerSimpleUser(
+    @PostMapping("user/register")
+    public ResponseEntity<RegistrationResponseDto> registerUser(
             @RequestBody @Valid SimpleUserRegistrationDto registrationDto) {
 
-        return ResponseEntity.status(OK).body(registrationService.registerSimpleUser(registrationDto));
+        return ResponseEntity.status(OK).body(registrationService.registerUser(registrationDto));
     }
 
 
-    @PostMapping("/register/businessuser")
-    public ResponseEntity<RegistrationResponseDto> registerBusinessUserUser(
-            @RequestBody @Valid BusinessUserRegistrationDto registrationDto) {
+    @PostMapping("user/activate/{activationCode}")
+    public ResponseEntity<ActivationResponseDto> activateUser(
+            @PathVariable String activationCode) {
 
-        return ResponseEntity.status(OK).body(registrationService.registerBusinessUser(registrationDto));
+        return registrationService.activateUser(activationCode);
     }
 }

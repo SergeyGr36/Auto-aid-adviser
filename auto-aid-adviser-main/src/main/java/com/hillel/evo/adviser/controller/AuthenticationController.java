@@ -25,7 +25,7 @@ public class AuthenticationController {
 
     /**
      * Authenticates the user with provided credentials - email and password.
-     * If authentication fails, returns status 401.
+     * If authentication fails, returns status 401 Unauthorized.
      *
      * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
      * Jwt holds user id.
