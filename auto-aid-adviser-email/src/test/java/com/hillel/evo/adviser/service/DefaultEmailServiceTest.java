@@ -1,11 +1,10 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
-import com.hillel.evo.adviser.parameters.MessageParameters;
+import com.hillel.evo.adviser.parameter.MessageParameters;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.internet.MimeMessage;
 
@@ -19,8 +18,9 @@ public class DefaultEmailServiceTest {
     private static final JavaMailSender mockSender = mock(JavaMailSender.class);
     private static final EmailConfigurationProperties mockProperties = mock(EmailConfigurationProperties.class);
     private static final MimeMessage mockMessage = mock(MimeMessage.class);
+    private static final TemplateService mockTemplateService = mock(TemplateService.class);
 
-    private EmailService service = new DefaultEmailService(mockSender, mockProperties);
+    private EmailService service = new DefaultEmailService(mockSender, mockProperties, mockTemplateService);
 
     @Test
     public void sendMessage() {
@@ -35,7 +35,10 @@ public class DefaultEmailServiceTest {
                 .setText("Test")
                 .setHtml("<H1>Test</H1>")
                 .build();
+        //when
         boolean successful = service.sendMessage(parameters);
+
+        //then
         assertTrue(successful);
     }
 }

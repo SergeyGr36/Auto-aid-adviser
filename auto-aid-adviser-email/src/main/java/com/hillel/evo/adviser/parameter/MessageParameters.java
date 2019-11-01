@@ -1,7 +1,10 @@
-package com.hillel.evo.adviser.parameters;
+package com.hillel.evo.adviser.parameter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashMap;
 
 @Getter
 @AllArgsConstructor
@@ -13,6 +16,8 @@ public class MessageParameters {
     private String subject;
     private String text;
     private String html;
+    private String nameOfTemplate;
+    private HashMap<String, String> templateParameters;
 
     @SuppressWarnings("PMD.BeanMembersShouldSerialize")
     public static class Builder {
@@ -22,6 +27,8 @@ public class MessageParameters {
         private String subject;
         private String text;
         private String html;
+        private String nameOfTemplate;
+        private HashMap<String, String> templateParameters;
 
         public Builder setToAddresses(String toAddresses) {
             this.toAddresses = toAddresses;
@@ -53,8 +60,17 @@ public class MessageParameters {
             return this;
         }
 
+        public void setNameOfTemplate(String nameOfTemplate) {
+            this.nameOfTemplate = nameOfTemplate;
+        }
+
+        public Builder addTemplateParameter(String key, String value) {
+            templateParameters.put(key, value);
+            return this;
+        }
+
         public MessageParameters build() {
-            return new MessageParameters(toAddresses, ccAddresses, bccAddresses, subject, text, html);
+            return new MessageParameters(toAddresses, ccAddresses, bccAddresses, subject, text, html, nameOfTemplate, templateParameters);
         }
     }
 }
