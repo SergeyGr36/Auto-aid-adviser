@@ -2,6 +2,8 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,11 +29,53 @@ public class SecurityUserDetailsService implements UserDetailsService {
         AdviserUserDetails user = repository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
 
+        return createUserDetailsFrom(user);
+    }
+
+    /**
+     * Creates the trusted authentication (isAuthenticated = true) for the user with provided id.
+     * @param userId - The id of the trusted user, that was previously authenticated.
+     *             For example, the bearer of jwt token or an activation code.
+     * @return the trusted authentication object.
+     */
+    public Authentication createTrustedAuthenticationWithUserId(Long userId) {
+
+        AdviserUserDetails user = repository.findById(userId).get();
+
+        return createTrustedAuthenticationWithUser(user);
+    }
+
+    /**
+     * Creates the trusted authentication (isAuthenticated = true) for the provided user.
+     * @param user - The trusted user, that was previously authenticated.
+     *             For example, the bearer of jwt token or an activation code.
+     * @return the trusted authentication object.
+     */
+    private Authentication createTrustedAuthenticationWithUser(AdviserUserDetails user) {
+
+        UserDetails userDetails = createUserDetailsFrom(user);
+
+        UsernamePasswordAuthenticationToken trustedAuthentication =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+
+        return trustedAuthentication;
+    }
+
+    /**
+     * Creates an instance of User Details interface with provided user
+     * @param user the user object, for which the user details is created
+     * @return
+     */
+    private UserDetails createUserDetailsFrom(AdviserUserDetails user) {
         return new UserDetails() {
+
+            private String userRole = user.getRole().toString();
 
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
-                return Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString()));
+                return Collections.singleton(new SimpleGrantedAuthority(userRole));
             }
 
             @Override

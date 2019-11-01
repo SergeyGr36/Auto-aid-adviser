@@ -30,13 +30,14 @@ public class JwtService {
     }
 
     /**
-     * Generates a jwt token with the user id and expiry date.
+     * Generates a jwt token with the user id.
+     * Expiration time is provided from jwt property config.
      * @param userId The user id to be written into token.
-     * @param expirationMillis expiration time in milliseconds.
      * @return The generated token.
      */
-    public String generateAccessToken(long userId, long expirationMillis) {
+    public String generateAccessToken(long userId) {
         final Date now = new Date();
+        final Long expirationMillis = jwtProperties.getExpirationMillis();
         final Date expiryDate = new Date(now.getTime() + expirationMillis);
         return Jwts.builder()
                 .setSubject(Long.toString(userId))
@@ -85,6 +86,7 @@ public class JwtService {
         if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
             return authorizationHeader.substring(TOKEN_PREFIX.length());
         }
+
         return null;
     }
 
@@ -97,7 +99,7 @@ public class JwtService {
      * <p> {@link InvalidJwtTokenException}
      * - if the token is null, not a jwt, or invalid for any other reason.
      */
-    public boolean tokenIsValid(final String token) {
+    public boolean isTokenValid(final String token) {
         parseToken(token);
         return true;
     }

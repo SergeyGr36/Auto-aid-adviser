@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
 import com.hillel.evo.adviser.dto.LoginResponseDto;
 
@@ -9,6 +8,7 @@ import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -19,17 +19,18 @@ public class AuthenticationService {
 
     private final transient JwtService jwtService;
     private final transient AuthenticationManager authenticationManager;
-    private final transient JwtPropertyConfiguration jwtPropertyConfiguration;
+
     private final transient AdviserUserDetailRepository userRepository;
+    private final transient SecurityUserDetailsService detailsService;
 
     public AuthenticationService(JwtService jwtService,
                                  AuthenticationManager authenticationManager,
-                                 JwtPropertyConfiguration jwtPropertyConfiguration,
-                                 AdviserUserDetailRepository userRepository) {
+                                 AdviserUserDetailRepository userRepository,
+                                 SecurityUserDetailsService detailsService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-        this.jwtPropertyConfiguration = jwtPropertyConfiguration;
         this.userRepository = userRepository;
+        this.detailsService = detailsService;
     }
 
 
@@ -49,13 +50,13 @@ public class AuthenticationService {
         final String userName = loginRequestDTO.getEmail();
         final String password = loginRequestDTO.getPassword();
 
-        authenticateUser(userName, password);
+        authenticateUserWithCredentials(userName, password);
 
         AdviserUserDetails user = userRepository.findByEmail(userName).get();
 
         long userId = user.getId();
 
-        String accessToken = jwtService.generateAccessToken(userId, jwtPropertyConfiguration.getExpirationMillis());
+        String accessToken = jwtService.generateAccessToken(userId);
 
         return ResponseEntity
                 .status(OK)
@@ -64,17 +65,18 @@ public class AuthenticationService {
     }
 
     /** Creates an untrusted (isAuthenticated = false) Authentication with user credentials,
-     * and calls AthenticationManager authenticate method.
+     * and relies on AthenticationManager authenticate method to authenticate user.
      * Throws org.springframework.security.core.AuthenticationException
      *
      * @param userName user email.
      * @param password user password.
      * @throws org.springframework.security.core.AuthenticationException
      */
-    private void authenticateUser(final String userName, final String password) {
+    private Authentication authenticateUserWithCredentials(final String userName, final String password) {
+
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userName, password);
 
-        authenticationManager.authenticate(authenticationToken);
+        return authenticationManager.authenticate(authenticationToken);
     }
 }
