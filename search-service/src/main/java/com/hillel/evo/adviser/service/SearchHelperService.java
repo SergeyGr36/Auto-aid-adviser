@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.search.QueryFactory;
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -10,7 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Service
-public class SearchService {
+public class SearchHelperService {
 
     @PersistenceContext
     private transient EntityManager entityManager;
@@ -25,20 +26,24 @@ public class SearchService {
                 .buildQueryBuilder().forEntity(clazz).get();
     }
 
-    public Query getTextQuery(Class clazz, String field, String value) {
-        return getQueryBuilder(clazz)
+    public QueryFactory getTextQuery(final Class clazz, final String field, final String value) {
+        QueryFactory result = () -> getQueryBuilder(clazz)
                 .keyword()
                 .onField(field)
                 .matching(value)
                 .createQuery();
+
+        return result;
     }
 
-    public Query getSpatialQuery(Class clazz, double radius, double latitude, double longitude) {
-        return getQueryBuilder(clazz)
+    public QueryFactory getSpatialQuery(Class clazz, double radius, double latitude, double longitude) {
+        QueryFactory result = () -> getQueryBuilder(clazz)
                 .spatial()
                 .within( radius, Unit.KM )
                 .ofLatitude( latitude )
                 .andLongitude( longitude )
                 .createQuery();
+
+        return result;
     }
 }

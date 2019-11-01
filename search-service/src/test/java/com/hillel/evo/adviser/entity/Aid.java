@@ -13,8 +13,6 @@ import javax.persistence.Table;
 @Entity
 @Indexed
 @Spatial
-//@Setter
-//@Getter
 @Table(name = "aids")
 public class Aid {
 

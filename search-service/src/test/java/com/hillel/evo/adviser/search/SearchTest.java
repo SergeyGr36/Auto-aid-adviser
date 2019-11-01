@@ -3,8 +3,7 @@ package com.hillel.evo.adviser.search;
 import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Aid;
-import com.hillel.evo.adviser.entity.Car;
-import com.hillel.evo.adviser.service.SearchService;
+import com.hillel.evo.adviser.service.SearchHelperService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +11,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEnti
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = SearchApp.class)
 @AutoConfigureTestEntityManager
-public class SpatialSearchTest {
+public class SearchTest {
 
     private TextSearch<Aid> aidTextSearch;
     private SpatialSearch<Aid> aidSpatialSearch;
     private CustomSearch<Aid> aidCustomSearch;
 
-    private SearchService searchService;
+    private SearchHelperService searchService;
 
     @Autowired
     public void setAidTextSearch(EntitySearch<Aid> aidTextSearch) {
@@ -44,7 +39,7 @@ public class SpatialSearchTest {
     }
 
     @Autowired
-    public void setSearchService(SearchService searchService) {
+    public void setSearchService(SearchHelperService searchService) {
         this.searchService = searchService;
     }
 
