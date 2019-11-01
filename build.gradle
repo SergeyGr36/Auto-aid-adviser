@@ -136,7 +136,7 @@ project(':auto-aid-adviser-security') {
         jar {
             enabled = true
         }
-        implementation project(":user-service")
+        implementation project(":auto-aid-adviser-user")
         implementation security.jwt
     }
 }
