@@ -64,7 +64,7 @@ wrapper {
 }
 
 
-project(":user-service") {
+project(":auto-aid-adviser-user") {
     bootJar {
         enabled = false
     }
@@ -81,6 +81,6 @@ project(":auto-aid-adviser-main") {
         classifier = 'boot'
     }
     dependencies {
-        implementation project(':user-service')
+        implementation project(':auto-aid-adviser-user')
     }
 }
