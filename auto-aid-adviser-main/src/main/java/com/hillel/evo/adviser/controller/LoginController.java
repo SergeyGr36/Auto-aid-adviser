@@ -14,12 +14,12 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/")
-public class AuthenticationController {
+public class LoginController {
 
     private final transient AuthenticationService authenticationService;
 
     @Autowired
-    public AuthenticationController(final AuthenticationService authService) {
+    public LoginController(final AuthenticationService authService) {
         this.authenticationService = authService;
     }
 

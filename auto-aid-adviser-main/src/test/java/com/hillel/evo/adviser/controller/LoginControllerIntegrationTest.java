@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class AuthenticationControllerIntegrationTest {
+class LoginControllerIntegrationTest {
 
     private static final String EMAIL = "test@gmail.com";
     private static final String PASSWORD = "testtest123";
