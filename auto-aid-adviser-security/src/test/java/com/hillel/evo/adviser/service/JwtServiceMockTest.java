@@ -34,7 +34,7 @@ public class JwtServiceMockTest {
     @Test
     public void whenGenerateAccessToken_thenTokenWithCorrectUserIdIsGenerated() {
 
-        String token = jwtService.generateAccessToken(USER_ID, EXPIRATION);
+        String token = jwtService.generateAccessToken(USER_ID);
 
         Long userIdFromToken = Long.parseLong(
                 Jwts.parser()
@@ -49,7 +49,7 @@ public class JwtServiceMockTest {
 
     @Test
     public void whenGetUserIdFromToken_thenCorrectUserIdIsReturned() {
-        String token = jwtService.generateAccessToken(USER_ID, EXPIRATION);
+        String token = jwtService.generateAccessToken(USER_ID);
 
         assertEquals(USER_ID, jwtService.getUserIdFromToken(token));
     }

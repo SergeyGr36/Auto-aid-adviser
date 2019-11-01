@@ -39,7 +39,7 @@ public class AuthenticationServiceIntegrationTest {
     private AdviserUserDetailRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @BeforeEach
     public void setUp() {

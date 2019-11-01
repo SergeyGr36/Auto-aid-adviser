@@ -31,10 +31,9 @@ public class AuthenticationServiceMockTest {
 
     @Mock private AuthenticationManager authenticationManager;
     @Mock private JwtService jwtService;
-    @Mock private JwtPropertyConfiguration jwtConfig;
     @Mock private AdviserUserDetailRepository userRepository;
     @Mock private AdviserUserDetails user;
-    @Mock private Authentication authentication;
+    @Mock private SecurityUserDetailsService detailsService;
 
     private AuthenticationService authenticationService;
     private LoginRequestDto loginRequestDto;
@@ -42,7 +41,7 @@ public class AuthenticationServiceMockTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        authenticationService = new AuthenticationService(jwtService, authenticationManager, jwtConfig, userRepository);
+        authenticationService = new AuthenticationService(jwtService, authenticationManager, userRepository, detailsService);
 
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail(USER_MAIL);
@@ -63,7 +62,7 @@ public class AuthenticationServiceMockTest {
     @Test
     public void whenAuthenticateAndResponce_thenResponseWithBodyIsReturned() {
         //given
-        when(jwtService.generateAccessToken(anyLong(), anyLong())).thenReturn(TOKEN);
+        when(jwtService.generateAccessToken(anyLong())).thenReturn(TOKEN);
         //when
         ResponseEntity<LoginResponseDto> responseEntity = authenticationService.authenticateAndResponse(loginRequestDto);
         LoginResponseDto responseDto = responseEntity.getBody();
