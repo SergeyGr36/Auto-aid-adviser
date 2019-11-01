@@ -45,6 +45,7 @@ configure(allprojects) { project ->
         implementation boot.starterWeb
         implementation boot.starterJpa
         implementation boot.starterMail
+        implementation boot.starterThyme        
         implementation utils.jaxbApi
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
