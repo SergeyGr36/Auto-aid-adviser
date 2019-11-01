@@ -12,5 +12,5 @@ public interface AdviserUserDetailRepository extends JpaRepository<AdviserUserDe
 
     Boolean existsByEmail(String email);
 
-
+    Optional<AdviserUserDetails> findByEmail(String email);
 }
