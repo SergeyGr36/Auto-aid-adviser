@@ -1,7 +1,6 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.search.QueryFactory;
-import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;

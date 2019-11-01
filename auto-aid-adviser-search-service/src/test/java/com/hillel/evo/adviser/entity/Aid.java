@@ -1,7 +1,5 @@
 package com.hillel.evo.adviser.entity;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.GenerationType;
