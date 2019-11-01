@@ -1,24 +1,25 @@
 package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hillel.evo.adviser.SecurityAppStarter;
-import com.hillel.evo.adviser.configuration.SecurityConfiguration;
+import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.service.EncoderService;
+import com.hillel.evo.adviser.service.JwtService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = {SecurityAppStarter.class, SecurityConfiguration.class})
+@SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class AuthenticationControllerIntegrationTest {
@@ -35,13 +36,13 @@ class AuthenticationControllerIntegrationTest {
     private AdviserUserDetailRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    EncoderService encoderService;
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
-    WebApplicationContext webApplicationContext;
+    JwtService jwtService;
 
     @BeforeEach
     public void setUp() {
@@ -50,12 +51,62 @@ class AuthenticationControllerIntegrationTest {
     }
 
     @Test
-    public void whenValidCredentialsProvided_thenUserIsAuthenticated() throws Exception {
+    public void whenValidCredentialsProvided_thenReturnStatusIsOk() throws Exception {
 
                 mockMvc.perform(post("/login")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(loginRequestDto)))
                         .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenValidCredentialsProvided_thenValidTokenIsReturned() throws Exception {
+
+        String jwtToken = mockMvc.perform(post("/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andReturn()
+                .getResponse()
+                .getHeader("Authorization")
+                .replace("Bearer ","");
+
+        Assertions.assertTrue(jwtService.isTokenValid(jwtToken));
+    }
+
+
+    @Test
+    public void whenWrongPasswordProvided_thenReturnStatusIsUnauthorized() throws Exception {
+
+        loginRequestDto.setPassword("WrongPassword555");
+
+        mockMvc.perform(post("/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void whenWrongUsernameProvided_thenReturnStatusIsUnauthorized() throws Exception {
+
+        loginRequestDto.setEmail("wrong@test.com");
+
+        mockMvc.perform(post("/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void whenAccountNotActivated_thenReturnStatusIsUnauthorized() throws Exception {
+
+        AdviserUserDetails user = userRepository.findByEmail(EMAIL).get();
+        user.setActive(false);
+        userRepository.save(user);
+
+        mockMvc.perform(post("/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andExpect(status().isUnauthorized());
     }
 
     private LoginRequestDto createTestLoginRequestDto() {
@@ -68,7 +119,7 @@ class AuthenticationControllerIntegrationTest {
     private void encodeTestUserPassword() {
         AdviserUserDetails user = userRepository.findByEmail(EMAIL).get();
         String password = user.getPassword();
-        user.setPassword(encoder.encode(password));
+        user.setPassword(encoderService.encode(password));
         userRepository.save(user);
     }
 }
