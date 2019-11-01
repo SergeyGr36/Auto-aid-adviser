@@ -1,9 +1,7 @@
 package com.hillel.evo.adviser.controller;
 
-import com.hillel.evo.adviser.dto.ActivationResponseDto;
-import com.hillel.evo.adviser.dto.BusinessUserRegistrationDto;
-import com.hillel.evo.adviser.dto.RegistrationResponseDto;
-import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
+import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.service.RegistrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,15 +23,15 @@ public class RegistrationController {
     }
 
     @PostMapping("user/register")
-    public ResponseEntity<RegistrationResponseDto> registerUser(
-            @RequestBody @Valid SimpleUserRegistrationDto registrationDto) {
+    public ResponseEntity<AdviserUserDetailsDto> registerUser(
+            @RequestBody @Valid UserRegistrationDto registrationDto) {
 
         return ResponseEntity.status(OK).body(registrationService.registerUser(registrationDto));
     }
 
 
     @PostMapping("user/activate/{activationCode}")
-    public ResponseEntity<ActivationResponseDto> activateUser(
+    public ResponseEntity<AdviserUserDetailsDto> activateUser(
             @PathVariable String activationCode) {
 
         return registrationService.activateUser(activationCode);

@@ -1,14 +1,10 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.dto.ActivationResponseDto;
-import com.hillel.evo.adviser.dto.RegistrationResponseDto;
-import com.hillel.evo.adviser.dto.SimpleUserRegistrationDto;
+import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
-import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -18,35 +14,45 @@ import static org.springframework.http.HttpStatus.OK;
 public class RegistrationService {
 
     final private transient UserService userService;
-    final private transient PasswordEncoder encoder;
+    final private transient EncoderService encoderService;
     final private transient JwtService jwtService;
     final private transient SecurityUserDetailsService detailsService;
 
     public RegistrationService(UserService userService,
-                               PasswordEncoder encoder,
+                               EncoderService encoderService,
                                JwtService jwtService,
                                SecurityUserDetailsService detailsService) {
         this.userService = userService;
-        this.encoder = encoder;
+        this.encoderService = encoderService;
         this.jwtService = jwtService;
         this.detailsService = detailsService;
     }
 
-    public RegistrationResponseDto registerUser(SimpleUserRegistrationDto dto) {
+    /**
+     * Registers a new user. Relays on the user service for implementation.
+     * @param dto - registration dto
+     * @return user dto of created user
+     */
+    public AdviserUserDetailsDto registerUser(UserRegistrationDto dto) {
 
         String password = dto.getPassword();
-        dto.setPassword(encoder.encode(password));
+        dto.setPassword(encoderService.encode(password));
 
-        AdviserUserDetails user = userService.registration(dto).orElseThrow();
-
-        return cteateRegistrationResponseDto(user);
+        return userService.registration(dto);
     }
 
-    public ResponseEntity<ActivationResponseDto> activateUser(String activationCode) {
+    /**
+     * Activates a new user. Relays on the user service for implementation.
+     * Returns a response with jwt token in "Authorization" header, a user dto body, and status ok.
+     * Jwt holds user id.
+     * @param activationCode - registration dto
+     * @return user dto of created user
+     */
+    public ResponseEntity<AdviserUserDetailsDto> activateUser(String activationCode) {
 
-        AdviserUserDetails user =  userService.activation(activationCode).get();
+        AdviserUserDetailsDto userDto =  userService.activation(activationCode);
 
-        long userId = user.getId();
+        long userId = userDto.getId();
 
         Authentication trustedAuthentication = detailsService.createTrustedAuthenticationWithUserId(userId);
 
@@ -57,14 +63,6 @@ public class RegistrationService {
         return ResponseEntity
                 .status(OK)
                 .header(AUTHORIZATION, JwtService.TOKEN_PREFIX + accessToken)
-                .body(new ActivationResponseDto());
-    }
-
-
-
-    private RegistrationResponseDto cteateRegistrationResponseDto(AdviserUserDetails user) {
-        RegistrationResponseDto responseDto = new RegistrationResponseDto();
-        responseDto.setUserId(user.getId());
-        return responseDto;
+                .body(userDto);
     }
 }
