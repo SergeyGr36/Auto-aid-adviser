@@ -1,9 +1,13 @@
 package com.hillel.evo.adviser.controller;
 
 import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
+import com.hillel.evo.adviser.dto.LoginRequestDto;
+import com.hillel.evo.adviser.dto.LoginResponseDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
+import com.hillel.evo.adviser.service.AuthenticationService;
 import com.hillel.evo.adviser.service.RegistrationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +19,15 @@ import javax.validation.Valid;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController()
-@RequestMapping("/")
+@RequestMapping("/user")
 public class RegistrationController {
 
     private final transient RegistrationService registrationService;
+    private final transient AuthenticationService authenticationService;
 
-    public RegistrationController(RegistrationService registrationService) {
+    public RegistrationController(RegistrationService registrationService, AuthenticationService authenticationService) {
         this.registrationService = registrationService;
+        this.authenticationService = authenticationService;
     }
 
     /**
@@ -58,5 +64,22 @@ public class RegistrationController {
             @PathVariable String activationCode) {
 
         return registrationService.activateUser(activationCode);
+    }
+
+    /**
+     * Authenticates the user with provided credentials - email and password.
+     * If authentication fails, returns status 401 Unauthorized.
+     * If user credentials violate required patterns, then status 403 bad request is returned.
+     *
+     * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
+     * Jwt holds user id.
+     * @param loginRequestDTO the request, containing user credentials.
+     * @return An http response with status ok and with jwt token, or an error status 401.
+     */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> authenticateUser(
+            @Valid @RequestBody final LoginRequestDto loginRequestDTO) {
+
+        return authenticationService.authenticateAndResponse(loginRequestDTO);
     }
 }
