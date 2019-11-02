@@ -4,23 +4,16 @@ import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.eq;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.ITemplateEngine;
 
-import java.util.Map;
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DefaultTemplateServiceTest {
-    private static final TemplateEngine mockTemplateEngine = mock(TemplateEngine.class);
+    private static final ITemplateEngine mockTemplateEngine = mock(ITemplateEngine.class);
     private static final TemplateService service = new DefaultTemplateService(mockTemplateEngine);
     private static MessageParameters parameters;
     private static MessageParameters.Builder builder;
@@ -29,8 +22,7 @@ class DefaultTemplateServiceTest {
 
     @BeforeAll
     static void setUp() {
-        doReturn(testString).when(mockTemplateEngine).process((String) argThat(Objects::nonNull), any(Context.class));
-        //when(mockTemplateEngine.process(any(String.class), any(Context.class))).thenReturn(testString);
+        doReturn(testString).when(mockTemplateEngine).process(eq(testNameOfTemplate), any(Context.class));
         builder = new MessageParameters.Builder()
                 .setToAddresses("some@ukr.net")
                 .setCcAddresses("some@gmail.com")
@@ -51,10 +43,19 @@ class DefaultTemplateServiceTest {
         String result = service.convert(parameters, EmailContentType.HTML);
 
         //then
-        assertNull(result);
+        assertEquals(testString, result);
     }
 
     @Test
-    void convert1() {
+    void shouldConvertWithoutTemplate() {
+        //given
+        parameters = builder.setNameOfTemplate(null)
+                .build();
+
+        //when
+        String result = service.convert(parameters, EmailContentType.TEXT);
+
+        //then
+        assertEquals(testString, result);
     }
 }

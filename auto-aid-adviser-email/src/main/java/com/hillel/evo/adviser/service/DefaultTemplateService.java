@@ -4,6 +4,7 @@ import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -12,10 +13,10 @@ import java.util.Map;
 
 @Service
 public class DefaultTemplateService implements TemplateService {
-    private TemplateEngine templateEngine;
+    private ITemplateEngine templateEngine;
 
     @Autowired
-    public DefaultTemplateService(TemplateEngine templateEngine) {
+    public DefaultTemplateService(ITemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
