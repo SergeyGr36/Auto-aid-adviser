@@ -28,7 +28,7 @@ public class MessageParameters {
         private String text;
         private String html;
         private String nameOfTemplate;
-        private HashMap<String, String> templateParameters;
+        private HashMap<String, String> templateParameters = new HashMap<>();
 
         public Builder setToAddresses(String toAddresses) {
             this.toAddresses = toAddresses;
@@ -60,8 +60,9 @@ public class MessageParameters {
             return this;
         }
 
-        public void setNameOfTemplate(String nameOfTemplate) {
+        public Builder setNameOfTemplate(String nameOfTemplate) {
             this.nameOfTemplate = nameOfTemplate;
+            return this;
         }
 
         public Builder addTemplateParameter(String key, String value) {

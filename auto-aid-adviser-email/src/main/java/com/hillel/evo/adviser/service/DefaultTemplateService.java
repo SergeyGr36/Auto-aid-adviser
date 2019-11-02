@@ -20,10 +20,10 @@ public class DefaultTemplateService implements TemplateService {
     }
 
     @Override
-    public String convert(String nameOfTemplate, String source, Map<String, String> parameters) {
-        if (source == null) return source;
+    public String convert(String nameOfTemplate, String text, Map<String, String> parameters) {
+        if (nameOfTemplate == null) return text;
         Context context = new Context();
-        parameters.forEach((key, value) -> context.setVariable(key, value));
+        parameters.forEach(context::setVariable);
         return templateEngine.process(nameOfTemplate, context);
     }
 
