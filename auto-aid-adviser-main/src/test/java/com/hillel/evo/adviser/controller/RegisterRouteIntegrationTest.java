@@ -7,7 +7,6 @@ import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.enums.RoleUser;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.service.EncoderService;
-import com.hillel.evo.adviser.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class RegistrationControllerIntegrationTest {
+public class RegisterRouteIntegrationTest {
 
-    private static final String REGISTER_ROUTE = "/register";
-    private static final String ACTIVATE_ROUTE = "/user/activate";
+    private static final String REGISTER_ROUTE = "/user/register";
+
 
     private static final String EXISTING_USER_EMAIL = "test@gmail.com";
     private static final String EXISTING_USER_PASSWORD = "testtest123";
@@ -49,9 +48,6 @@ public class RegistrationControllerIntegrationTest {
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @Autowired
-    JwtService jwtService;
 
     @BeforeEach
     public void setUp() {
@@ -95,7 +91,16 @@ public class RegistrationControllerIntegrationTest {
 
     }
 
+    @Test
+    public void whenMalformedEmailProvided_thenReturnStatusIsBadRequest() throws Exception {
 
+        registrationDto.setEmail("as=1@lll.mm");
+
+        mockMvc.perform(post(REGISTER_ROUTE)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(registrationDto)))
+                .andExpect(status().isBadRequest());
+    }
 
     private UserRegistrationDto createTestRegistrationDto() {
         UserRegistrationDto dto = new UserRegistrationDto();

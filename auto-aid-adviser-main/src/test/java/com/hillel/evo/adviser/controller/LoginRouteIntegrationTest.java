@@ -22,7 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class LoginControllerIntegrationTest {
+class LoginRouteIntegrationTest {
+
+    private static final String LOGIN_ROUTE = "/user/login";
 
     private static final String EMAIL = "test@gmail.com";
     private static final String PASSWORD = "testtest123";
@@ -53,7 +55,7 @@ class LoginControllerIntegrationTest {
     @Test
     public void whenValidCredentialsProvided_thenReturnStatusIsOk() throws Exception {
 
-                mockMvc.perform(post("/login")
+                mockMvc.perform(post(LOGIN_ROUTE)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(loginRequestDto)))
                         .andExpect(status().isOk());
@@ -62,7 +64,7 @@ class LoginControllerIntegrationTest {
     @Test
     public void whenValidCredentialsProvided_thenValidTokenIsReturned() throws Exception {
 
-        String jwtToken = mockMvc.perform(post("/login")
+        String jwtToken = mockMvc.perform(post(LOGIN_ROUTE)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
                 .andReturn()
@@ -79,7 +81,7 @@ class LoginControllerIntegrationTest {
 
         loginRequestDto.setPassword("WrongPassword555");
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post(LOGIN_ROUTE)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
                 .andExpect(status().isUnauthorized());
@@ -90,7 +92,7 @@ class LoginControllerIntegrationTest {
 
         loginRequestDto.setEmail("wrong@test.com");
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post(LOGIN_ROUTE)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
                 .andExpect(status().isUnauthorized());
@@ -103,11 +105,23 @@ class LoginControllerIntegrationTest {
         user.setActive(false);
         userRepository.save(user);
 
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post(LOGIN_ROUTE)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    public void whenMalformedEmail_thenReturnStatusIsBadRequest() throws Exception {
+
+        loginRequestDto.setEmail("?1=1@mail.ua");
+
+        mockMvc.perform(post(LOGIN_ROUTE)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .andExpect(status().isBadRequest());
+    }
+
 
     private LoginRequestDto createTestLoginRequestDto() {
         LoginRequestDto dto = new LoginRequestDto();
