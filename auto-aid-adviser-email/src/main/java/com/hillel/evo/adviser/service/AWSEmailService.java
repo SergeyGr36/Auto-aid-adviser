@@ -1,7 +1,11 @@
 package com.hillel.evo.adviser.service;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.*;
+import com.amazonaws.services.simpleemail.model.Body;
+import com.amazonaws.services.simpleemail.model.Content;
+import com.amazonaws.services.simpleemail.model.Destination;
+import com.amazonaws.services.simpleemail.model.Message;
+import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
 import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
@@ -30,14 +34,14 @@ public class AWSEmailService implements EmailService {
     }
 
     @Override
-    public boolean sendMessage(MessageParameters dto) {
+    public boolean sendMessage(MessageParameters params) {
         try {
-            String text = templateService.convert(dto, EmailContentType.TEXT);
-            String html = templateService.convert(dto, EmailContentType.HTML);
+            String text = templateService.convert(params, EmailContentType.TEXT);
+            String html = templateService.convert(params, EmailContentType.HTML);
 
             SendEmailRequest request = new SendEmailRequest()
                     .withDestination(
-                            new Destination().withToAddresses(dto.getToAddresses()))
+                            new Destination().withToAddresses(params.getToAddresses()))
                     .withMessage(new Message()
                             .withBody(new Body()
                                     .withHtml(new Content()
@@ -45,7 +49,7 @@ public class AWSEmailService implements EmailService {
                                     .withText(new Content()
                                             .withCharset("UTF-8").withData(text)))
                             .withSubject(new Content()
-                                    .withCharset("UTF-8").withData(dto.getSubject())))
+                                    .withCharset("UTF-8").withData(params.getSubject())))
                     .withSource(emailProperties.getUsername());
             client.sendEmail(request);
             return true;

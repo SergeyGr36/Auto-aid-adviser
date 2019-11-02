@@ -2,7 +2,6 @@ package com.hillel.evo.adviser.parameter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashMap;
 

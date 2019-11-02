@@ -13,9 +13,6 @@ public class EmailConfiguration {
     public AmazonSimpleEmailService amazonMailService() {
         AmazonSimpleEmailService client =
         AmazonSimpleEmailServiceClientBuilder.standard()
-        // Replace US_WEST_2 with the AWS Region you're using for
-        // Amazon SES.
-        //.withRegion(Regions.US_WEST_2)
         .build();
 
         return client;

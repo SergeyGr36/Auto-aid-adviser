@@ -4,13 +4,13 @@ import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.eq;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.ITemplateEngine;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 class DefaultTemplateServiceTest {
     private static final ITemplateEngine mockTemplateEngine = mock(ITemplateEngine.class);
@@ -18,7 +18,7 @@ class DefaultTemplateServiceTest {
     private static MessageParameters parameters;
     private static MessageParameters.Builder builder;
     private static final String testString = "Test";
-    private static final String testNameOfTemplate = new String("some-template.html");
+    private static final String testNameOfTemplate = "some-template.html";
 
     @BeforeAll
     static void setUp() {

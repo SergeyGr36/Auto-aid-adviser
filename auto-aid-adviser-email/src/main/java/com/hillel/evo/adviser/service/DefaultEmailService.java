@@ -34,17 +34,17 @@ public class DefaultEmailService implements EmailService {
     }
 
     @Override
-    public boolean sendMessage(MessageParameters dto) {
+    public boolean sendMessage(MessageParameters params) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(emailProperties.getUsername());
-            helper.setTo(dto.getToAddresses());
-            helper.setCc(dto.getCcAddresses());
-            helper.setBcc(dto.getBccAddresses());
-            helper.setSubject(dto.getSubject());
-            String text = templateService.convert(dto, EmailContentType.TEXT);
-            String html = templateService.convert(dto, EmailContentType.HTML);
+            helper.setTo(params.getToAddresses());
+            helper.setCc(params.getCcAddresses());
+            helper.setBcc(params.getBccAddresses());
+            helper.setSubject(params.getSubject());
+            String text = templateService.convert(params, EmailContentType.TEXT);
+            String html = templateService.convert(params, EmailContentType.HTML);
             helper.setText(text, html);
             helper.setSentDate(new Date());
             javaMailSender.send(message);
