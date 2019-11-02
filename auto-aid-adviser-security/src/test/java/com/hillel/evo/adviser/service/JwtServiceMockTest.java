@@ -17,6 +17,7 @@ public class JwtServiceMockTest {
 
     private final static String TEST_KEY = "test-key";
     private final static Long USER_ID = 100L;
+    private final static Long EXPIRATION = 10000000L;
 
     @Mock private JwtPropertyConfiguration jwtProperties;
     @Mock HttpServletRequest request;
@@ -27,6 +28,7 @@ public class JwtServiceMockTest {
         MockitoAnnotations.initMocks(this);
         jwtService = new JwtService(jwtProperties);
         when(jwtProperties.getSecretKey()).thenReturn(TEST_KEY);
+        when(jwtProperties.getExpirationMillis()).thenReturn(EXPIRATION);
     }
 
     @Test
