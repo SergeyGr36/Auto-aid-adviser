@@ -4,6 +4,7 @@ import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
 import com.hillel.evo.adviser.dto.LoginResponseDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
+import com.hillel.evo.adviser.exception.MalformedParameterException;
 import com.hillel.evo.adviser.service.AuthenticationService;
 import com.hillel.evo.adviser.service.RegistrationService;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,10 @@ public class RegistrationController {
     @PostMapping("/activate/{activationCode}")
     public ResponseEntity<AdviserUserDetailsDto> activateUser(
             @PathVariable String activationCode) {
+
+        if (! activationCode.matches("^[a-fA-F0-9-]+$")) {
+            throw new MalformedParameterException("Malformed activation code");
+        }
 
         return registrationService.activateUser(activationCode);
     }
