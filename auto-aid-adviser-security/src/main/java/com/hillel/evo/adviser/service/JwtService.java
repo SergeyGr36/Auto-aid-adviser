@@ -1,14 +1,17 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
+import com.hillel.evo.adviser.exception.AccessTokenExpiredException;
 import com.hillel.evo.adviser.exception.InvalidJwtTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.dialect.function.AbstractAnsiTrimEmulationFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -123,8 +126,13 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
 
+        } catch (ExpiredJwtException ex) {
+
+            throw new AccessTokenExpiredException(ex);
+
         } catch (SignatureException | MalformedJwtException
                 | UnsupportedJwtException | IllegalArgumentException ex) {
+
             throw new InvalidJwtTokenException(ex);
         }
     }
