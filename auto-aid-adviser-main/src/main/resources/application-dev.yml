@@ -13,5 +13,5 @@ spring:
         search:
           default:
             directory_provider: filesystem
-            indexBase: /tmp/adviser/indexes/
+            indexBase: /var/adviser/indexes/
           reindex: false

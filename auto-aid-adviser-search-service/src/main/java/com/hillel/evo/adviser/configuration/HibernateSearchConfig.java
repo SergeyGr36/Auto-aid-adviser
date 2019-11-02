@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.configuration;
 
+import com.hillel.evo.adviser.exception.HibernateSearchIndexException;
 import org.hibernate.Session;
 import org.hibernate.search.Search;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,12 @@ import javax.persistence.PersistenceContext;
 @Configuration
 public class HibernateSearchConfig {
 
-    @Autowired
     private transient Environment environment;
+
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     @PersistenceContext
     private transient EntityManager entityManager;
@@ -34,9 +39,7 @@ public class HibernateSearchConfig {
             try {
                 fullTextEntityManager.createIndexer(clazz).startAndWait();
             } catch (InterruptedException e) {
-                System.out.println(
-                        "An error occurred trying to build the serach index: " +
-                                e.toString());
+                throw new HibernateSearchIndexException("An error occurred trying to build the serach index", e);
             }
         }
     }
