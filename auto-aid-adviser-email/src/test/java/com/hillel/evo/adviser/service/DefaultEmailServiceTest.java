@@ -73,7 +73,7 @@ public class DefaultEmailServiceTest {
     @Test
     public void shouldThrowExceptionWhenSendMessage() {
         //given
-        Mockito.doThrow(new MailSendException("")).when(mockSender).send(any(MimeMessage.class));
+        Mockito.doThrow(new MailSendException("Failed")).when(mockSender).send(any(MimeMessage.class));
 
         //when
         boolean successful = service.sendMessage(parameters);
