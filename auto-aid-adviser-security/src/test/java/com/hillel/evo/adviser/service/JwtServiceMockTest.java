@@ -2,29 +2,27 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
 import io.jsonwebtoken.Jwts;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class JwtServiceMockTest {
 
     private final static String TEST_KEY = "test-key";
     private final static Long USER_ID = 100L;
-    private static final long EXPIRATION = 3_600_000L;
 
     @Mock private JwtPropertyConfiguration jwtProperties;
     @Mock HttpServletRequest request;
     private JwtService jwtService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         jwtService = new JwtService(jwtProperties);
@@ -43,7 +41,7 @@ public class JwtServiceMockTest {
                 .getBody()
                 .getSubject());
 
-        Assert.assertEquals(USER_ID, userIdFromToken);
+        assertEquals(USER_ID, userIdFromToken);
 
     }
 
@@ -62,9 +60,5 @@ public class JwtServiceMockTest {
         when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(JwtService.TOKEN_PREFIX + token);
         //then
         assertEquals(token, jwtService.getTokenFromRequest(request));
-    }
-
-    @Test
-    public void tokenIsValid() {
     }
 }

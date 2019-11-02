@@ -1,12 +1,11 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
 import com.hillel.evo.adviser.dto.LoginResponseDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -38,10 +37,11 @@ public class AuthenticationServiceMockTest {
     private AuthenticationService authenticationService;
     private LoginRequestDto loginRequestDto;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        authenticationService = new AuthenticationService(jwtService, authenticationManager, userRepository, detailsService);
+        authenticationService = new AuthenticationService(jwtService, authenticationManager,
+                userRepository, detailsService);
 
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail(USER_MAIL);
