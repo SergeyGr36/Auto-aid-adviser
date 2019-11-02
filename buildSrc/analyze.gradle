@@ -30,7 +30,7 @@ jacocoTestReport {
         classDirectories = files(classDirectories.files.collect {
             fileTree(
                     dir: it,
-                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+                    exclude: ['**/dto/**', '**/*Application.*', '**/*Starter.*', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
             )
         })
     }
@@ -41,7 +41,7 @@ jacocoTestCoverageVerification {
         classDirectories = files(classDirectories.files.collect {
             fileTree(
                     dir: it,
-                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+                    exclude: ['**/dto/**', '**/*Application.*', '**/*Starter.*', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
             )
         })
     }

@@ -12,6 +12,7 @@ import java.util.Map;
 
 
 @Service
+@SuppressWarnings("PMD.BeanMembersShouldSerialize")
 public class DefaultTemplateService implements TemplateService {
     private ITemplateEngine templateEngine;
 
