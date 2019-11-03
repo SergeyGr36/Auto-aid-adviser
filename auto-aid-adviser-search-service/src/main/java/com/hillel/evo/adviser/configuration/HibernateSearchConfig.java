@@ -26,7 +26,6 @@ public class HibernateSearchConfig {
     private transient EntityManager entityManager;
 
     @PostConstruct
-    @Transactional
     public void reindex() {
         if (Boolean.parseBoolean(environment.getProperty("spring.jpa.properties.hibernate.search.reindex", "false"))) {
             reindex(Object.class);
