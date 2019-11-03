@@ -14,6 +14,7 @@ public class ServiceBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     private String type;
 

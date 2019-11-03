@@ -73,12 +73,16 @@ project(":user-service") {
     }
 }
 
-project(':business') {
+project(':auto-aid-adviser-business') {
     bootJar {
         enabled = false
     }
     jar {
         enabled = true
+    }
+    dependencies {
+        implementation utils.mapstructJdk8
+        implementation utils.mapstructProcessor
     }
 }
 
@@ -91,6 +95,6 @@ project(":auto-aid-adviser-main") {
     }
     dependencies {
         implementation project(':user-service')
-        implementation project(':business')
+        implementation project(':auto-aid-adviser-business')
     }
 }

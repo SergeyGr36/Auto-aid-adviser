@@ -1,5 +1,5 @@
 rootProject.name = 'auto-aid-adviser'
 include 'auto-aid-adviser-main'
 include 'user-service'
-include 'business'
+include 'auto-aid-adviser-business'
 

@@ -9,24 +9,20 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class BusinessDTO {
-    @NonNull
+public class BusinessDto {
     private Long id;
-    @NonNull
     private String name;
-    @NonNull
-    private Location localization;
-    @NonNull
+    private LocationDto location;
     private Contact contact;
-    @NonNull
     private String workingDays;
-    @NonNull
     private String workingHours;
+/*
     @NonNull
     private TypeBusiness businessType;
     @NonNull
     private BusinessUser businessUser;
-    @NonNull
-    private List<ServiceBusiness> serviceBusinesses;
+*/
+
+    private List<ServiceBusinessDto> serviceBusinesses;
 
 }
