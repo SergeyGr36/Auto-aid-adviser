@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ServiceBusinessDto {
-    private Long id;
+public class TypeServiceDto {
+    private long id;
     private String type;
-    private TypeServiceDto typeService;
+    private TypeBusinessDto typeBusiness;
 }

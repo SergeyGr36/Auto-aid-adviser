@@ -13,16 +13,10 @@ public class BusinessDto {
     private Long id;
     private String name;
     private LocationDto location;
-    private Contact contact;
+    private ContactDto contact;
     private String workingDays;
     private String workingHours;
-/*
-    @NonNull
-    private TypeBusiness businessType;
-    @NonNull
-    private BusinessUser businessUser;
-*/
-
+    private TypeBusinessDto typeBusiness;
     private List<ServiceBusinessDto> serviceBusinesses;
 
 }

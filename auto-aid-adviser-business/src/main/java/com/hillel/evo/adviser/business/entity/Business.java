@@ -27,7 +27,7 @@ public class Business {
     private String name;
 
     @Embedded
-    private Location localization;
+    private Location location;
 
     @Embedded
     private Contact contact;
@@ -37,11 +37,11 @@ public class Business {
 
     @ManyToOne
 //    @JoinColumn(name = "business_type_id")
-    private TypeBusiness businessType;
+    private TypeBusiness typeBusiness;
 
-    @ManyToOne
+//    @ManyToOne
 //    @JoinColumn(name = "businessUser_id")
-    private BusinessUser businessUser;
+//    private BusinessUser businessUser;
 
     @ManyToMany
     private List<ServiceBusiness> serviceBusinesses;

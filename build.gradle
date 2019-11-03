@@ -43,6 +43,11 @@ configure(allprojects) { project ->
         implementation utils.jaxbApi
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
+
+        implementation "org.mapstruct:mapstruct:1.3.1.Final"
+        annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+        testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+
         testImplementation boot.starterTest
 
         runtimeOnly db.h2
@@ -80,10 +85,7 @@ project(':auto-aid-adviser-business') {
     jar {
         enabled = true
     }
-    dependencies {
-        implementation utils.mapstructJdk8
-        implementation utils.mapstructProcessor
-    }
+
 }
 
 project(":auto-aid-adviser-main") {
