@@ -59,7 +59,7 @@ public class SearchTest {
     @Sql({"/data-aids.sql"})
     public void TestSearchText() {
 
-        hibernateSearchConfig.reindex(true, Aid.class);
+        hibernateSearchConfig.reindex(Aid.class);
         var result = aidTextSearch.search(Aid.class, "name", "BMW");
 
         assertEquals(1, result.size());
@@ -69,7 +69,7 @@ public class SearchTest {
     @Sql({"/data-aids.sql"})
     public void TestSearchSpatial() {
 
-        hibernateSearchConfig.reindex(true, Aid.class);
+        hibernateSearchConfig.reindex(Aid.class);
         var result = aidSpatialSearch.search(Aid.class, 100, 11.125, 12.365);
 
         assertEquals(5, result.size());
@@ -79,7 +79,7 @@ public class SearchTest {
     @Sql({"/data-aids.sql"})
     public void TestSearchCustom() {
 
-        hibernateSearchConfig.reindex(true, Aid.class);
+        hibernateSearchConfig.reindex(Aid.class);
 
         var queryText = searchService.getTextQuery(Aid.class, "name", "Honda");
         var querySpatial = searchService.getSpatialQuery(Aid.class, 100, 11.125, 12.365);

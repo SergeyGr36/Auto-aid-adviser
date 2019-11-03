@@ -26,24 +26,21 @@ public class HibernateSearchConfig {
     private transient EntityManager entityManager;
 
     @PostConstruct
-    public void reindex() {
-        boolean reindex = Boolean.parseBoolean(environment.getProperty("spring.jpa.properties.hibernate.search.reindex", "false"));
-        reindex(reindex, Object.class);
-    }
-
     @Transactional
-    public void reindex(boolean reindex, Class clazz) {
-
-        if (reindex) {
-            var fullTextEntityManager = Search.getFullTextSession((Session)entityManager.getDelegate());
-            try {
-                fullTextEntityManager.createIndexer(clazz).startAndWait();
-            } catch (InterruptedException e) {
-                throw new HibernateSearchIndexException("An error occurred trying to build the serach index", e);
-            }
+    public void reindex() {
+        if (Boolean.parseBoolean(environment.getProperty("spring.jpa.properties.hibernate.search.reindex", "false"))) {
+            reindex(Object.class);
         }
     }
 
+    @Transactional
+    public void reindex(Class clazz) {
 
-
+        var fullTextEntityManager = Search.getFullTextSession((Session)entityManager.getDelegate());
+        try {
+            fullTextEntityManager.createIndexer(clazz).startAndWait();
+        } catch (InterruptedException e) {
+            throw new HibernateSearchIndexException("An error occurred trying to build the serach index", e);
+        }
+    }
 }
