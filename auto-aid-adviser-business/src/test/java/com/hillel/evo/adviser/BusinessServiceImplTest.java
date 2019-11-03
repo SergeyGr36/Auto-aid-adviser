@@ -3,7 +3,7 @@ package com.hillel.evo.adviser;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.service.BusinessService;
+import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class BusinessServiceImplTest {
 
     @Autowired
-    private BusinessService businessService;
+    private BusinessServiceImpl businessService;
 
     @Test
     public void whenCreateBusinessThenReturnDto() {

@@ -1,10 +1,12 @@
-package com.hillel.evo.adviser.service;
+package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hillel.evo.adviser.service.BusinessService;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class BusinessServiceImpl implements BusinessService {
 
     private BusinessMapper mapper;
+    //    private final WrapperBusinessRepository<Business> wrapperRepository;
     private final BusinessRepository businessRepository;
 
     public BusinessServiceImpl(BusinessRepository businessRepository) {
@@ -27,7 +30,19 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<BusinessDto> findAllByUser(Long id) {
-        return null;
+    @Query("select business from businessUser business where businessUser.id = :id ")
+    public List<BusinessDto> findAllByUser(@Param("id") Long id) {
+
+        return mapper.listToDto(businessRepository.findAll());
+    }
+
+    @Override
+    public BusinessDto updateBusiness(BusinessDto dto) {
+        return createBusiness(dto);
+    }
+
+    @Override
+    public void deleteBusiness(Long id) {
+        businessRepository.deleteById(id);
     }
 }
