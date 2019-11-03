@@ -36,7 +36,6 @@ jacocoTestReport {
     }
 }
 
-def ratio = 0.9
 jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
@@ -53,7 +52,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'METHOD'
                 value = 'COVEREDRATIO'
-                minimum = ratio
+                minimum = 0.9
             }
         }
 
@@ -62,7 +61,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'CLASS'
                 value = 'COVEREDRATIO'
-                minimum = ratio
+                minimum = 0.9
             }
 
         }
@@ -71,7 +70,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'INSTRUCTION'
                 value = 'COVEREDRATIO'
-                minimum = ratio
+                minimum = 0.9
             }
         }
         rule {
@@ -79,7 +78,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-                minimum = ratio
+                minimum = 0.9
             }
         }
     }
