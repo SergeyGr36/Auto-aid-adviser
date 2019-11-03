@@ -1,12 +1,17 @@
 package com.hillel.evo.adviser.entity;
 
-import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode(of = {"id"})

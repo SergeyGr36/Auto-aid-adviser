@@ -14,8 +14,8 @@ public class BusinessUser  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToMany(mappedBy = "businessUser")
+//    @OneToMany(mappedBy = "businessUser")
 //    @ElementCollection(targetClass = Business.class)
-    private List <Business> business;
+//    private List<Business> business;
 
 }

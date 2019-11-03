@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "business")
 @EqualsAndHashCode(of = {"id"})
+@NoArgsConstructor
 public class Business {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
