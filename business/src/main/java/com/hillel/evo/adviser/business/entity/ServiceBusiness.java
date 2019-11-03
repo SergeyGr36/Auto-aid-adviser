@@ -1,13 +1,14 @@
 package com.hillel.evo.adviser.business.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class ServiceBusiness {
     @Id

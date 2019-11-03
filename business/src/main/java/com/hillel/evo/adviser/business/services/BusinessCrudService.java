@@ -5,13 +5,16 @@ import com.hillel.evo.adviser.business.entity.Business;
 import com.hillel.evo.adviser.business.entity.BusinessUser;
 import com.hillel.evo.adviser.business.repository.BusinessRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-//todo завтра треба розібратись з цим говнокодом)
 @Service
 public class BusinessCrudService {
+    public BusinessCrudService() {
+    }
+
     private BusinessRepository businessRepository;
 
     public BusinessDTO createBusiness(final BusinessDTO dto) {
@@ -20,8 +23,8 @@ public class BusinessCrudService {
     }
 
     public List<BusinessDTO> getAllByOwner(final BusinessUser businessUser) {
-        return new ArrayList<>(mappedEntityToDto(businessRepository.findAllById(businessUser.getId)));
-    }
+       return new ArrayList<>(mappedEntityToDto(businessRepository.findAll()));
+   }
 
     private Business mappedDtoToEntity(final BusinessDTO dto) {
         Business business = new Business();

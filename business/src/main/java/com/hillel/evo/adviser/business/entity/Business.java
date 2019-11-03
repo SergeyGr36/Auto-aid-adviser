@@ -20,9 +20,11 @@ public class Business {
     private String name;
 
     @Enumerated
+    @Embedded
     private Location localization;
 
     @Enumerated
+    @Embedded
     private Contact contact;
 
     private String workingDays;
@@ -30,12 +32,13 @@ public class Business {
 
     @ManyToOne
     @JoinColumn(name = "business_type_id", referencedColumnName = "id")
-    private TypeBusiness businessType;
+    private transient TypeBusiness businessType;
 
     @ManyToOne
     @JoinColumn(name = "businessUser_id")
     private BusinessUser businessUser;
 
     @ManyToMany
-    private List<ServiceBusiness> serviceBusinesses;
+//    @ElementCollection(targetClass = ServiceBusiness.class)
+    private transient List<ServiceBusiness> serviceBusinesses;
 }

@@ -1,19 +1,32 @@
 package com.hillel.evo.adviser.business.dto;
 
+import com.hillel.evo.adviser.business.entity.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class BusinessDTO {
-    @NotNull
+    @NonNull
+    private Long id;
+    @NonNull
     private String name;
-    @Positive
-    private double longitude;
-    @Positive
-    private double latitude;
-    @NotNull
-    private String description;
-    private String businessType; //питання на рахунок типу(строка чи екземпляр класу)
+    @NonNull
+    private Location localization;
+    @NonNull
+    private Contact contact;
+    @NonNull
+    private String workingDays;
+    @NonNull
+    private String workingHours;
+    @NonNull
+    private TypeBusiness businessType;
+    @NonNull
+    private BusinessUser businessUser;
+    @NonNull
+    private List<ServiceBusiness> serviceBusinesses;
+
 }
