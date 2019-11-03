@@ -1,8 +1,7 @@
-package com.hillel.evo.adviser.business.entity;
+package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;

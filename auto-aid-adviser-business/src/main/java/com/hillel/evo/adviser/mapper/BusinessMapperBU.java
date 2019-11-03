@@ -1,7 +1,7 @@
-package com.hillel.evo.adviser.business.mapper;
+package com.hillel.evo.adviser.mapper;
 
-import com.hillel.evo.adviser.business.dto.BusinessDto;
-import com.hillel.evo.adviser.business.entity.Business;
+import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.entity.Business;
 import org.springframework.beans.BeanUtils;
 
 public class BusinessMapperBU {

@@ -1,6 +1,6 @@
-package com.hillel.evo.adviser.business.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.business.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessDto;
 
 import java.util.List;
 

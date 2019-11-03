@@ -1,10 +1,7 @@
-package com.hillel.evo.adviser.business.service;
+package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.business.dto.BusinessDto;
-import com.hillel.evo.adviser.business.entity.Business;
-import com.hillel.evo.adviser.business.mapper.BusinessMapper;
-import com.hillel.evo.adviser.business.mapper.BusinessMapperBU;
-import com.hillel.evo.adviser.business.repository.BusinessRepository;
+import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.repository.BusinessRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

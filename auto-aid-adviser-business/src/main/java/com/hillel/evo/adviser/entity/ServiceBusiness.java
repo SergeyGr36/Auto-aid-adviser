@@ -1,19 +1,23 @@
-package com.hillel.evo.adviser.business.entity;
+package com.hillel.evo.adviser.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
-public class TypeBusiness {
+public class ServiceBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @NonNull
+    private Long id;
+
+    @NotNull
     private String type;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private TypeService typeService;
 }

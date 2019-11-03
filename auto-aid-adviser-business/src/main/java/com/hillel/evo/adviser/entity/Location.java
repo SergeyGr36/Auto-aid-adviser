@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.business.entity;
+package com.hillel.evo.adviser.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,7 @@
-package com.hillel.evo.adviser.business.dto;
+package com.hillel.evo.adviser.dto;
 
-import com.hillel.evo.adviser.business.entity.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.util.List;
 
