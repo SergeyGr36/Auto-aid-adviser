@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EncoderService {
 
-    private final PasswordEncoder encoder;
+    private final transient PasswordEncoder encoder;
 
     public EncoderService(PasswordEncoder encoder) {
         this.encoder = encoder;
