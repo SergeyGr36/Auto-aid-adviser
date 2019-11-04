@@ -9,6 +9,7 @@ group 'com.hillel.evo'
 version '1.0-SNAPSHOT'
 
 configure(allprojects) { project ->
+
     apply plugin: 'application'
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
@@ -61,6 +62,10 @@ configure(allprojects) { project ->
 
         implementation db.postgres
         testImplementation db.h2
+
+        testImplementation testing.junit5
+        testImplementation utils.lombok
+
     }
 }
 
@@ -68,8 +73,22 @@ wrapper {
     version = '5.6.2'
 }
 
+project(':auto-aid-adviser-search-service') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation hibernate.search
+        implementation hibernate.em
+        implementation hibernate.spatial
 
-project(":user-service") {
+    }
+}
+
+project(":auto-aid-adviser-user") {
     bootJar {
         enabled = false
     }
@@ -96,7 +115,8 @@ project(":auto-aid-adviser-main") {
         classifier = 'boot'
     }
     dependencies {
-        implementation project(':user-service')
         implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
     }
 }

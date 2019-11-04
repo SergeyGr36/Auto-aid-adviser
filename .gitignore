@@ -1,6 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 .gradle
 .idea
+.classpath
+.project
+.settings/
+bin/
 build
 out
 *.iml
