@@ -1,8 +1,6 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
-import com.hillel.evo.adviser.exception.AccessTokenExpiredException;
-import com.hillel.evo.adviser.exception.InvalidJwtTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,7 +9,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.dialect.function.AbstractAnsiTrimEmulationFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@Slf4j
 @Component
 public class JwtService {
 
@@ -39,8 +35,18 @@ public class JwtService {
      * @return The generated token.
      */
     public String generateAccessToken(long userId) {
-        final Date now = new Date();
         final Long expirationMillis = jwtProperties.getExpirationMillis();
+        return generateAccessToken(userId, expirationMillis);
+    }
+
+    /**
+     * Generates a jwt token with the user id.
+     * @param userId The user id to be written into token.
+     * @param expirationMillis Expiration time in milliseconds.
+     * @return The generated token.
+     */
+    public String generateAccessToken(long userId, long expirationMillis) {
+        final Date now = new Date();
         final Date expiryDate = new Date(now.getTime() + expirationMillis);
         return Jwts.builder()
                 .setSubject(Long.toString(userId))
@@ -53,26 +59,27 @@ public class JwtService {
     /**
      * Parses the provided string as jwt token.
      * If the string is a valid token, and has the user id information, then user id is returned.
-     * Otherwise exceptions are thrown, as described below.
+     * Otherwise returns null.
      *
      * @param token the string to be a jwt token.
      * @return The user id, parsed from token.
-     *
-     * @throws io.jsonwebtoken.ExpiredJwtException  if the specified JWT is a Claims JWT
-     * and the Claims has an expiration time before the time this method is invoked.
-     * <p> {@link InvalidJwtTokenException}
-     * - if the token is null, not a jwt, or invalid for any other reason.
+
      */
     public Long getUserIdFromToken(final String token) {
 
         final Claims claims = parseToken(token);
+
+        if(claims == null) {
+            return null;
+        }
+
         final String userIdString = claims.getSubject();
 
         try {
             return Long.parseLong(userIdString);
 
         } catch (NumberFormatException e) {
-            throw new InvalidJwtTokenException(e);
+            return null;
         }
     }
 
@@ -96,28 +103,18 @@ public class JwtService {
     /**
      * Checks if this token is a valid jwt token.
      * @param token the compact token string.
-     * @return true, if the token is valid. Otherwise exceptions are thrown.
-     * @throws io.jsonwebtoken.ExpiredJwtException  if the specified JWT is a Claims JWT
-     * and the Claims has an expiration time before the time this method is invoked.
-     * <p> {@link InvalidJwtTokenException}
-     * - if the token is null, not a jwt, or invalid for any other reason.
+     * @return true, if the token is valid. Otherwise false.
      */
     public boolean isTokenValid(final String token) {
-        parseToken(token);
-        return true;
+        return (token != null && parseToken(token) != null);
     }
 
     /**
      * Parses the provided string as jwt and returns the claims object.
-     * If the token is invalid, thows exceptions.
+     * If the token is invalid, returnes null.
      *
      * @param token the compact token string.
-     * @return Claims object, if the token is valid.
-     *
-     * @throws io.jsonwebtoken.ExpiredJwtException  if the specified JWT is a Claims JWT
-     * and the Claims has an expiration time before the time this method is invoked.
-     * <p> {@link InvalidJwtTokenException}
-     * - if the token is null, not a jwt, or invalid for any other reason.
+     * @return Claims object, if the token is valid. Null otherwise.
      */
     private Claims parseToken(final String token) {
         try {
@@ -126,15 +123,12 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
 
-        } catch (ExpiredJwtException ex) {
-
-            throw new AccessTokenExpiredException(ex);
-
-        } catch (SignatureException | MalformedJwtException
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException
                 | UnsupportedJwtException | IllegalArgumentException ex) {
 
-            throw new InvalidJwtTokenException(ex);
+            return null;
         }
+
     }
 }
 

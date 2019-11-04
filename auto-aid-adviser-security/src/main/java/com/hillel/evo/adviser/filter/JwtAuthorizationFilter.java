@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
@@ -35,9 +34,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         final String accessToken = jwtService.getTokenFromRequest(request);
 
-        if (accessToken != null) {
+        Long userId = jwtService.getUserIdFromToken(accessToken);
 
-            Long userId = jwtService.getUserIdFromToken(accessToken);
+        if (userId != null) {
 
             Authentication trustedAuthentication = detailsService.createTrustedAuthenticationWithUserId(userId);
 
