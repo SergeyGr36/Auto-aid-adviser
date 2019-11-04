@@ -38,7 +38,6 @@ public class Business {
     private String workingHours;
 
     @ManyToOne
-//    @JoinColumn(name = "business_type_id")
     private TypeBusiness typeBusiness;
 
 //    @ManyToOne
