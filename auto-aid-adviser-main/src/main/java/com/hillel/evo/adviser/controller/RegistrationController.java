@@ -41,7 +41,8 @@ public class RegistrationController {
      * Should contain at least one digit, one uppercase and one lowercase letter.
      * Violation of these rules results in "bad request" status.
      *
-     * If the user with provided email already exist, the returned status is "
+     * If the user with provided email already exist, the returned status is Already Reported 208.
+     *
      * @param registrationDto
      * @return
      */
@@ -58,6 +59,8 @@ public class RegistrationController {
      * Returns a response with status ok, jwt token in "Authorization" header, and user dto body.
      * Jwt holds user id.
      *
+     * If activation code is malformed, returns status Bad Request 403.
+     * If activation code is invalid, returns status Not Found 404.
      * @param activationCode the activation code from email.
      * @return Returns a response with status ok, jwt token in "Authorization" header, and user dto body.
      */
@@ -76,7 +79,7 @@ public class RegistrationController {
      * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
      * Jwt holds user id.
      * @param loginRequestDTO the request, containing user credentials.
-     * @return An http response with status ok and with jwt token, or an error status 401.
+     * @return An http response with status ok and with jwt token, or an error status Unauthorized 401.
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> authenticateUser(
