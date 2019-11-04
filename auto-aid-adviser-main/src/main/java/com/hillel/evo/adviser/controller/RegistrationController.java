@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final UserService userService;
+    private transient final UserService userService;
 
     public RegistrationController(UserService userService) {
         this.userService = userService;
