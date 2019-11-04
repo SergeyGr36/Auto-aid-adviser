@@ -36,6 +36,9 @@ public class AuthenticationServiceIntegrationTest {
     private AuthenticationService authenticationService;
 
     @Autowired
+    JwtPropertyConfiguration jwtProperties;
+
+    @Autowired
     private AdviserUserDetailRepository userRepository;
 
     @Autowired

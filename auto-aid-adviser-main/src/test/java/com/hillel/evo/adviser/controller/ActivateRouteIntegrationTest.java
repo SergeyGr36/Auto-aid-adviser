@@ -5,7 +5,6 @@ import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.service.EncoderService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +74,15 @@ public class ActivateRouteIntegrationTest {
                 post(ACTIVATE_ROUTE + "/" + "111-222"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void whenMalformedActivationCodeProvided_thenReturnStatusIsBadRequest() throws Exception {
+
+        mockMvc.perform(
+                post(ACTIVATE_ROUTE + "/" + "11..!*"))
+                .andExpect(status().isBadRequest());
+    }
+
 
     private void setActivationCodeClearActive() {
         AdviserUserDetails user = userRepository.findByEmail(USER_EMAIL).get();

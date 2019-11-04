@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
 import io.jsonwebtoken.Jwts;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 public class JwtServiceMockTest {
@@ -55,6 +57,13 @@ public class JwtServiceMockTest {
     }
 
     @Test
+    public void whenGetUserIdFromInvalidToken_thenNullReturned() {
+
+        Assertions.assertNull(jwtService.getUserIdFromToken("InvalidToken"));
+    }
+
+
+    @Test
     public void getTokenFromRequest() {
         // given
         final String token = "token";
@@ -63,4 +72,17 @@ public class JwtServiceMockTest {
         //then
         assertEquals(token, jwtService.getTokenFromRequest(request));
     }
+
+    @Test
+    public void whenTokenIsNull_thenIsTokenValidFalse() {
+
+        assertFalse(jwtService.isTokenValid(null));
+    }
+
+    @Test
+    public void whenParseTokenIsNull_thenIsTokenValidFalse() {
+
+    }
+
+
 }

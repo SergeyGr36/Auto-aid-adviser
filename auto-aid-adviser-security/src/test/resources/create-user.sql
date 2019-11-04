@@ -1,4 +1,4 @@
-delete from simple_usr
+delete from simple_usr;
 delete from adviser_usr;
 
 insert into adviser_usr(email, password, role, active, activation_code) values
