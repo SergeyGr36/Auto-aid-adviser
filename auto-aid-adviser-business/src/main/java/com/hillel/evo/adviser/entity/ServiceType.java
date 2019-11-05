@@ -8,12 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@Table(name = "service_type")
 @EqualsAndHashCode(of = {"id"})
-public class TypeService {
+public class ServiceType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -22,5 +24,5 @@ public class TypeService {
     private String type;
 
     @ManyToOne
-    private TypeBusiness typeBusiness;
+    private BusinessType typeBusiness;
 }

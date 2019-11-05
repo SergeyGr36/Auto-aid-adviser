@@ -8,13 +8,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-//@Sql(value = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class BusinessServiceImplTest {
 
     @Autowired
@@ -24,9 +28,12 @@ public class BusinessServiceImplTest {
     public void whenCreateBusinessThenReturnDto() {
         final BusinessDto dto = new BusinessDto();
             dto.setName("some name");
+            dto.setUserId(3L);
+            dto.setServiceBusinessesIds(Arrays.asList(1L, 2L));
+
         final LocationDto location = new LocationDto();
-            location.setLatitude(100);
-            location.setLongitude(100);
+            location.setLatitude(111);
+            location.setLongitude(111);
             location.setAddress("some address");
 
         final ContactDto contact = new ContactDto();

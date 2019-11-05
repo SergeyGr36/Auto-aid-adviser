@@ -10,12 +10,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "business_type")
 @EqualsAndHashCode(of = {"id"})
-public class TypeBusiness {
+public class BusinessType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

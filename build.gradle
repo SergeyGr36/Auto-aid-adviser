@@ -104,7 +104,11 @@ project(':auto-aid-adviser-business') {
     jar {
         enabled = true
     }
+    dependencies {
+        implementation project(':auto-aid-adviser-user')
+        testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
 
+    }
 }
 
 project(":auto-aid-adviser-main") {

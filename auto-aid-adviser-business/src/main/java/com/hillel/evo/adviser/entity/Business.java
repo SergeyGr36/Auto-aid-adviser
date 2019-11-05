@@ -4,11 +4,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -37,13 +40,10 @@ public class Business {
     private String workingDays;
     private String workingHours;
 
-    @ManyToOne
-    private TypeBusiness typeBusiness;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BusinessUser businessUser;
 
-//    @ManyToOne
-//    @JoinColumn(name = "businessUser_id")
-//    private BusinessUser businessUser;
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "business_has_service")
     private List<ServiceBusiness> serviceBusinesses;
 }

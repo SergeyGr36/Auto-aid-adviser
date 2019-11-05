@@ -10,10 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
+@Table(name = "service")
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class ServiceBusiness {
@@ -25,5 +27,5 @@ public class ServiceBusiness {
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private TypeService typeService;
+    private ServiceType typeService;
 }
