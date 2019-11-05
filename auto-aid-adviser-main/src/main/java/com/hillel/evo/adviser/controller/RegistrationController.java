@@ -39,9 +39,9 @@ public class RegistrationController {
      * Password should be 8-64 symbols long, could contain uppercase and lowercase latin letters,
      * digits 0-9, and underscores.
      * Should contain at least one digit, one uppercase and one lowercase letter.
-     * Violation of these rules results in "bad request" status.
+     * Violation of these rules results in Bad Request status 400.
      *
-     * If the user with provided email already exist, the returned status is Already Reported 208.
+     * If the user with provided email already exist, the returned status is Conflict 409.
      *
      * @param registrationDto
      * @return
@@ -59,8 +59,8 @@ public class RegistrationController {
      * Returns a response with status ok, jwt token in "Authorization" header, and user dto body.
      * Jwt holds user id.
      *
-     * If activation code is malformed, returns status Bad Request 403.
-     * If activation code is invalid, returns status Not Found 404.
+     * If activation code is malformed, returns status Bad Request 400.
+     * If activation code is invalid, returns status Bad Request 400.
      * @param activationCode the activation code from email.
      * @return Returns a response with status ok, jwt token in "Authorization" header, and user dto body.
      */
@@ -74,12 +74,13 @@ public class RegistrationController {
     /**
      * Authenticates the user with provided credentials - email and password.
      * If authentication fails, returns status 401 Unauthorized.
-     * If user credentials violate required patterns, then status 403 bad request is returned.
+     * If user credentials violate required patterns, returns status Bad Request 400.
      *
      * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
      * Jwt holds user id.
      * @param loginRequestDTO the request, containing user credentials.
-     * @return An http response with status ok and with jwt token, or an error status Unauthorized 401.
+     * @return An http response with status ok and with jwt token,
+     * or an error status Unauthorized 401, or an error status Bad Request 400.
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> authenticateUser(

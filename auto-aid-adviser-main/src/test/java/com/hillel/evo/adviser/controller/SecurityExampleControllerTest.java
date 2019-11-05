@@ -28,7 +28,7 @@ class SecurityExampleControllerTest {
     private static final String UNSECURED_ROUTE = "/example/unsecured";
 
     private static final String EMAIL = "test@gmail.com";
-    private static final String PASSWORD = "testtest123";
+    private static final String BUSINESS_EMAIL = "business@gmail.com";
 
     private AdviserUserDetails user;
 
@@ -63,6 +63,21 @@ class SecurityExampleControllerTest {
                         .header("Authorization", JwtService.TOKEN_PREFIX + jwtToken))
                 .andExpect(status().isOk());
     }
+
+
+    @Test
+    public void whenRequestSecuredRouteWithValidJwtButWrongRole_thenResponseStatusIsForbidden403() throws Exception {
+
+        AdviserUserDetails businessUser = userRepository.findByEmail(BUSINESS_EMAIL).get();
+
+        String jwtToken = jwtService.generateAccessToken(businessUser.getId());
+
+        mockMvc.perform(
+                get(SECURED_ROUTE)
+                        .header("Authorization", JwtService.TOKEN_PREFIX + jwtToken))
+                .andExpect(status().isForbidden());
+    }
+
 
     @Test
     public void whenRequestSecuredRouteWithoutJwt_thenResponseStatusIsUnauthorized() throws Exception {
@@ -102,4 +117,5 @@ class SecurityExampleControllerTest {
         user.setPassword(encoderService.encode(password));
         userRepository.save(user);
     }
+
 }

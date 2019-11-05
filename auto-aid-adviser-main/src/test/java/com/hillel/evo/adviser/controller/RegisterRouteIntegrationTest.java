@@ -78,7 +78,7 @@ public class RegisterRouteIntegrationTest {
     }
 
     @Test
-    public void whenUserAlreadyExists_thenReturnStatusIsAlreadyReported208() throws Exception {
+    public void whenUserAlreadyExists_thenReturnStatusIsConflict409() throws Exception {
 
         assertTrue(userRepository.existsByEmail(EXISTING_USER_EMAIL));
 
@@ -87,12 +87,11 @@ public class RegisterRouteIntegrationTest {
         mockMvc.perform(post(REGISTER_ROUTE)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(registrationDto)))
-                .andExpect(status().isAlreadyReported());
-
+                .andExpect(status().isConflict());
     }
 
     @Test
-    public void whenMalformedEmailProvided_thenReturnStatusIsBadRequest() throws Exception {
+    public void whenMalformedEmailProvided_thenReturnStatusIsBadRequest400() throws Exception {
 
         registrationDto.setEmail("as=1@lll.mm");
 

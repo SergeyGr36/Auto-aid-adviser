@@ -77,7 +77,7 @@ class LoginRouteIntegrationTest {
 
 
     @Test
-    public void whenWrongPasswordProvided_thenReturnStatusIsUnauthorized() throws Exception {
+    public void whenWrongPasswordProvided_thenReturnStatusIsUnauthorized401() throws Exception {
 
         loginRequestDto.setPassword("WrongPassword555");
 
@@ -88,7 +88,7 @@ class LoginRouteIntegrationTest {
     }
 
     @Test
-    public void whenWrongUsernameProvided_thenReturnStatusIsUnauthorized() throws Exception {
+    public void whenWrongUsernameProvided_thenReturnStatusIsUnauthorized401() throws Exception {
 
         loginRequestDto.setEmail("wrong@test.com");
 
@@ -99,7 +99,7 @@ class LoginRouteIntegrationTest {
     }
 
     @Test
-    public void whenAccountNotActivated_thenReturnStatusIsUnauthorized() throws Exception {
+    public void whenAccountNotActivated_thenReturnStatusIsUnauthorized401() throws Exception {
 
         AdviserUserDetails user = userRepository.findByEmail(EMAIL).get();
         user.setActive(false);
@@ -112,7 +112,7 @@ class LoginRouteIntegrationTest {
     }
 
     @Test
-    public void whenMalformedEmail_thenReturnStatusIsBadRequest() throws Exception {
+    public void whenMalformedEmail_thenReturnStatusIsBadRequest400() throws Exception {
 
         loginRequestDto.setEmail("?1=1@mail.ua");
 

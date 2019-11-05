@@ -26,7 +26,6 @@ public class ActivateRouteIntegrationTest {
     private static final String ACTIVATE_ROUTE = "/user/activate";
 
     private static final String USER_EMAIL = "test@gmail.com";
-    private static final String USER_PASSWORD = "testtest123";
 
     private static final String ACTIVATION_CODE = "aaa-bbb-ccc-123";
 
@@ -68,15 +67,15 @@ public class ActivateRouteIntegrationTest {
     }
 
     @Test
-    public void whenWrongActivationCodeProvided_thenReturnStatusIsNotFound404() throws Exception {
+    public void whenWrongActivationCodeProvided_thenReturnStatusIsBadRequest400() throws Exception {
 
         mockMvc.perform(
                 post(ACTIVATE_ROUTE + "/" + "111-222"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void whenMalformedActivationCodeProvided_thenReturnStatusIsBadRequest() throws Exception {
+    public void whenMalformedActivationCodeProvided_thenReturnStatusIsBadRequest400() throws Exception {
 
         mockMvc.perform(
                 post(ACTIVATE_ROUTE + "/" + "11..!*"))
