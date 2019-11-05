@@ -34,7 +34,7 @@ public class ManualAWSEmailServiceTest {
     @Test
     public void doTest() {
         MessageParameters parameters = MessageParameters.builder()
-                .toAddresses("somemailbox@ukr.net")
+                .toAddresses("yourownmailbox@ukr.net")
                 .subject("AWS mail service test")
                 .text("Please use email client with HTML support.")
                 .html("<H4>If you receive this message, AWS mail service test was successful.</H4>")

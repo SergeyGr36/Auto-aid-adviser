@@ -9,6 +9,7 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
 import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -17,21 +18,13 @@ import org.slf4j.LoggerFactory;
 
 @Service
 @ConditionalOnProperty(prefix = "email", name = "service", havingValue = "aws")
+@RequiredArgsConstructor
 @SuppressWarnings("PMD.BeanMembersShouldSerialize")
 public class AWSEmailService implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AWSEmailService.class);
+    private final AmazonSimpleEmailService client;
     private final EmailConfigurationProperties emailProperties;
-    private AmazonSimpleEmailService client;
     private final TemplateService templateService;
-
-    @Autowired
-    public AWSEmailService(AmazonSimpleEmailService client,
-                           EmailConfigurationProperties emailProperties,
-                           TemplateService templateService) {
-        this.client = client;
-        this.emailProperties = emailProperties;
-        this.templateService = templateService;
-    }
 
     @Override
     public boolean sendMessage(MessageParameters params) {

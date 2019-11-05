@@ -28,7 +28,7 @@ public class ManualDefaultEmailServiceTest {
     @Test
     public void doTest() {
         MessageParameters parameters = MessageParameters.builder()
-                .toAddresses("somemailbox@ukr.net")
+                .toAddresses("yourownmailbox@ukr.net")
                 .nameOfTemplate("confirmation-of-registration")
                 .templateParameter("userName", "USERNAME")
                 .templateParameter("link", "www.google.com")

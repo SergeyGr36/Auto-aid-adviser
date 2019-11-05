@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.service;
 import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
 import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,22 +17,13 @@ import java.util.Date;
 
 @Service
 @ConditionalOnProperty(prefix = "email", name = "service", havingValue = "default", matchIfMissing = true)
+@RequiredArgsConstructor
 @SuppressWarnings("PMD.BeanMembersShouldSerialize")
 public class DefaultEmailService implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultEmailService.class);
     private final JavaMailSender javaMailSender;
     private final EmailConfigurationProperties emailProperties;
     private final TemplateService templateService;
-
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public DefaultEmailService(JavaMailSender javaMailSender,
-                               EmailConfigurationProperties emailProperties,
-                               TemplateService templateService) {
-        this.javaMailSender = javaMailSender;
-        this.emailProperties = emailProperties;
-        this.templateService = templateService;
-    }
 
     @Override
     public boolean sendMessage(MessageParameters params) {
