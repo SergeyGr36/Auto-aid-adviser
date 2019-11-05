@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.service;
 import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
 import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
+import com.hillel.evo.adviser.parameter.MessageParameters.MessageParametersBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,29 +25,24 @@ public class DefaultEmailServiceTest {
     private static final TemplateService mockTemplateService = mock(TemplateService.class);
     private static final String testString = "Test";
     private static MessageParameters parameters;
-    private static MessageParameters.Builder builder;
+    private static MessageParametersBuilder builder = MessageParameters.builder();
 
     private EmailService service = new DefaultEmailService(mockSender, mockProperties, mockTemplateService);
 
     @BeforeAll
     static void setUp() {
+        builder.toAddresses("some@ukr.net");
         when(mockSender.createMimeMessage()).thenReturn(mockMessage);
         when(mockProperties.getUsername()).thenReturn("Anonimous");
-        builder = new MessageParameters.Builder()
-                .setToAddresses("some@ukr.net")
-                .setCcAddresses("some@gmail.com")
-                .setBccAddresses("another@ukr.net")
-                .setSubject(testString)
-                .setText(testString)
-                .setHtml(testString);
         when(mockTemplateService.convert(any(MessageParameters.class), any(EmailContentType.class))).thenReturn(testString);
     }
 
     @Test
     public void shouldReturnTrueWhenSendMessageWithTemplate() {
         //given
-        parameters = builder.setNameOfTemplate("some-template.html")
-                .addTemplateParameter("userName", "Obama")
+        setAdditionalBuilderFields();
+        parameters = builder.nameOfTemplate("some-template.html")
+                .templateParameter("userName", "Obama")
                 .build();
         Mockito.doNothing().when(mockSender).send(any(MimeMessage.class));
 
@@ -60,7 +56,22 @@ public class DefaultEmailServiceTest {
     @Test
     public void shouldReturnTrueWhenSendMessageWithoutTemplate() {
         //given
-        parameters = builder.setNameOfTemplate(null).build();
+        setAdditionalBuilderFields();
+        parameters = builder.nameOfTemplate(null).build();
+        Mockito.doNothing().when(mockSender).send(any(MimeMessage.class));
+
+        //when
+        boolean successful = service.sendMessage(parameters);
+
+        //then
+        assertTrue(successful);
+    }
+
+    @Test
+    public void shouldReturnTrueWhenSendEmptyMessage() {
+        //given
+        clearAdditionalBuilderFields();
+        parameters = builder.build();
         Mockito.doNothing().when(mockSender).send(any(MimeMessage.class));
 
         //when
@@ -73,6 +84,8 @@ public class DefaultEmailServiceTest {
     @Test
     public void shouldThrowExceptionWhenSendMessage() {
         //given
+        setAdditionalBuilderFields();
+        parameters = builder.build();
         Mockito.doThrow(new MailSendException("Failed")).when(mockSender).send(any(MimeMessage.class));
 
         //when
@@ -80,5 +93,21 @@ public class DefaultEmailServiceTest {
 
         //then
         assertFalse(successful);
+    }
+
+    private static void setAdditionalBuilderFields() {
+        builder.ccAddresses("some@gmail.com")
+                .bccAddresses("another@ukr.net")
+                .subject(testString)
+                .text(testString)
+                .html(testString);
+    }
+
+    private static void clearAdditionalBuilderFields() {
+        builder.ccAddresses(null)
+                .bccAddresses(null)
+                .subject(null)
+                .text(null)
+                .html(null);
     }
 }

@@ -40,9 +40,15 @@ public class DefaultEmailService implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(emailProperties.getUsername());
             helper.setTo(params.getToAddresses());
-            helper.setCc(params.getCcAddresses());
-            helper.setBcc(params.getBccAddresses());
-            helper.setSubject(params.getSubject());
+            if (params.getCcAddresses() != null) {
+                helper.setCc(params.getCcAddresses());
+            }
+            if (params.getBccAddresses() != null) {
+                helper.setBcc(params.getBccAddresses());
+            }
+            if (params.getSubject() != null) {
+                helper.setSubject(params.getSubject());
+            }
             String text = templateService.convert(params, EmailContentType.TEXT);
             String html = templateService.convert(params, EmailContentType.HTML);
             helper.setText(text, html);

@@ -2,7 +2,7 @@ spring:
   mail:
     host: email-smtp.eu-west-1.amazonaws.com
     port: 587
-    username: xxxxxxxxxxxxxxxx@gmail.com
+    username: xxxxxxxxxxxxxx@gmail.com
     properties.mail.smtp:
       auth: true
       starttls.enable: true

@@ -11,32 +11,33 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.ITemplateEngine;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import com.hillel.evo.adviser.parameter.MessageParameters.MessageParametersBuilder;
 
 class DefaultTemplateServiceTest {
     private static final ITemplateEngine mockTemplateEngine = mock(ITemplateEngine.class);
     private static final TemplateService service = new DefaultTemplateService(mockTemplateEngine);
     private static MessageParameters parameters;
-    private static MessageParameters.Builder builder;
+    private static MessageParametersBuilder builder;
     private static final String testString = "Test";
     private static final String testNameOfTemplate = "some-template.html";
 
     @BeforeAll
     static void setUp() {
         doReturn(testString).when(mockTemplateEngine).process(eq(testNameOfTemplate), any(Context.class));
-        builder = new MessageParameters.Builder()
-                .setToAddresses("some@ukr.net")
-                .setCcAddresses("some@gmail.com")
-                .setBccAddresses("another@ukr.net")
-                .setSubject(testString)
-                .setText(testString)
-                .setHtml(testString);
+        builder = MessageParameters.builder()
+                .toAddresses("some@ukr.net")
+                .ccAddresses("some@gmail.com")
+                .bccAddresses("another@ukr.net")
+                .subject(testString)
+                .text(testString)
+                .html(testString);
     }
 
     @Test
     void shouldConvertWithTemplate() {
         //given
-        parameters = builder.setNameOfTemplate(testNameOfTemplate)
-                .addTemplateParameter("userName", "Obama")
+        parameters = builder.nameOfTemplate(testNameOfTemplate)
+                .templateParameter("userName", "Obama")
                 .build();
 
         //when
@@ -49,7 +50,7 @@ class DefaultTemplateServiceTest {
     @Test
     void shouldConvertWithoutTemplate() {
         //given
-        parameters = builder.setNameOfTemplate(null)
+        parameters = builder.nameOfTemplate(null)
                 .build();
 
         //when

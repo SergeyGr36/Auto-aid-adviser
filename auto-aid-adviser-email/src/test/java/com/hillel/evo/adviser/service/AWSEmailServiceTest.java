@@ -5,6 +5,7 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.hillel.evo.adviser.configuration.EmailConfigurationProperties;
 import com.hillel.evo.adviser.enums.EmailContentType;
 import com.hillel.evo.adviser.parameter.MessageParameters;
+import com.hillel.evo.adviser.parameter.MessageParameters.MessageParametersBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,28 +22,28 @@ class AWSEmailServiceTest {
     private static final AmazonSimpleEmailService mockClient = mock(AmazonSimpleEmailService.class);
     private static final String testString = "Test";
     private static MessageParameters parameters;
-    private static MessageParameters.Builder builder;
+    private static MessageParametersBuilder builder;
 
     private final EmailService service = new AWSEmailService(mockClient, mockProperties, mockTemplateService);
 
     @BeforeAll
     static void setUp() {
         when(mockProperties.getUsername()).thenReturn("Anonimous");
-        builder = new MessageParameters.Builder()
-                .setToAddresses("some@ukr.net")
-                .setCcAddresses("some@gmail.com")
-                .setBccAddresses("another@ukr.net")
-                .setSubject(testString)
-                .setText(testString)
-                .setHtml(testString);
+        builder = MessageParameters.builder()
+                .toAddresses("some@ukr.net")
+                .ccAddresses("some@gmail.com")
+                .bccAddresses("another@ukr.net")
+                .subject(testString)
+                .text(testString)
+                .html(testString);
         when(mockTemplateService.convert(any(MessageParameters.class), any(EmailContentType.class))).thenReturn(testString);
     }
 
     @Test
     public void shouldReturnTrueWhenSendMessageWithTemplate() {
         //given
-        parameters = builder.setNameOfTemplate("some-template.html")
-                .addTemplateParameter("userName", "Obama")
+        parameters = builder.nameOfTemplate("some-template.html")
+                .templateParameter("userName", "Obama")
                 .build();
         when(mockClient.sendEmail(any(SendEmailRequest.class))).thenReturn(null);
 
@@ -56,7 +57,7 @@ class AWSEmailServiceTest {
     @Test
     public void shouldReturnTrueWhenSendMessageWithoutTemplate() {
         //given
-        parameters = builder.setNameOfTemplate(null).build();
+        parameters = builder.nameOfTemplate(null).build();
         when(mockClient.sendEmail(any(SendEmailRequest.class))).thenReturn(null);
 
         //when
