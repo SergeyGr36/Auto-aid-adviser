@@ -30,3 +30,9 @@ spring:
 
 email:
   service: aws
+
+
+app:
+  jwt:
+    secretKey: super-secret-test-key
+    expirationMillis: 3600000
