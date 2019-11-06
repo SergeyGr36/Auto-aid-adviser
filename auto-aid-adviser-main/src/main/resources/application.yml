@@ -22,8 +22,23 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: xxxxxxxxx@gmail.com
+    password: xxxxxxx
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
+      connectiontimeout: 5000
+      timeout: 3000
+      writetimeout: 5000
 
 server:
   port: 8080
   servlet:
     context-path: /api
+
+email:
+  service: default
