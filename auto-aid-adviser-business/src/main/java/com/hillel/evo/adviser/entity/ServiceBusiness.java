@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "service")
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
+//Есть справочник услуг (покраска, замена масла, продажа запчастей, ...) услуги привязаны к группам услуг
 public class ServiceBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

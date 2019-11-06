@@ -5,21 +5,17 @@ import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceBusiness;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import com.hillel.evo.adviser.repository.ServiceBusinessRepository;
-import com.hillel.evo.adviser.repository.TypeBusinessRepository;
-import com.hillel.evo.adviser.service.UserService;
+import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring",
         uses = {BusinessUserRepository.class,
-                TypeBusinessRepository.class,
+                BusinessTypeRepository.class,
                 ServiceBusinessRepository.class})
 public interface BusinessMapper {
 

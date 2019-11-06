@@ -6,8 +6,6 @@ import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +31,11 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public List<BusinessDto> findAllByUser(Long id) {
         return mapper.listToDto(businessRepository.findAllByBusinessUser_Id(id));
+    }
+
+    @Override
+    public BusinessDto getBusinessById(Long id) {
+        return null;
     }
 
     @Override

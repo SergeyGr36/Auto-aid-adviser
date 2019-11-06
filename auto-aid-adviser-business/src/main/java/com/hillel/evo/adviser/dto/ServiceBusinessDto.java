@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 public class ServiceBusinessDto {
     private Long id;
     private String type;
-    private TypeServiceDto typeService;
+    private ServiceTypeDto typeService;
 }
