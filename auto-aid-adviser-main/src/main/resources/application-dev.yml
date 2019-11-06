@@ -22,6 +22,11 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: /var/adviser/indexes/
+          reindex: false
 
 email:
   service: aws

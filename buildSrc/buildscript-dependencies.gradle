@@ -1,4 +1,4 @@
- ext.springBootVersion = '2.1.4.RELEASE'
+ext.springBootVersion = '2.1.4.RELEASE'
 
 ext.extDependencies = {
     classpath("io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE")
@@ -6,4 +6,7 @@ ext.extDependencies = {
     classpath("com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3")
     classpath("gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0")
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+
 }
+
+

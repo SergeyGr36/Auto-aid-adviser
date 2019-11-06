@@ -44,26 +44,30 @@ configure(allprojects) { project ->
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
-        implementation boot.starterMail
-        implementation boot.starterThyme        
+        implementation boot.starterThyme
+        testImplementation boot.starterTest
+        
         implementation utils.jaxbApi
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
-        testImplementation boot.starterTest
 
         runtimeOnly db.h2
         runtimeOnly db.postgres
         runtimeOnly db.awsSecretsmanager
+        implementation db.postgres
+        testImplementation db.h2
+        
         implementation misc.awsSdk
         implementation misc.swagger
         implementation misc.swaggerUI
 
         annotationProcessor utils.lombok
         annotationProcessor boot.annotationProcessor
+        
         compileOnly utils.lombok
+        testImplementation utils.lombok
 
-        implementation db.postgres
-        testImplementation db.h2
+        testImplementation testing.junit5
     }
 }
 
@@ -71,8 +75,7 @@ wrapper {
     version = '5.6.2'
 }
 
-
-project(":user-service") {
+project(":auto-aid-adviser-user") {
     bootJar {
         enabled = false
     }
@@ -81,12 +84,29 @@ project(":user-service") {
     }
 }
 
+project(':auto-aid-adviser-search-service') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation hibernate.search
+        implementation hibernate.em
+        implementation hibernate.spatial
+
+    }
+}
 project(":auto-aid-adviser-email") {
     bootJar {
         enabled = false
     }
     jar {
         enabled = true
+    }
+    dependencies {
+        implementation boot.starterMail
     }
 }
 
@@ -98,7 +118,8 @@ project(":auto-aid-adviser-main") {
         classifier = 'boot'
     }
     dependencies {
-        implementation project(':user-service')
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
     }
 }
