@@ -3,13 +3,7 @@ package com.hillel.evo.adviser.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -24,6 +18,6 @@ public class ServiceType {
     @NotNull
     private String type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private BusinessType businessType;
 }

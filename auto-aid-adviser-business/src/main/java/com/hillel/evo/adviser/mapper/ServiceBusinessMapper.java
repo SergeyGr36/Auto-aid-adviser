@@ -14,6 +14,7 @@ public interface ServiceBusinessMapper {
     ServiceBusiness toEntity(ServiceBusinessDto serviceBusinessDto);
     ServiceBusinessDto toDto(ServiceBusiness businessService);
     List<ServiceBusinessDto> toDto (List<ServiceBusiness> serviceBusinesses);
+    List<ServiceBusiness> toEntity (List<ServiceBusinessDto> serviceBusinessesDto);
     ServiceBusinessShortDto toShortDto(ServiceBusiness businessService);
 
     @Mapping(target = "serviceType", ignore = true)

@@ -7,6 +7,7 @@ import com.hillel.evo.adviser.repository.ServiceTypeRepository;
 import com.hillel.evo.adviser.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +25,13 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     public ServiceTypeDto createServiceType(ServiceTypeDto dto) {
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
-
+    @Transactional
     @Override
-    public List<ServiceTypeDto> findAllByBusinessTypeId(Long id) {
+    public List<ServiceTypeDto> findAllByServiceTypeId(Long id) {
         final Iterable<Long> idForSearch = Arrays.asList(id);
         return mapper.toDto(repository.findAllById(idForSearch));
     }
-
+@Transactional
     @Override
     public ServiceTypeDto getServiceTypeById(Long id) {
         return mapper.toDto(repository.getOne(id));

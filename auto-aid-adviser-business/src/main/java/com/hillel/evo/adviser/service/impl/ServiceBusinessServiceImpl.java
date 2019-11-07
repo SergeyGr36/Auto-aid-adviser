@@ -7,6 +7,7 @@ import com.hillel.evo.adviser.repository.ServiceBusinessRepository;
 import com.hillel.evo.adviser.service.ServiceBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,11 +23,13 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
     }
 
     @Override
+    @Transactional
     public ServiceBusinessDto getServiceBusinessById(Long id) {
         return mapper.toDto(repository.getOne(id));
     }
 
     @Override
+    @Transactional
     public List<ServiceBusinessDto> getAllByServiceTypeId(Long id) {
         final Iterable<Long> idForSearch = Arrays.asList(id);
         return mapper.toDto(repository.findAllById(idForSearch));
