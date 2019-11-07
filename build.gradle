@@ -68,6 +68,9 @@ configure(allprojects) { project ->
         testImplementation utils.lombok
 
         testImplementation testing.junit5
+
+        implementation boot.starterSecurity
+
     }
 }
 
@@ -121,5 +124,19 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
+        implementation project(':auto-aid-adviser-security')
+    }
+}
+
+project(':auto-aid-adviser-security') {
+    dependencies {
+        bootJar {
+            enabled = false
+        }
+        jar {
+            enabled = true
+        }
+        implementation project(":auto-aid-adviser-user")
+        implementation security.jwt
     }
 }

@@ -6,8 +6,8 @@ import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.enums.RoleUser;
-import com.hillel.evo.adviser.exception.ResourceAlreadyExistsException;
-import com.hillel.evo.adviser.exception.ResourceNotFoundException;
+import com.hillel.evo.adviser.exception.UserAlreadyExistsRegistrationException;
+import com.hillel.evo.adviser.exception.ActivationCodeFoundNoMatchException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
             adviserUserDetails.setActivationCode(null);
             AdviserUserDetails save = userDetailRepository.save(adviserUserDetails);
             return new AdviserUserDetailsDto(save);
-        }).orElseThrow(ResourceNotFoundException::new);
+        }).orElseThrow(() -> new ActivationCodeFoundNoMatchException());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     private AdviserUserDetails createNewAdviserUserDetails(UserRegistrationDto dto) {
         if (userDetailRepository.existsByEmail(dto.getEmail())) {
-            throw new ResourceAlreadyExistsException();
+            throw new UserAlreadyExistsRegistrationException();
         }
 
         AdviserUserDetails userDetails = new AdviserUserDetails();
