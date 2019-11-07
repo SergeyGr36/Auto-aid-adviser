@@ -25,8 +25,8 @@ public class ServiceBusiness {
     private Long id;
 
     @NotNull
-    private String type;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ServiceType typeService;
+    private ServiceType serviceType;
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 public class BusinessTypeServiceImpl implements BusinessTypeService {
+
     @Autowired
     private BusinessTypeMapper mapper;
     private final BusinessTypeRepository repository;

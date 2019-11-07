@@ -29,12 +29,12 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
     @Override
     public List<ServiceBusinessDto> getAllByServiceTypeId(Long id) {
         final Iterable<Long> idForSearch = Arrays.asList(id);
-        return mapper.toAllDto(repository.findAllById(idForSearch));
+        return mapper.toDto(repository.findAllById(idForSearch));
     }
 
     @Override
     public ServiceBusinessDto createServiceBusiness(ServiceBusinessDto dto) {
-        return mapper.toDto(repository.save(mapper.toService(dto)));
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override

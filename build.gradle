@@ -66,6 +66,8 @@ configure(allprojects) { project ->
         testImplementation testing.junit5
         testImplementation utils.lombok
 
+        implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+
     }
 }
 
@@ -107,7 +109,6 @@ project(':auto-aid-adviser-business') {
     dependencies {
         implementation project(':auto-aid-adviser-user')
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
-
     }
 }
 

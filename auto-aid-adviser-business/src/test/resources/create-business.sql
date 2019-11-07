@@ -1,17 +1,17 @@
-insert into business_type(type) values
+insert into business_type(name) values
 ('CTO'),
 ('shinomantazh'),
 ('shop'),
 ('gaz');
 
-insert into service_type(type, type_business_id) values
-('body', (select id from business_type where type like 'CTO')),
-('run', (select id from business_type where type like 'CTO')),
-('engine', (select id from business_type where type like 'CTO')),
-('disk', (select id from business_type where type like 'shinomantazh')),
-('gum', (select id from business_type where type like 'shinomantazh'));
+insert into service_type(type, business_type_id) values
+('body', (select id from business_type where name like 'CTO')),
+('run', (select id from business_type where name like 'CTO')),
+('engine', (select id from business_type where name like 'CTO')),
+('disk', (select id from business_type where name like 'shinomantazh')),
+('gum', (select id from business_type where name like 'shinomantazh'));
 
-insert into service(type, type_service_id) values
+insert into service(name, service_type_id) values
 ('straightening dents', (select id from service_type where type like 'body')),
 ('balancing', (select id from service_type where type like 'run')),
 ('oil change', (select id from service_type where type like 'engine')),

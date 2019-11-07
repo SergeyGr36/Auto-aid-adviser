@@ -22,13 +22,13 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public ServiceTypeDto createServiceType(ServiceTypeDto dto) {
-        return mapper.toDto(repository.save(mapper.toType(dto)));
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
     public List<ServiceTypeDto> findAllByBusinessTypeId(Long id) {
         final Iterable<Long> idForSearch = Arrays.asList(id);
-        return mapper.allToDto(repository.findAllById(idForSearch));
+        return mapper.toDto(repository.findAllById(idForSearch));
     }
 
     @Override

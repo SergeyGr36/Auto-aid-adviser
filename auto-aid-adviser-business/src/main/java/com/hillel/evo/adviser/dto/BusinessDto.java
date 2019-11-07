@@ -14,6 +14,6 @@ public class BusinessDto {
     private ContactDto contact;
     private String workingDays;
     private String workingHours;
-    private List<Long> serviceBusinessesIds;
+    private List<ServiceBusinessShortDto> serviceBusinesses;
     private Long userId;
 }

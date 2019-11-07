@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class BusinessType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @NonNull
-    private String type;
+    private String name;
 }
