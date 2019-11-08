@@ -1,6 +1,8 @@
 rootProject.name = 'auto-aid-adviser'
-include 'auto-aid-adviser-search-service'
 include 'auto-aid-adviser-main'
+include 'auto-aid-adviser-search-service'
 include 'auto-aid-adviser-user'
+include 'auto-aid-adviser-email'
+include 'auto-aid-adviser-security'
 include 'auto-aid-adviser-websockets'
 
