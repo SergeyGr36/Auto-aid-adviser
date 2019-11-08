@@ -125,6 +125,7 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
         implementation project(':auto-aid-adviser-security')
+        implementation project(':auto-aid-adviser-image')
     }
 }
 
@@ -140,3 +141,16 @@ project(':auto-aid-adviser-security') {
         implementation security.jwt
     }
 }
+
+project(":auto-aid-adviser-image") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(":auto-aid-adviser-user")
+    }
+}
+
