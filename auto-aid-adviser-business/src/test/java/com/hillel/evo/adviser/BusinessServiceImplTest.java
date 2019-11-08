@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceBusinessShortDto;
 import com.hillel.evo.adviser.entity.ServiceBusiness;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,11 +62,53 @@ public class BusinessServiceImplTest {
     }
 
     @Test
-    public void whenSendIdUserThenReturnListBusinessDto() {
+    public void whenFindByUserIdThenReturnListBusinessDto() {
         //when
         List<BusinessDto> list = businessService.findAllByUser(userId);
         //then
         assertEquals(list.size(), 2);
+    }
+
+    @Test
+    public void whenFindByBusinessIdThenReturnBusinessDto() {
+        //given
+        BusinessDto dto = businessService.findAllByUser(userId).get(0);
+        //when
+        BusinessDto findBusinessDto = businessService.findBusinessById(dto.getId());
+        //then
+        assertEquals(findBusinessDto.getId(), dto.getId());
+        assertEquals(findBusinessDto.getName(), dto.getName());
+        assertEquals(findBusinessDto.getServiceBusinesses().size(), dto.getServiceBusinesses().size());
+    }
+
+    @Test
+    public void whenFindByBusinessIdThenReturnException() {
+        assertThrows(ResourceNotFoundException.class, () -> businessService.findBusinessById(99L));
+    }
+
+    @Test
+    public void whenUpdateBusinessThenReturnBusinessDto() {
+        //given
+        BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        sourceDto.setName("updating name");
+        sourceDto.getServiceBusinesses().remove(0);
+        //when
+        BusinessDto updateDto = businessService.updateBusiness(sourceDto);
+        //then
+        assertEquals(updateDto.getId(), sourceDto.getId());
+        assertEquals(updateDto.getName(), sourceDto.getName());
+        assertEquals(updateDto.getServiceBusinesses().size(), sourceDto.getServiceBusinesses().size());
+    }
+
+    @Test
+    public void whenDeleteBusinessThenNotThrow() {
+        BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        assertDoesNotThrow(() -> businessService.deleteBusiness(sourceDto.getId()));
+    }
+
+    @Test
+    public void whenDeleteBusinessThenReturnException() {
+        assertThrows(Exception.class, () -> businessService.deleteBusiness(99L));
     }
 
     private BusinessDto createTestDto() {

@@ -15,7 +15,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
@@ -70,7 +73,9 @@ public class ServiceBusinessServiceTest {
     //todo дописать даний метод
     @Test
     public void tryToDeleteThenReturnNothing() {
-        service.deleteServiceBusiness(1L);
-        assertNull(repo.findAll());
+        final ServiceBusiness type = repo.findByName("for-delete-test").get();
+        final Long id = type.getId();
+        assertDoesNotThrow(() -> service.deleteServiceBusiness(id));
+        assertTrue(repo.findById(id).isEmpty());
     }
 }

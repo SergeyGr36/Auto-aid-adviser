@@ -6,8 +6,6 @@ import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +13,11 @@ import java.util.List;
 @Service
 public class BusinessServiceImpl implements BusinessService {
 
-    @Autowired
-    private BusinessMapper mapper;
+    private final BusinessMapper mapper;
     private final BusinessRepository businessRepository;
 
-    public BusinessServiceImpl(BusinessRepository businessRepository) {
+    public BusinessServiceImpl(BusinessMapper mapper, BusinessRepository businessRepository) {
+        this.mapper = mapper;
         this.businessRepository = businessRepository;
     }
 
@@ -36,7 +34,7 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public BusinessDto getBusinessById(Long id) {
+    public BusinessDto findBusinessById(Long id) {
         return mapper.toDto(businessRepository.findById(id).orElseThrow(ResourceNotFoundException::new));
     }
 

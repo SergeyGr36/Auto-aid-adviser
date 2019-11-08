@@ -2,12 +2,12 @@ package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.exception.DeleteException;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessTypeMapper;
 import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,22 +27,21 @@ public class BusinessTypeServiceImpl implements BusinessTypeService {
         return mapper.toDto(repository.save(mapper.toType(dto)));
     }
 
-    @Override//+
+    @Override
     public List<BusinessTypeDto> findAll() {
         return mapper.toAllDto(repository.findAll());
     }
-    @Transactional
-    @Override //+
-    public BusinessTypeDto getBusinessTypeById(Long id) {
 
-        return mapper.toDto(repository.getOne(id));
+    @Override
+    public BusinessTypeDto findBusinessTypeById(Long id) {
+        return mapper.toDto(repository.findById(id).orElseThrow(ResourceNotFoundException::new));
     }
 
     @Override
     public BusinessTypeDto updateBusinessType(BusinessTypeDto dto) {
         return createBusinessType(dto);
     }
-//+
+
     @Override
     public void deleteBusinessType(Long id) {
         try {

@@ -7,7 +7,7 @@ import java.util.List;
 public interface BusinessService {
     BusinessDto createBusiness(BusinessDto dto);
     List<BusinessDto> findAllByUser(Long id);
-    BusinessDto getBusinessById(Long id);
+    BusinessDto findBusinessById(Long id);
     BusinessDto updateBusiness(BusinessDto dto);
     void deleteBusiness(Long id);
 

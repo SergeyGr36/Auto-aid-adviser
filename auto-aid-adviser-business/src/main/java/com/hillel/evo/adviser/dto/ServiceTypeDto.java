@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ServiceTypeDto {
     private long id;
-    private String type;
+    private String name;
     private BusinessTypeDto businessType;
 }

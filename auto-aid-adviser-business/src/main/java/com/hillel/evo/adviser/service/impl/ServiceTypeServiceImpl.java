@@ -1,43 +1,45 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
+import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
 import com.hillel.evo.adviser.repository.ServiceTypeRepository;
 import com.hillel.evo.adviser.service.ServiceTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
+
 @Service
 public class ServiceTypeServiceImpl implements ServiceTypeService {
-    @Autowired
-    private ServiceTypeMapper mapper;
+    private final ServiceTypeMapper mapper;
     private final ServiceTypeRepository repository;
 
-    public ServiceTypeServiceImpl(ServiceTypeRepository repository) {
+    public ServiceTypeServiceImpl(ServiceTypeMapper mapper, ServiceTypeRepository repository) {
+        this.mapper = mapper;
         this.repository = repository;
     }
 
     @Override
+    @Transactional
     public ServiceTypeDto createServiceType(ServiceTypeDto dto) {
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
-    @Transactional
+
     @Override
-    public List<ServiceTypeDto> findAllByServiceTypeId(Long id) {
-        final Iterable<Long> idForSearch = Arrays.asList(id);
-        return mapper.toDto(repository.findAllById(idForSearch));
-    }
-@Transactional
-    @Override
-    public ServiceTypeDto getServiceTypeById(Long id) {
-        return mapper.toDto(repository.getOne(id));
+    public List<ServiceTypeDto> findAllByBusinessTypeId(Long id) {
+        return mapper.toDto(repository.findAllByBusinessType_Id(id));
     }
 
     @Override
+    public ServiceTypeDto getServiceTypeById(Long id) {
+        return mapper.toDto(repository.findById_Fetch(id).orElseThrow(ResourceNotFoundException::new));
+    }
+
+    @Override
+    @Transactional
     public ServiceTypeDto updateServiceType(ServiceTypeDto dto) {
         return createServiceType(dto);
     }

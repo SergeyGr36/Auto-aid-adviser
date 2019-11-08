@@ -1,8 +1,6 @@
 package com.hillel.evo.adviser;
 
-import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
-import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
@@ -17,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -38,20 +37,25 @@ public class ServiceTypeServiceImplTest {
     }
 
     @Test
+    public void tryToDeleteThenNotThrowException() {
+        ServiceType type = repo.findByName("test").get();
+        assertDoesNotThrow(() -> service.deleteServiceType(type.getId()));
+    }
+
+    @Test
     public void whenGetServiceTypeByIdThenReturnThisOne() {
         final ServiceType type = repo.findAll().get(0);
         final ServiceTypeDto dto = service.getServiceTypeById(type.getId());
-        assertEquals(type.getType(), dto.getType());
+        assertEquals(type.getName(), dto.getName());
         assertEquals(type.getId(), dto.getId());
     }
 
     @Test
     public void whenFindAllByServiceTypeIdThenReturnThisList() {
-        List<ServiceType> type;
-        List<ServiceTypeDto> dto = service.findAllByServiceTypeId(1L);
-        type = mapper.toEntity(dto);
+        List<ServiceTypeDto> dto = service.findAllByBusinessTypeId(1L);
+        List<ServiceType> type = mapper.toEntity(dto);
         for (int i = 0; i < type.size() && i < dto.size(); i++) {
-            assertEquals(type.get(i).getType(), dto.get(i).getType());
+            assertEquals(type.get(i).getName(), dto.get(i).getName());
             assertEquals(type.get(i).getId(), dto.get(i).getId());
         }
     }
@@ -59,17 +63,20 @@ public class ServiceTypeServiceImplTest {
     @Test
     public void whenCreateServiceTypeThenReturn() {
         ServiceTypeDto dtoSource = new ServiceTypeDto();
-        dtoSource.setType("yyyyy");
+        dtoSource.setName("yyyyy");
         ServiceTypeDto dtoTarget = service.createServiceType(dtoSource);
-        assertEquals(dtoSource.getType(), dtoTarget.getType());
+        assertEquals(dtoSource.getName(), dtoTarget.getName());
     }
 
     @Test
     public void whenUpdateServiceTypeThenReturn() {
-        ServiceTypeDto dtoSource = new ServiceTypeDto();
-        dtoSource.setType("yyyyy");
+        //given
+        ServiceTypeDto dtoSource = mapper.toDto(repo.findByName("body").get());
+        //when
+        dtoSource.setName("yyyyy");
         ServiceTypeDto dtoTarget = service.updateServiceType(dtoSource);
-        assertEquals(dtoSource.getType(), dtoTarget.getType());
+        //then
+        assertEquals(dtoSource.getName(), dtoTarget.getName());
     }
 //  //todo дописать даний метод
 //    @Test

@@ -32,8 +32,8 @@ public class BusinessController {
         return new ResponseEntity<>(businessService.findAllByUser(id), HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<BusinessDto> getBusinessById(@PathVariable Long id){
-        return ResponseEntity.ok(businessService.getBusinessById(id));
+    public ResponseEntity<BusinessDto> findBusinessById(@PathVariable Long id){
+        return ResponseEntity.ok(businessService.findBusinessById(id));
     }
 
     @PostMapping

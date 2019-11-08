@@ -7,7 +7,7 @@ import java.util.List;
 public interface BusinessTypeService {
     BusinessTypeDto createBusinessType(BusinessTypeDto dto);
     List<BusinessTypeDto> findAll();
-    BusinessTypeDto getBusinessTypeById(Long id);
+    BusinessTypeDto findBusinessTypeById(Long id);
     BusinessTypeDto updateBusinessType(BusinessTypeDto dto);
     void deleteBusinessType(Long id);
 }

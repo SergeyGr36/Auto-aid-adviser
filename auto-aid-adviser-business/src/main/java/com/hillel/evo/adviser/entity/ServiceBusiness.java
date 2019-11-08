@@ -21,6 +21,6 @@ public class ServiceBusiness {
     @NotNull
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ServiceType serviceType;
 }

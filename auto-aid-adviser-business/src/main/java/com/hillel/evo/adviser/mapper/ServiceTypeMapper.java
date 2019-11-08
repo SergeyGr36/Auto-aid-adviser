@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ServiceTypeRepository.class})
+@Mapper(componentModel = "spring", uses = {BusinessTypeMapper.class, ServiceTypeRepository.class})
 public interface ServiceTypeMapper {
     ServiceType toEntity(ServiceTypeDto dto);
     ServiceTypeDto toDto(ServiceType type);

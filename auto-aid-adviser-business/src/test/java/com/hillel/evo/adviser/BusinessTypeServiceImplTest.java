@@ -35,9 +35,17 @@ public class BusinessTypeServiceImplTest {
     }
 
     @Test
+    public void whenDeleteThenNotException() {
+        //given
+        BusinessType type = businessTypeRepository.findByName("test").get();
+        //then
+        assertDoesNotThrow(() -> businessTypeService.deleteBusinessType(type.getId()));
+    }
+
+    @Test
     public void whenGetBusinessTypeByIdThenReturnThisOne() {
         BusinessType type = businessTypeRepository.findAll().get(0);
-        final BusinessTypeDto dto = businessTypeService.getBusinessTypeById(type.getId());
+        final BusinessTypeDto dto = businessTypeService.findBusinessTypeById(type.getId());
         assertEquals(type.getName(), dto.getName());
         assertEquals(type.getId(), dto.getId());
     }
@@ -63,16 +71,18 @@ public class BusinessTypeServiceImplTest {
 
     @Test
     public void whenUpdateBusinessTypeThenReturn() {
-        BusinessTypeDto dtoSource = new BusinessTypeDto();
+        BusinessTypeDto dtoSource = mapper.toDto(businessTypeRepository.findByName("test").get());
         dtoSource.setName("yyyyy");
         BusinessTypeDto dtoTarget = businessTypeService.updateBusinessType(dtoSource);
         assertEquals(dtoSource.getName(), dtoTarget.getName());
     }
-//  //todo дописать даний метод
-//    @Test
-//    public void tryToDeleteThenReturnNothing() {
-//        businessTypeRepository.deleteAllInBatch();
-//        assertNull(businessTypeRepository.findAll());
-//    }
+
+/*
+    @Test
+    public void tryToDeleteThenReturnNothing() {
+        businessTypeRepository.deleteAllInBatch();
+        assertNull(businessTypeRepository.findAll());
+    }
+*/
 
 }

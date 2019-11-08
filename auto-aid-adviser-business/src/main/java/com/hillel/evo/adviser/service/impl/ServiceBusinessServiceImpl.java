@@ -5,7 +5,6 @@ import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceBusinessMapper;
 import com.hillel.evo.adviser.repository.ServiceBusinessRepository;
 import com.hillel.evo.adviser.service.ServiceBusinessService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +13,11 @@ import java.util.List;
 
 @Service
 public class ServiceBusinessServiceImpl implements ServiceBusinessService {
-    @Autowired
-    private ServiceBusinessMapper mapper;
+    private final ServiceBusinessMapper mapper;
     private final ServiceBusinessRepository repository;
 
-    public ServiceBusinessServiceImpl(ServiceBusinessRepository repository) {
+    public ServiceBusinessServiceImpl(ServiceBusinessMapper mapper, ServiceBusinessRepository repository) {
+        this.mapper = mapper;
         this.repository = repository;
     }
 
@@ -31,8 +30,7 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
     @Override
     @Transactional
     public List<ServiceBusinessDto> getAllByServiceTypeId(Long id) {
-        final Iterable<Long> idForSearch = Arrays.asList(id);
-        return mapper.toDto(repository.findAllById(idForSearch));
+        return mapper.toDto(repository.findAllByServiceType_Id(id));
     }
 
     @Override
