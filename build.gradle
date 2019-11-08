@@ -9,7 +9,6 @@ group 'com.hillel.evo'
 version '1.0-SNAPSHOT'
 
 configure(allprojects) { project ->
-
     apply plugin: 'application'
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
@@ -38,34 +37,54 @@ configure(allprojects) { project ->
         mainClassName = 'com.hillel.evo.adviser.AdviserStarter'
     }
 
+    bootRun {
+        systemProperties = System.properties
+    }
+    
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
+        implementation boot.starterThyme
+        testImplementation boot.starterTest
+        
         implementation utils.jaxbApi
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
-        testImplementation boot.starterTest
 
         runtimeOnly db.h2
         runtimeOnly db.postgres
         runtimeOnly db.awsSecretsmanager
+        implementation db.postgres
+        testImplementation db.h2
+        
+        implementation misc.awsSdk
         implementation misc.swagger
         implementation misc.swaggerUI
 
         annotationProcessor utils.lombok
+        annotationProcessor boot.annotationProcessor
+        
         compileOnly utils.lombok
-
-        implementation db.postgres
-        testImplementation db.h2
+        testImplementation utils.lombok
 
         testImplementation testing.junit5
-        testImplementation utils.lombok
+
+        implementation boot.starterSecurity
 
     }
 }
 
 wrapper {
     version = '5.6.2'
+}
+
+project(":auto-aid-adviser-user") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
 }
 
 project(':auto-aid-adviser-search-service') {
@@ -82,13 +101,15 @@ project(':auto-aid-adviser-search-service') {
 
     }
 }
-
-project(":auto-aid-adviser-user") {
+project(":auto-aid-adviser-email") {
     bootJar {
         enabled = false
     }
     jar {
         enabled = true
+    }
+    dependencies {
+        implementation boot.starterMail
     }
 }
 
@@ -102,5 +123,20 @@ project(":auto-aid-adviser-main") {
     dependencies {
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-search-service')
+        implementation project(':auto-aid-adviser-email')
+        implementation project(':auto-aid-adviser-security')
+    }
+}
+
+project(':auto-aid-adviser-security') {
+    dependencies {
+        bootJar {
+            enabled = false
+        }
+        jar {
+            enabled = true
+        }
+        implementation project(":auto-aid-adviser-user")
+        implementation security.jwt
     }
 }

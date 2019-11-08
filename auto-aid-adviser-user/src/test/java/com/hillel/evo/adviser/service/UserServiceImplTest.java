@@ -2,10 +2,9 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
-import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.enums.RoleUser;
-import com.hillel.evo.adviser.exception.ResourceAlreadyExistsException;
-import com.hillel.evo.adviser.exception.ResourceNotFoundException;
+import com.hillel.evo.adviser.exception.UserAlreadyExistsRegistrationException;
+import com.hillel.evo.adviser.exception.ActivationCodeFoundNoMatchException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,7 +45,7 @@ public class UserServiceImplTest {
         //given
         final String activeCode = "asdf-1234-xxxxx";
         //then
-        assertThrows(ResourceNotFoundException.class, () -> service.activation(activeCode));
+        assertThrows(ActivationCodeFoundNoMatchException.class, () -> service.activation(activeCode));
     }
 
     @Test
@@ -72,7 +70,7 @@ public class UserServiceImplTest {
         registrationDto.setPassword( "12345678");
         registrationDto.setRole(RoleUser.ROLE_BUSINESS);
         //then
-        assertThrows(ResourceAlreadyExistsException.class, () -> service.registration(registrationDto));
+        assertThrows(UserAlreadyExistsRegistrationException.class, () -> service.registration(registrationDto));
     }
 
     @Test
@@ -97,7 +95,7 @@ public class UserServiceImplTest {
         registrationDto.setPassword( "12345678");
         registrationDto.setRole(RoleUser.ROLE_USER);
         //then
-        assertThrows(ResourceAlreadyExistsException.class, () -> service.registration(registrationDto));
+        assertThrows(UserAlreadyExistsRegistrationException.class, () -> service.registration(registrationDto));
     }
 
     @Test
