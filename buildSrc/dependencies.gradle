@@ -160,7 +160,8 @@ ext {
             starterThyme: "org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion",
             starterSecurity: "org.springframework.boot:spring-boot-starter-security:$springBootVersion",
             starterBatch: "org.springframework.boot:spring-boot-starter-batch:$springBootVersion",
-            starterWebflux: "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion"
+            starterWebflux: "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion",
+            starterWebSocket: "org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"
 
     ]
 

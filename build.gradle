@@ -83,6 +83,19 @@ project(':auto-aid-adviser-search-service') {
     }
 }
 
+project(':auto-aid-adviser-websockets') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation boot.starterWebSocket
+        implementation spring.messaging
+    }
+}
+
 project(":auto-aid-adviser-user") {
     bootJar {
         enabled = false
