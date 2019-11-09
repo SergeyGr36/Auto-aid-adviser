@@ -5,9 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 @NoArgsConstructor
@@ -17,8 +15,7 @@ public class Image {
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private BusinessUser businessUser;
-
     private String imageId;
+
+    private String originalFileName;
 }
