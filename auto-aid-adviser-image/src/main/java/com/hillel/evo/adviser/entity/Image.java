@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -15,7 +16,8 @@ public class Image {
     @Id
     private Long id;
 
-    private String imageId;
+    @NotNull
+    private String storageURL;
 
     private String originalFileName;
 }
