@@ -14,8 +14,8 @@ import java.util.List;
 
 @Service
 public class ServiceTypeServiceImpl implements ServiceTypeService {
-    private final ServiceTypeMapper mapper;
-    private final ServiceTypeRepository repository;
+    private transient final ServiceTypeMapper mapper;
+    private transient final ServiceTypeRepository repository;
 
     public ServiceTypeServiceImpl(ServiceTypeMapper mapper, ServiceTypeRepository repository) {
         this.mapper = mapper;

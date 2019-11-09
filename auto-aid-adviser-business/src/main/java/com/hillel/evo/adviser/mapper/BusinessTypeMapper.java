@@ -13,5 +13,4 @@ public interface BusinessTypeMapper {
     BusinessTypeDto toDto(BusinessType type);
     List<BusinessTypeDto> toAllDto (List<BusinessType> type);
     List<BusinessType> toAllType (List<BusinessTypeDto> dto);
-
 }

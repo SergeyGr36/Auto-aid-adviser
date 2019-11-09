@@ -13,8 +13,8 @@ import java.util.List;
 @Service
 public class BusinessServiceImpl implements BusinessService {
 
-    private final BusinessMapper mapper;
-    private final BusinessRepository businessRepository;
+    private transient final BusinessMapper mapper;
+    private transient final BusinessRepository businessRepository;
 
     public BusinessServiceImpl(BusinessMapper mapper, BusinessRepository businessRepository) {
         this.mapper = mapper;

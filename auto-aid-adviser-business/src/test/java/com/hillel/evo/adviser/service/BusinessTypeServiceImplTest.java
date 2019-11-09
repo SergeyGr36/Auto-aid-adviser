@@ -1,5 +1,6 @@
-package com.hillel.evo.adviser;
+package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.exception.DeleteException;

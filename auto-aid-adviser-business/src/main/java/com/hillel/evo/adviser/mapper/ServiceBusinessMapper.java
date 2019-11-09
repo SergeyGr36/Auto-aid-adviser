@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ServiceBusinessRepository.class, ServiceTypeMapper.class})
+@Mapper(componentModel = "spring", uses = {ServiceTypeMapper.class})
 public interface ServiceBusinessMapper {
     ServiceBusiness toEntity(ServiceBusinessDto serviceBusinessDto);
     ServiceBusinessDto toDto(ServiceBusiness businessService);

@@ -6,7 +6,6 @@ import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessTypeMapper;
 import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +13,11 @@ import java.util.List;
 @Service
 public class BusinessTypeServiceImpl implements BusinessTypeService {
 
-    @Autowired
-    private BusinessTypeMapper mapper;
-    private final BusinessTypeRepository repository;
+    private transient final BusinessTypeMapper mapper;
+    private transient final BusinessTypeRepository repository;
 
-    public BusinessTypeServiceImpl(BusinessTypeRepository repository) {
+    public BusinessTypeServiceImpl(BusinessTypeMapper mapper, BusinessTypeRepository repository) {
+        this.mapper = mapper;
         this.repository = repository;
     }
 

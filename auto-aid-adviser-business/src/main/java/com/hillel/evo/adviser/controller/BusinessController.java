@@ -6,6 +6,7 @@ import com.hillel.evo.adviser.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/businesses")
 public class BusinessController {
-    private final BusinessService businessService;
+    private transient final BusinessService businessService;
 
     @Autowired
     public BusinessController(BusinessService businessService) {
@@ -37,12 +38,12 @@ public class BusinessController {
     }
 
     @PostMapping
-    public ResponseEntity<BusinessDto> createBusiness(@RequestBody final BusinessDto businessDTO){
+    public ResponseEntity<BusinessDto> createBusiness(@Validated @RequestBody final BusinessDto businessDTO){
         return ResponseEntity.ok(businessService.createBusiness(businessDTO));
     }
 
     @PutMapping
-    public ResponseEntity<BusinessDto> updateBusiness(@RequestBody final BusinessDto businessDTO){
+    public ResponseEntity<BusinessDto> updateBusiness(@Validated @RequestBody final BusinessDto businessDTO){
         return ResponseEntity.ok(businessService.updateBusiness(businessDTO));
     }
 
