@@ -15,9 +15,10 @@ import javax.validation.constraints.NotNull;
 public class Image {
     @Id
     private Long id;
-
     @NotNull
-    private String storageURL;
+    private String keyFileName;
 
-    private String originalFileName;
+    public Image(@NotNull String keyFileName) {
+        this.keyFileName = keyFileName;
+    }
 }
