@@ -52,4 +52,9 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
             throw new DeleteException("Delete failed");
         }
     }
+
+    @Override
+    public List<ServiceTypeDto> findAll() {
+        return mapper.toDto(repository.findAll());
+    }
 }

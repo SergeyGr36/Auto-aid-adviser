@@ -10,4 +10,5 @@ public interface ServiceTypeService {
     ServiceTypeDto getServiceTypeById(Long id);
     ServiceTypeDto updateServiceType(ServiceTypeDto dto);
     void deleteServiceType(Long id);
+    List<ServiceTypeDto> findAll();
 }

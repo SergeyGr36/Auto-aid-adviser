@@ -11,6 +11,6 @@ public interface ServiceBusinessService {
     ServiceBusinessDto createServiceBusiness(ServiceBusinessDto dto);
     ServiceBusinessDto updateServiceBusiness(ServiceBusinessDto dto);
     void deleteServiceBusiness(Long id);
-
+    List<ServiceBusinessDto> findAll();
 
 }

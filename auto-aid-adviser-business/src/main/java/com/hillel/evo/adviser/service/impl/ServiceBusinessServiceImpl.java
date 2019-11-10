@@ -8,7 +8,6 @@ import com.hillel.evo.adviser.service.ServiceBusinessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -50,5 +49,10 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
         } catch (RuntimeException e){
             throw new DeleteException("Delete failed");
         }
+    }
+
+    @Override
+    public List<ServiceBusinessDto> findAll() {
+        return mapper.toDto(repository.findAll());
     }
 }

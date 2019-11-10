@@ -18,4 +18,7 @@ public interface ServiceTypeRepository extends JpaRepository<ServiceType, Long> 
 
         @Query("select st from ServiceType st join fetch st.businessType where st.name = :name")
         Optional<ServiceType> findByName(String name);
+
+        @Query("select st from ServiceType st join fetch st.businessType")
+        List<ServiceType> findAll();
 }

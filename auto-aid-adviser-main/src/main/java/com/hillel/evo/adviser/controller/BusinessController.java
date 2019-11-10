@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -48,7 +49,8 @@ public class BusinessController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBusiness(@PathVariable Long id){
+    public ResponseEntity<String> deleteBusiness(@PathVariable Long id, Principal principal){
+        String mail = principal.getName();
         businessService.deleteBusiness(id);
         return new ResponseEntity<String>("Deleted successful", HttpStatus.OK);
     }

@@ -14,4 +14,7 @@ public interface ServiceBusinessRepository extends JpaRepository<ServiceBusiness
 
     @Query("select sb from ServiceBusiness sb join fetch sb.serviceType st where st.id = :id")
     List<ServiceBusiness> findAllByServiceType_Id(Long id);
+
+    @Query("select sb from ServiceBusiness sb join fetch sb.serviceType")
+    List<ServiceBusiness> findAll();
 }
