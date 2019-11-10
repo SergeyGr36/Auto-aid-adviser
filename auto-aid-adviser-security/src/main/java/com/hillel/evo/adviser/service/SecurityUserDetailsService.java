@@ -69,7 +69,12 @@ public class SecurityUserDetailsService implements UserDetailsService {
      * @return
      */
     private UserDetails createUserDetailsFrom(AdviserUserDetails user) {
-        return new UserDetails() {
+        return new SecurityUserDetails() {
+
+            @Override
+            public Long getUserId() {
+                return user.getId();
+            }
 
             private String userRole = user.getRole().toString();
 
