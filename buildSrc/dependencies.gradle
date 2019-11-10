@@ -117,6 +117,7 @@ ext {
             instrument: "org.springframework:spring-instrument:$springVersion",
             data: "org.springframework.data:spring-data-jpa:$springDataVersion",
             securityWeb: "org.springframework.security:spring-security-web:$springSecurityVersion",
+            securityMessaging: "org.springframework.security:spring-security-messaging:$springSecurityVersion",
             securityConfig: "org.springframework.security:spring-security-config:$springSecurityVersion",
             securityTaglibs: "org.springframework.security:spring-security-taglibs:$springSecurityVersion",
             springSecurityTest: "org.springframework.security:spring-security-test:$springSecurityVersion",
@@ -297,7 +298,9 @@ ext {
     ]
 
     tomcatEmbedded = [
-            tomcatEmbedJasper: "org.apache.tomcat.embed:tomcat-embed-jasper:$embeddedTomcat"
+            tomcatEmbedJasper: "org.apache.tomcat.embed:tomcat-embed-jasper:$embeddedTomcat",
+            tomcatEmbedCore: "org.apache.tomcat.embed:tomcat-embed-core:$embeddedTomcat",
+            tomcatEmbedWebSocket: "org.apache.tomcat.embed:tomcat-embed-websocket:$embeddedTomcat"
     ]
 
     dependencyInjection = [

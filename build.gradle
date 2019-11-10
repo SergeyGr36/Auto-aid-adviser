@@ -40,7 +40,9 @@ configure(allprojects) { project ->
     bootRun {
         systemProperties = System.properties
     }
-    
+
+
+
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
@@ -70,6 +72,8 @@ configure(allprojects) { project ->
         testImplementation testing.junit5
 
         implementation boot.starterSecurity
+        implementation spring.messaging
+        implementation spring.webSocket
 
     }
 }
@@ -109,10 +113,6 @@ project(':auto-aid-adviser-websockets') {
     jar {
         enabled = true
     }
-    dependencies {
-        implementation boot.starterWebSocket
-        implementation spring.messaging
-    }
 }
 
 project(":auto-aid-adviser-email") {
@@ -139,6 +139,7 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
         implementation project(':auto-aid-adviser-security')
+        implementation project(':auto-aid-adviser-websockets')
     }
 }
 
