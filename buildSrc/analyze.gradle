@@ -5,7 +5,7 @@ apply plugin: 'jdepend'
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = '0.8.4'
+    toolVersion = '0.8.5'
 }
 
 pmd {
@@ -30,7 +30,7 @@ jacocoTestReport {
         classDirectories = files(classDirectories.files.collect {
             fileTree(
                     dir: it,
-                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+                    exclude: ['**/dto/**', '**/parameter/**', '**/*Application.*', '**/*Starter.*', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
             )
         })
     }
@@ -41,7 +41,7 @@ jacocoTestCoverageVerification {
         classDirectories = files(classDirectories.files.collect {
             fileTree(
                     dir: it,
-                    exclude: ['**/dto/**', '**/starter/**', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
+                    exclude: ['**/dto/**', '**/parameter/**', '**/*Application.*', '**/*Starter.*', '**/entity/**', '**/*Main*/**', '**/exception/**', '**/configuration/**', '**/filter/**']
             )
         })
     }
