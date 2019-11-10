@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.com.hillel.evo.adviser.message;
+package com.hillel.evo.adviser.message;
 
 public enum ErrorMessage{
 

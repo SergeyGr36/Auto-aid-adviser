@@ -37,7 +37,7 @@ public class BusinessMapperTest {
 
     @Test
     public void whenToEntity_SetDtoReturnEntity() {
-        Assertions.assertNull(businessMapper.toEntity(null));
+        Assertions.assertNull(businessMapper.toEntity(null, null));
     }
 
     @Test
@@ -54,13 +54,12 @@ public class BusinessMapperTest {
     public void whenToEntity_SetEmptyDto_ReturnEmptyEntity() {
         //given
         BusinessDto dto = new BusinessDto();
-        dto.setUserId(99L);
         dto.setContact(null);
         dto.setLocation(null);
         dto.setServiceBusinesses(new ArrayList<>());
         dto.getServiceBusinesses().add(new ServiceBusinessShortDto());
         //when
-        Business business = businessMapper.toEntity(dto);
+        Business business = businessMapper.toEntity(dto, null);
         //then
         Assertions.assertNull(business.getLocation());
         Assertions.assertNull(business.getContact());
@@ -71,7 +70,6 @@ public class BusinessMapperTest {
         //given
         BusinessUser user = businessUserRepository.findAll().get(0);
         BusinessDto dto = new BusinessDto();
-        dto.setUserId(user.getId());
         ContactDto contact = new ContactDto();
         contact.setPhone("123445");
         dto.setContact(contact);
@@ -83,7 +81,7 @@ public class BusinessMapperTest {
         dto.setServiceBusinesses(new ArrayList<>());
         dto.getServiceBusinesses().add(new ServiceBusinessShortDto());
         //when
-        Business business = businessMapper.toEntity(dto);
+        Business business = businessMapper.toEntity(dto, null);
         //then
         Assertions.assertEquals(business.getLocation().getAddress(), dto.getLocation().getAddress());
         Assertions.assertEquals(business.getContact().getPhone(), dto.getContact().getPhone());
@@ -96,21 +94,8 @@ public class BusinessMapperTest {
         Business business = new Business();
         //when
         BusinessDto dto = businessMapper.toDto(business);
-        Assertions.assertNull(dto.getUserId());
         Assertions.assertNull(dto.getLocation());
         Assertions.assertNull(dto.getContact());
-    }
-
-    @Test
-    public void whenUserIdNonNull_ReturnDtoWithUserId() {
-        //given
-        Business business = new Business();
-        business.setBusinessUser(new BusinessUser());
-        business.getBusinessUser().setId(1L);
-        //when
-        BusinessDto dto = businessMapper.toDto(business);
-        //then
-        Assertions.assertEquals(dto.getUserId(), business.getBusinessUser().getId());
     }
 
 }

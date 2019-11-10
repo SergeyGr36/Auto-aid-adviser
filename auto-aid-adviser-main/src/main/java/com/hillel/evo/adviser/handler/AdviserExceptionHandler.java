@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.handler;
 
-import com.hillel.evo.adviser.com.hillel.evo.adviser.message.ErrorMessage;
 import com.hillel.evo.adviser.exception.ActivationCodeFoundNoMatchException;
 import com.hillel.evo.adviser.exception.UserAlreadyExistsRegistrationException;
 import org.springframework.http.HttpStatus;
@@ -10,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 
-import static com.hillel.evo.adviser.com.hillel.evo.adviser.message.ErrorMessage.CONSTRAINT_VIOLATION;
-import static com.hillel.evo.adviser.com.hillel.evo.adviser.message.ErrorMessage.INVALID_CODE;
-import static com.hillel.evo.adviser.com.hillel.evo.adviser.message.ErrorMessage.USER_ALREADY_EXISTS;
+import static com.hillel.evo.adviser.message.ErrorMessage.CONSTRAINT_VIOLATION;
+import static com.hillel.evo.adviser.message.ErrorMessage.INVALID_CODE;
+import static com.hillel.evo.adviser.message.ErrorMessage.USER_ALREADY_EXISTS;
 
 @ControllerAdvice
 public class AdviserExceptionHandler {

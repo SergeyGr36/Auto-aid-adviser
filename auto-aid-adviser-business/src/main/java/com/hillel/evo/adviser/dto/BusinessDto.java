@@ -25,6 +25,6 @@ public class BusinessDto {
     @NotEmpty
     private List<ServiceBusinessShortDto> serviceBusinesses;
 
-    @NotNull
-    private Long userId;
+//    @NotNull
+//    private Long userId;
 }

@@ -51,7 +51,7 @@ public class BusinessServiceImplTest {
     @Test
     public void whenCreateBusinessThenReturnDto() {
         //when
-        BusinessDto saveDto = businessService.createBusiness(createTestDto());
+        BusinessDto saveDto = businessService.createBusiness(createTestDto(), 1L);
         //then
         assertNotNull(saveDto);
         assertEquals(saveDto.getServiceBusinesses().size(), 2);
@@ -59,7 +59,7 @@ public class BusinessServiceImplTest {
 
     @Test
     public void whenCreateBusinessThenReturnThrow() {
-        assertThrows(Exception.class, () -> businessService.createBusiness(new BusinessDto()));
+        assertThrows(Exception.class, () -> businessService.createBusiness(new BusinessDto(), 1L));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class BusinessServiceImplTest {
         //given
         BusinessDto dto = businessService.findAllByUser(userId).get(0);
         //when
-        BusinessDto findBusinessDto = businessService.findBusinessById(dto.getId());
+        BusinessDto findBusinessDto = businessService.findBusinessById(dto.getId(), 1L);
         //then
         assertEquals(findBusinessDto.getId(), dto.getId());
         assertEquals(findBusinessDto.getName(), dto.getName());
@@ -84,7 +84,7 @@ public class BusinessServiceImplTest {
 
     @Test
     public void whenFindByBusinessIdThenReturnException() {
-        assertThrows(ResourceNotFoundException.class, () -> businessService.findBusinessById(99L));
+        assertThrows(ResourceNotFoundException.class, () -> businessService.findBusinessById(99L, 1L));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class BusinessServiceImplTest {
         sourceDto.setName("updating name");
         sourceDto.getServiceBusinesses().remove(0);
         //when
-        BusinessDto updateDto = businessService.updateBusiness(sourceDto);
+        BusinessDto updateDto = businessService.updateBusiness(sourceDto, 1L);
         //then
         assertEquals(updateDto.getId(), sourceDto.getId());
         assertEquals(updateDto.getName(), sourceDto.getName());
@@ -104,12 +104,12 @@ public class BusinessServiceImplTest {
     @Test
     public void whenDeleteBusinessThenNotThrow() {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
-        assertDoesNotThrow(() -> businessService.deleteBusiness(sourceDto.getId()));
+        assertDoesNotThrow(() -> businessService.deleteBusiness(sourceDto.getId(), 1L));
     }
 
     @Test
     public void whenDeleteBusinessThenReturnException() {
-        assertThrows(Exception.class, () -> businessService.deleteBusiness(99L));
+        assertThrows(Exception.class, () -> businessService.deleteBusiness(99L, 1L));
     }
 
     private BusinessDto createTestDto() {
@@ -117,7 +117,6 @@ public class BusinessServiceImplTest {
 
         BusinessDto dto = new BusinessDto();
         dto.setName("some name");
-        dto.setUserId(userId);
 
         LocationDto location = new LocationDto();
         location.setLatitude(99);

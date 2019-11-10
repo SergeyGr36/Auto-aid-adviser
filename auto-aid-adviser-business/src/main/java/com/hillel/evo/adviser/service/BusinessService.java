@@ -5,11 +5,11 @@ import com.hillel.evo.adviser.dto.BusinessDto;
 import java.util.List;
 
 public interface BusinessService {
-    BusinessDto createBusiness(BusinessDto dto);
-    List<BusinessDto> findAllByUser(Long id);
-    BusinessDto findBusinessById(Long id);
-    BusinessDto updateBusiness(BusinessDto dto);
-    void deleteBusiness(Long id);
+    BusinessDto createBusiness(BusinessDto dto, Long userId);
+    List<BusinessDto> findAllByUser(Long userId);
+    BusinessDto findBusinessById(Long id, Long userId);
+    BusinessDto updateBusiness(BusinessDto dto, Long userId);
+    void deleteBusiness(Long id, Long userId);
 
 
 }

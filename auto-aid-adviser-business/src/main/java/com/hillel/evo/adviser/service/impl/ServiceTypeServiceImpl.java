@@ -1,7 +1,6 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
-import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
