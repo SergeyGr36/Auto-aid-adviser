@@ -18,6 +18,7 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
     @Query("select distinct b from Business b join fetch b.serviceBusinesses where b.businessUser.id = :id")
     List<Business> findBusinessesFetchServicesByBusinessUser_Id(Long id);
 
+    @Query("select b from Business b join fetch b.serviceBusinesses where b.id = :id and b.businessUser.id = :userId")
     Optional<Business> findByIdAndBusinessUser_Id(Long id, Long userId);
 
     @Query("select b from Business b join fetch b.serviceBusinesses where b.id = :id")

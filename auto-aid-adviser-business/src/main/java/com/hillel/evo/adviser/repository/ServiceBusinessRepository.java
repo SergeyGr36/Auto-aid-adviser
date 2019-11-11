@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface ServiceBusinessRepository extends JpaRepository<ServiceBusiness, Long> {
     Optional<ServiceBusiness> findByName(String name);
 
-    @Query("select sb from ServiceBusiness sb join fetch sb.serviceType st where st.id = :id")
+    @Query("select distinct sb from ServiceBusiness sb join fetch sb.serviceType st where st.id = :id")
     List<ServiceBusiness> findAllByServiceType_Id(Long id);
 
-    @Query("select sb from ServiceBusiness sb join fetch sb.serviceType")
+    @Query("select distinct sb from ServiceBusiness sb join fetch sb.serviceType st join fetch st.businessType")
     List<ServiceBusiness> findAll();
 }
