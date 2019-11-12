@@ -5,13 +5,13 @@ import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessShortDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.entity.ServiceBusiness;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
-import com.hillel.evo.adviser.repository.ServiceBusinessRepository;
+import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +58,7 @@ public class BusinessControllerTest {
     private BusinessRepository businessRepository;
 
     @Autowired
-    private ServiceBusinessRepository serviceBusinessRepository;
+    private ServiceForBusinessRepository serviceForBusinessRepository;
 
     @Autowired
     EncoderService encoderService;
@@ -157,7 +157,7 @@ public class BusinessControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(businessDto)))
                 //then
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value(businessDto.getName()));
     }
 
@@ -173,13 +173,13 @@ public class BusinessControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(businessDto)))
                 //then
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(business.getId()))
                 .andExpect(jsonPath("$.name").value(businessDto.getName()));
     }
 
     private BusinessDto createTestDto() {
-        List<ServiceBusiness> list = serviceBusinessRepository.findAll();
+        List<ServiceForBusiness> list = serviceForBusinessRepository.findAll();
 
         BusinessDto dto = new BusinessDto();
         dto.setName("some name");
@@ -192,15 +192,15 @@ public class BusinessControllerTest {
         ContactDto contact = new ContactDto();
         contact.setPhone("2345678");
 
-        ServiceBusinessShortDto serviceBusiness1 = new ServiceBusinessShortDto();
+        ServiceForBusinessShortDto serviceBusiness1 = new ServiceForBusinessShortDto();
         serviceBusiness1.setId(list.get(0).getId());
 
-        ServiceBusinessShortDto serviceBusiness2 = new ServiceBusinessShortDto();
+        ServiceForBusinessShortDto serviceBusiness2 = new ServiceForBusinessShortDto();
         serviceBusiness2.setId(list.get(1).getId());
 
         dto.setContact(contact);
         dto.setLocation(location);
-        dto.setServiceBusinesses(Arrays.asList(serviceBusiness1, serviceBusiness2));
+        dto.setServiceForBusinesses(Arrays.asList(serviceBusiness1, serviceBusiness2));
 
         return dto;
     }

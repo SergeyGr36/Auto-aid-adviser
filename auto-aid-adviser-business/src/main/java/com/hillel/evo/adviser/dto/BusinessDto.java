@@ -23,7 +23,7 @@ public class BusinessDto {
     private String workingHours;
 
     @NotEmpty
-    private List<ServiceBusinessShortDto> serviceBusinesses;
+    private List<ServiceForBusinessShortDto> serviceForBusinesses;
 
 //    @NotNull
 //    private Long userId;

@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ServiceBusinessDto {
+public class ServiceForBusinessShortDto {
     private Long id;
     private String name;
-    private ServiceTypeDto serviceType;
 }

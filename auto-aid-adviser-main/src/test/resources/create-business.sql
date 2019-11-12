@@ -25,7 +25,7 @@ insert into business(phone, address, latitude, longitude, name, working_days, wo
 ('066-666-66-66', 'Kharkov', 102, 120, 'user 2 STO 1', null, null, (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'bkc@mail.com')),
 ('096-999-99-99', 'Kharkov', 103, 130, 'user 2 STO 2', null, null, (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'bkc@mail.com'));
 
-insert into business_has_service(business_id, service_businesses_id)
+insert into business_has_service(business_id, service_for_businesses_id)
 select b.id, s.id from business b, service s;
 
 insert into service(name, service_type_id) values

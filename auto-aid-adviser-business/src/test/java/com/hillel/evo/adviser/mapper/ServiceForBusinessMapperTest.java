@@ -1,13 +1,9 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.BusinessApplication;
-import com.hillel.evo.adviser.dto.BusinessDto;
-import com.hillel.evo.adviser.dto.ContactDto;
-import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessShortDto;
-import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.entity.ServiceBusiness;
+import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,19 +20,19 @@ import java.util.List;
 @SpringBootTest(classes = {BusinessApplication.class})
 @Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class ServiceBusinessMapperTest {
+public class ServiceForBusinessMapperTest {
 
     @Autowired
-    ServiceBusinessMapperImpl mapper;
+    ServiceForBusinessMapper mapper;
 
     @Test
     public void whenToDto_SetNull_ReturnNull() {
-        Assertions.assertNull(mapper.toDto((ServiceBusiness) null));
+        Assertions.assertNull(mapper.toDto((ServiceForBusiness) null));
     }
 
     @Test
     public void whenToDto_SetNullList_ReturnEmptyList() {
-        Assertions.assertNull(mapper.toDto((List<ServiceBusiness>) null));
+        Assertions.assertNull(mapper.toDto((List<ServiceForBusiness>) null));
     }
 
     @Test
@@ -46,34 +42,34 @@ public class ServiceBusinessMapperTest {
 
     @Test
     public void whenToDto_SetList_ReturnListDto() {
-        List<ServiceBusiness> list = Arrays.asList(new ServiceBusiness());
+        List<ServiceForBusiness> list = Arrays.asList(new ServiceForBusiness());
         Assertions.assertEquals(mapper.toDto(list).size(), list.size());
     }
 
     @Test
     public void whenToEntity_SetNull_ReturnNull() {
-        Assertions.assertNull(mapper.toEntity((ServiceBusinessDto) null));
+        Assertions.assertNull(mapper.toEntity((ServiceForBusinessDto) null));
     }
 
     @Test
     public void whenToEntity_SetNullList_ReturnEmptyList() {
-        Assertions.assertNull(mapper.toEntity((List<ServiceBusinessDto>) null));
+        Assertions.assertNull(mapper.toEntity((List<ServiceForBusinessDto>) null));
     }
 
     @Test
     public void whenToEntity_SetEmptyList_ReturnEmptyList() {
-        List<ServiceBusinessDto> list = new ArrayList<>();
+        List<ServiceForBusinessDto> list = new ArrayList<>();
         Assertions.assertTrue(mapper.toEntity(list).isEmpty());
     }
 
     @Test
     public void whenToEntity_SetList_ReturnListEntity() {
-        List<ServiceBusinessDto> list = Arrays.asList(new ServiceBusinessDto());
+        List<ServiceForBusinessDto> list = Arrays.asList(new ServiceForBusinessDto());
         Assertions.assertEquals(mapper.toEntity(list).size(), list.size());
     }
 
     @Test
     public void whenToEntity_ReturnNull() {
-        Assertions.assertNull(mapper.toEntity((ServiceBusinessShortDto) null));
+        Assertions.assertNull(mapper.toEntity((ServiceForBusinessShortDto) null));
     }
 }

@@ -4,11 +4,11 @@ import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessShortDto;
-import com.hillel.evo.adviser.entity.ServiceBusiness;
+import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.repository.ServiceBusinessRepository;
+import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public class BusinessServiceImplTest {
     private AdviserUserDetailRepository repository;
 
     @Autowired
-    private ServiceBusinessRepository serviceBusinessRepository;
+    private ServiceForBusinessRepository serviceForBusinessRepository;
 
     Long userId;
 
@@ -54,7 +54,7 @@ public class BusinessServiceImplTest {
         BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId);
         //then
         assertNotNull(saveDto);
-        assertEquals(saveDto.getServiceBusinesses().size(), 2);
+        assertEquals(saveDto.getServiceForBusinesses().size(), 2);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class BusinessServiceImplTest {
         //then
         assertEquals(findBusinessDto.getId(), dto.getId());
         assertEquals(findBusinessDto.getName(), dto.getName());
-        assertEquals(findBusinessDto.getServiceBusinesses().size(), dto.getServiceBusinesses().size());
+        assertEquals(findBusinessDto.getServiceForBusinesses().size(), dto.getServiceForBusinesses().size());
     }
 
     @Test
@@ -92,13 +92,13 @@ public class BusinessServiceImplTest {
         //given
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         sourceDto.setName("updating name");
-        sourceDto.getServiceBusinesses().remove(0);
+        sourceDto.getServiceForBusinesses().remove(0);
         //when
         BusinessDto updateDto = businessService.updateBusiness(sourceDto, userId);
         //then
         assertEquals(updateDto.getId(), sourceDto.getId());
         assertEquals(updateDto.getName(), sourceDto.getName());
-        assertEquals(updateDto.getServiceBusinesses().size(), sourceDto.getServiceBusinesses().size());
+        assertEquals(updateDto.getServiceForBusinesses().size(), sourceDto.getServiceForBusinesses().size());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class BusinessServiceImplTest {
     }
 
     private BusinessDto createTestDto() {
-        List<ServiceBusiness> list = serviceBusinessRepository.findAll();
+        List<ServiceForBusiness> list = serviceForBusinessRepository.findAll();
 
         BusinessDto dto = new BusinessDto();
         dto.setName("some name");
@@ -126,15 +126,15 @@ public class BusinessServiceImplTest {
         ContactDto contact = new ContactDto();
         contact.setPhone("2345678");
 
-        ServiceBusinessShortDto serviceBusiness1 = new ServiceBusinessShortDto();
+        ServiceForBusinessShortDto serviceBusiness1 = new ServiceForBusinessShortDto();
         serviceBusiness1.setId(list.get(0).getId());
 
-        ServiceBusinessShortDto serviceBusiness2 = new ServiceBusinessShortDto();
+        ServiceForBusinessShortDto serviceBusiness2 = new ServiceForBusinessShortDto();
         serviceBusiness2.setId(list.get(1).getId());
 
         dto.setContact(contact);
         dto.setLocation(location);
-        dto.setServiceBusinesses(Arrays.asList(serviceBusiness1, serviceBusiness2));
+        dto.setServiceForBusinesses(Arrays.asList(serviceBusiness1, serviceBusiness2));
 
         return dto;
     }

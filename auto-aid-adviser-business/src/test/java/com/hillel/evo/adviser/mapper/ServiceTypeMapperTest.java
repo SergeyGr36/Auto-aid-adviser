@@ -1,10 +1,7 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.BusinessApplication;
-import com.hillel.evo.adviser.dto.ServiceBusinessDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessShortDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
-import com.hillel.evo.adviser.entity.ServiceBusiness;
 import com.hillel.evo.adviser.entity.ServiceType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,5 +44,5 @@ public class Business {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "business_has_service")
-    private List<ServiceBusiness> serviceBusinesses;
+    private List<ServiceForBusiness> serviceForBusinesses;
 }

@@ -3,12 +3,10 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
-import com.hillel.evo.adviser.entity.ServiceBusiness;
-import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
-import com.hillel.evo.adviser.service.ServiceBusinessService;
+import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +50,7 @@ class CatalogControllerTest {
     private ServiceTypeService serviceTypeService;
 
     @Autowired
-    private ServiceBusinessService serviceBusinessService;
+    private ServiceForBusinessService serviceForBusinessService;
 
     @Test
     public void findBusinessTypeById_Test() throws Exception {
@@ -113,31 +111,55 @@ class CatalogControllerTest {
     @Test
     public void findServiceById() throws Exception {
         //given
-        ServiceBusinessDto serviceBusinessDto = serviceBusinessService.findAll().get(0);
+        ServiceForBusinessDto serviceForBusinessDto = serviceForBusinessService.byPages(0, 2).getContent().get(0);
         //when
-        mockMvc.perform(get(PATH_SERVICE+"/{id}", serviceBusinessDto.getId()))
+        mockMvc.perform(get(PATH_SERVICE+"/{id}", serviceForBusinessDto.getId()))
                 //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(serviceBusinessDto.getName()));
+                .andExpect(jsonPath("$.name").value(serviceForBusinessDto.getName()));
     }
 
     @Test
-    public void findAllService() throws Exception {
-        //given
-        List<ServiceBusinessDto> all = serviceBusinessService.findAll();
-        //when
+    public void serviceByPages_Default() throws Exception {
         mockMvc.perform(get(PATH_SERVICE))
                 //then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(objectMapper.writeValueAsString(all)));
+                .andExpect(jsonPath("$.number").value(0))
+                .andExpect(jsonPath("$.size").value(50))
+                .andExpect(jsonPath("$.content").isArray());
+    }
+
+    @Test
+    public void serviceByPages_WithParams() throws Exception {
+        //given
+        final Integer page = 1;
+        final Integer size = 5;
+        //when
+        mockMvc.perform(get(PATH_SERVICE+"?page="+page+"&size="+size))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.number").value(page))
+                .andExpect(jsonPath("$.size").value(size))
+                .andExpect(jsonPath("$.content").isArray());
+    }
+
+    @Test
+    public void serviceByPages_WithBadParams() throws Exception {
+        //given
+        final Integer size = 500;
+        //when
+        mockMvc.perform(get(PATH_SERVICE+"?size="+size))
+                //then
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void saveService() throws Exception {
         //given
         ServiceTypeDto serviceTypeDto = serviceTypeService.findAll().get(0);
-        ServiceBusinessDto newDto = new ServiceBusinessDto();
+        ServiceForBusinessDto newDto = new ServiceForBusinessDto();
         newDto.setName("save test");
         newDto.setServiceType(serviceTypeDto);
         //when
@@ -145,7 +167,7 @@ class CatalogControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(newDto)))
                 //then
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.name").value(newDto.getName()));
     }
@@ -153,15 +175,15 @@ class CatalogControllerTest {
     @Test
     public void updateService() throws Exception {
         //given
-        ServiceBusinessDto serviceBusinessDto = serviceBusinessService.findAll().get(0);
-        serviceBusinessDto.setName("update test");
+        ServiceForBusinessDto serviceForBusinessDto = serviceForBusinessService.byPages(0, 2).getContent().get(0);
+        serviceForBusinessDto.setName("update test");
         //when
         mockMvc.perform(put(PATH_SERVICE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(serviceBusinessDto)))
+                .content(objectMapper.writeValueAsBytes(serviceForBusinessDto)))
                 //then
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.name").value(serviceBusinessDto.getName()));
+                .andExpect(jsonPath("$.name").value(serviceForBusinessDto.getName()));
     }
 }

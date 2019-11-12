@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -31,12 +32,10 @@ public class BusinessController {
 
     private transient final String ROLE_BUSINESS = "ROLE_BUSINESS";
 
-    private transient final AdviserUserDetailRepository userRepo;
     private transient final BusinessService businessService;
 
     @Autowired
-    public BusinessController(AdviserUserDetailRepository userRepo, BusinessService businessService) {
-        this.userRepo = userRepo;
+    public BusinessController(BusinessService businessService) {
         this.businessService = businessService;
     }
 
@@ -55,17 +54,19 @@ public class BusinessController {
     }
 
     @Secured(ROLE_BUSINESS)
+    @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<BusinessDto> createBusiness(@Validated @RequestBody final BusinessDto businessDTO, Authentication authentication){
+    public BusinessDto createBusiness(@Validated @RequestBody final BusinessDto businessDTO, Authentication authentication){
         Long userId = getUserFromAuthentication(authentication);
-        return ResponseEntity.ok(businessService.createBusiness(businessDTO, userId));
+        return businessService.createBusiness(businessDTO, userId);
     }
 
     @Secured(ROLE_BUSINESS)
+    @ResponseStatus(code = HttpStatus.CREATED)
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<BusinessDto> updateBusiness(@Validated @RequestBody final BusinessDto businessDTO, Authentication authentication){
+    public BusinessDto updateBusiness(@Validated @RequestBody final BusinessDto businessDTO, Authentication authentication){
         Long userId = getUserFromAuthentication(authentication);
-        return ResponseEntity.ok(businessService.updateBusiness(businessDTO, userId));
+        return businessService.updateBusiness(businessDTO, userId);
     }
 
     @Secured(ROLE_BUSINESS)

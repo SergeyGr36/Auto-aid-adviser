@@ -4,7 +4,7 @@ import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.dto.ServiceBusinessShortDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
@@ -56,8 +56,8 @@ public class BusinessMapperTest {
         BusinessDto dto = new BusinessDto();
         dto.setContact(null);
         dto.setLocation(null);
-        dto.setServiceBusinesses(new ArrayList<>());
-        dto.getServiceBusinesses().add(new ServiceBusinessShortDto());
+        dto.setServiceForBusinesses(new ArrayList<>());
+        dto.getServiceForBusinesses().add(new ServiceForBusinessShortDto());
         //when
         Business business = businessMapper.toEntity(dto, null);
         //then
@@ -78,14 +78,14 @@ public class BusinessMapperTest {
         location.setLongitude(1.0);
         location.setAddress("address");
         dto.setLocation(location);
-        dto.setServiceBusinesses(new ArrayList<>());
-        dto.getServiceBusinesses().add(new ServiceBusinessShortDto());
+        dto.setServiceForBusinesses(new ArrayList<>());
+        dto.getServiceForBusinesses().add(new ServiceForBusinessShortDto());
         //when
         Business business = businessMapper.toEntity(dto, null);
         //then
         Assertions.assertEquals(business.getLocation().getAddress(), dto.getLocation().getAddress());
         Assertions.assertEquals(business.getContact().getPhone(), dto.getContact().getPhone());
-        Assertions.assertEquals(business.getServiceBusinesses().size(), dto.getServiceBusinesses().size());
+        Assertions.assertEquals(business.getServiceForBusinesses().size(), dto.getServiceForBusinesses().size());
     }
 
     @Test
