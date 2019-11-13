@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -62,6 +63,19 @@ public class ServiceTypeServiceImplTest {
     }
 
     @Test
+    public void whenFindAllByPages() {
+        //geven
+        final int page = 0;
+        final int size = 5;
+        //when
+        Page<ServiceTypeDto> allByPages = service.findAllByPages(page, size);
+        //then
+        assertEquals(allByPages.getNumber(), page);
+        assertEquals(allByPages.getSize(), size);
+        assertEquals(allByPages.getContent().size(), size);
+    }
+
+    @Test
     public void whenCreateServiceTypeThenReturn() {
         ServiceTypeDto dtoSource = new ServiceTypeDto();
         dtoSource.setName("yyyyy");
@@ -79,10 +93,4 @@ public class ServiceTypeServiceImplTest {
         //then
         assertEquals(dtoSource.getName(), dtoTarget.getName());
     }
-//  //todo дописать даний метод
-//    @Test
-//    public void tryToDeleteThenReturnNothing() {
-//        businessTypeRepository.deleteAllInBatch();
-//        assertNull(businessTypeRepository.findAll());
-//    }
 }

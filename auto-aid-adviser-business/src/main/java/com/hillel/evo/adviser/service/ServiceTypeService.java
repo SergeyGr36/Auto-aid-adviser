@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,5 +11,5 @@ public interface ServiceTypeService {
     ServiceTypeDto getServiceTypeById(Long id);
     ServiceTypeDto updateServiceType(ServiceTypeDto dto);
     void deleteServiceType(Long id);
-    List<ServiceTypeDto> findAll();
+    Page<ServiceTypeDto> findAllByPages(Integer page, Integer size);
 }

@@ -1,11 +1,15 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
+import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
 import com.hillel.evo.adviser.repository.ServiceTypeRepository;
 import com.hillel.evo.adviser.service.ServiceTypeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +57,8 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     }
 
     @Override
-    public List<ServiceTypeDto> findAll() {
-        return mapper.toDto(repository.findAll());
+    public Page<ServiceTypeDto> findAllByPages(Integer page, Integer size) {
+        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "name")));
+        return pageEntity.map(mapper::toDto);
     }
 }

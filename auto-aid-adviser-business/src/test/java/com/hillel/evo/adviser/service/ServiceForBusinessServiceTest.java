@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -54,6 +55,19 @@ public class ServiceForBusinessServiceTest {
             assertEquals(type.get(i).getName(), dto.get(i).getName());
             assertEquals(type.get(i).getId(), dto.get(i).getId());
         }
+    }
+
+    @Test
+    public void whenFindAllByPages() {
+        //given
+        final int page = 0;
+        final int size = 5;
+        //when
+        Page<ServiceForBusinessDto> serviceForBusinessDtos = service.byPages(page, size);
+        //then
+        assertEquals(serviceForBusinessDtos.getContent().size(), size);
+        assertEquals(serviceForBusinessDtos.getNumber(), page);
+        assertEquals(serviceForBusinessDtos.getSize(), size);
     }
 
     @Test

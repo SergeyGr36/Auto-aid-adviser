@@ -5,6 +5,8 @@ import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
+import com.hillel.evo.adviser.entity.BusinessType;
+import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -51,6 +54,9 @@ class CatalogControllerTest {
 
     @Autowired
     private ServiceForBusinessService serviceForBusinessService;
+
+    @Autowired
+    private BusinessTypeRepository businessTypeRepository;
 
     @Test
     public void findBusinessTypeById_Test() throws Exception {
@@ -89,7 +95,7 @@ class CatalogControllerTest {
     @Test
     public void findServiceTypeById() throws Exception {
         //given
-        ServiceTypeDto serviceTypeDto = serviceTypeService.findAll().get(0);
+        ServiceTypeDto serviceTypeDto = serviceTypeService.findAllByPages(0, 2).getContent().get(0);
         //when
         mockMvc.perform(get(PATH_SERVICE_TYPE+"/{id}", serviceTypeDto.getId()))
                 //then
@@ -100,7 +106,7 @@ class CatalogControllerTest {
     @Test
     public void findServiceByServiceTypeId() throws Exception {
         //given
-        ServiceTypeDto serviceTypeDto = serviceTypeService.findAll().get(0);
+        ServiceTypeDto serviceTypeDto = serviceTypeService.findAllByPages(0, 2).getContent().get(0);
         //when
         mockMvc.perform(get(PATH_SERVICE_TYPE+"/{id}/services", serviceTypeDto.getId()))
                 //then
@@ -158,7 +164,7 @@ class CatalogControllerTest {
     @Test
     public void saveService() throws Exception {
         //given
-        ServiceTypeDto serviceTypeDto = serviceTypeService.findAll().get(0);
+        ServiceTypeDto serviceTypeDto = serviceTypeService.findAllByPages(0, 2).getContent().get(0);
         ServiceForBusinessDto newDto = new ServiceForBusinessDto();
         newDto.setName("save test");
         newDto.setServiceType(serviceTypeDto);
@@ -186,4 +192,48 @@ class CatalogControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.name").value(serviceForBusinessDto.getName()));
     }
+
+    @Test
+    public void saveBusinessType() throws Exception {
+        //given
+        BusinessTypeDto newBusiness = new BusinessTypeDto();
+        newBusiness.setName("new business type");
+        //when
+        mockMvc.perform(post(PATH_BUSINESSES_TYPE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newBusiness)))
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.name").value(newBusiness.getName()))
+                .andExpect(jsonPath("$.id").isNotEmpty());
+    }
+
+    @Test
+    public void updateBusinessType() throws Exception {
+        //given
+        BusinessTypeDto newBusiness = businessTypeService.findAll().get(0);
+        newBusiness.setName("new business type");
+        //when
+        mockMvc.perform(put(PATH_BUSINESSES_TYPE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newBusiness)))
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.name").value(newBusiness.getName()))
+                .andExpect(jsonPath("$.id").value(newBusiness.getId()));
+    }
+
+    @Test
+    public void deleteBusinessType() throws Exception {
+        //given
+        BusinessType type = businessTypeRepository.findByName("test").get();
+        //when
+        mockMvc.perform(delete(PATH_BUSINESSES_TYPE+"/{id}", type.getId()))
+                //then
+                .andExpect(status().isOk());
+    }
+
+
 }
