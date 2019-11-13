@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {ImageApplication.class})
@@ -14,30 +15,50 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DefaultImageServiceTest {
     @Autowired
     private ImageService imageService;
+    private Long testId = 1L;
 
     @Test
     void whenCreateImageShouldCreateImage() {
+        //given
         Image imageToSave = new Image("filename.jpg");
-
+        //when
         Image savedImage = imageService.create(imageToSave);
-
+        //then
         assertNotNull(savedImage.getId());
     }
 
     @Test
     void findAllByBusiness() {
+        assertEquals(null, imageService.findAllByBusiness(null));
     }
 
     @Test
-    void findById() {
-
+    void whenFindByIdShouldReturnId() {
+        //when
+        Image image = imageService.findById(testId).get();
+        //then
+        assertEquals(testId, image.getId());
     }
 
     @Test
     void update() {
+        //given
+        String newFileName = "newKeyFileName";
+        Image image = new Image(testId, newFileName);
+        //when
+        Image updated = imageService.update(image);
+        //then
+        assertEquals(newFileName, updated.getKeyFileName());
     }
 
     @Test
     void delete() {
+        //given
+        Image imageToDelete = new Image(testId, null);
+        //when
+        imageService.delete(imageToDelete);
+        Image found = imageService.findById(testId).orElse(null);
+        //then
+        assertEquals(null, found);
     }
 }

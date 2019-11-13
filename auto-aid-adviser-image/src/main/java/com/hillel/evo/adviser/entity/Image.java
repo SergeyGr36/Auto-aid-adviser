@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @EqualsAndHashCode(of = {"id"})
 public class Image {
