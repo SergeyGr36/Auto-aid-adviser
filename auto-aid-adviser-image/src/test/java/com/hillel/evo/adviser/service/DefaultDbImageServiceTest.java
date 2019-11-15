@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {ImageApplication.class})
 @Sql(value = {"/prepare-image.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class DefaultImageServiceTest {
+class DefaultDbImageServiceTest {
     @Autowired
     private DbImageService imageService;
     private Long testId = 1L;
