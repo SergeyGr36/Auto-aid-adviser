@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.repository.ImageRepository;
+import com.hillel.evo.adviser.service.interfaces.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultImageService implements ImageService{
+public class DefaultImageService implements ImageService {
     private final transient ImageRepository imageRepository;
     @Override
     public Image create(Image image) {

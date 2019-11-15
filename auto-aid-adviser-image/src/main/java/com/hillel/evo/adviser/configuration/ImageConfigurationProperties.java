@@ -8,5 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "aws.s3")
 public class ImageConfigurationProperties {
-        private String bucket;
+        private String bucketName;
+        private Long expiresIn;
 }

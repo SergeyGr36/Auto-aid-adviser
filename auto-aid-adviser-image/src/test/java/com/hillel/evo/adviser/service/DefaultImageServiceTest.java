@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.ImageApplication;
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.service.interfaces.ImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

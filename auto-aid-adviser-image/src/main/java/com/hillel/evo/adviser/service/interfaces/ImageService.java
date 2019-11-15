@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.service;
+package com.hillel.evo.adviser.service.interfaces;
 
 import com.hillel.evo.adviser.entity.Image;
 
