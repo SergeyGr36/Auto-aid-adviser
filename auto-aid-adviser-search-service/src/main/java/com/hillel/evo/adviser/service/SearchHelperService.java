@@ -28,6 +28,7 @@ public class SearchHelperService {
     public QueryFactory getTextQuery(final Class clazz, final String field, final String value) {
         QueryFactory result = () -> getQueryBuilder(clazz)
                 .keyword()
+                .wildcard()
                 .onField(field)
                 .matching(value)
                 .createQuery();
