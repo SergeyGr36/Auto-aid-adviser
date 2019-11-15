@@ -22,7 +22,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
         String keyFileName = generateKeyFileName(businessUserId, businessId);
         Image image = new Image(keyFileName);
         if (cloudService.uploadFile(keyFileName, file, false)) {
-            return new Optional<>(dbService.create(image));
+            return Optional.of(dbService.create(image));
         }
         return Optional.empty();
     }

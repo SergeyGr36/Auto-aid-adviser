@@ -13,12 +13,14 @@ import com.hillel.evo.adviser.configuration.ImageConfigurationProperties;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class S3CloudImageService implements CloudImageService {
@@ -62,7 +64,7 @@ public class S3CloudImageService implements CloudImageService {
                             .withMethod(HttpMethod.GET)
                             .withExpiration(expiration);
             URL url = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
-            return new Optional<>(url);
+            return Optional.of(url);
         } catch (SdkClientException ex) {
             log.error(ex.getMessage(), ex);
             return Optional.empty();
