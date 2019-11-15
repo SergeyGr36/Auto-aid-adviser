@@ -80,6 +80,11 @@ configure(allprojects) { project ->
         implementation spring.messaging
         implementation spring.webSocket
 
+        implementation hibernate.search
+        implementation hibernate.em
+        implementation hibernate.spatial
+
+
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }
@@ -117,12 +122,6 @@ project(':auto-aid-adviser-search-service') {
     jar {
         enabled = true
     }
-    dependencies {
-        implementation hibernate.search
-        implementation hibernate.em
-        implementation hibernate.spatial
-
-    }
 }
 
 project(':auto-aid-adviser-websockets') {
@@ -131,6 +130,9 @@ project(':auto-aid-adviser-websockets') {
     }
     jar {
         enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-business')
     }
 }
 
@@ -155,6 +157,7 @@ project(':auto-aid-adviser-business') {
     }
     dependencies {
         implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }

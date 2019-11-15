@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class OutputContextListDTO {
+public class WSOutputDTO {
 
-    List<String> contextList;
+    List<String> result;
 }
