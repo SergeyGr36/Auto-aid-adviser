@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,6 +64,23 @@ class SecurityExampleControllerTest {
                         .header("Authorization", JwtService.TOKEN_PREFIX + jwtToken))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void whenRequestSecuredRouteWithValidJwt_thenGetGreetingWithProperUserId() throws Exception {
+
+        String jwtToken = jwtService.generateAccessToken(user.getId());
+
+         MvcResult result = mockMvc.perform(
+                 get(SECURED_ROUTE)
+                         .header("Authorization", JwtService.TOKEN_PREFIX + jwtToken))
+                 .andExpect(status().isOk())
+                 .andReturn();
+
+        String greeting = result.getResponse().getContentAsString();
+
+        assertEquals("Hello from Secured controller, your ID is: " + user.getId(), greeting);
+    }
+
 
 
     @Test

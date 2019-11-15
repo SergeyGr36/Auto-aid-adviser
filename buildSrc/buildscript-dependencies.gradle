@@ -6,7 +6,6 @@ ext.extDependencies = {
     classpath("com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3")
     classpath("gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0")
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-
 }
 
 
