@@ -2,7 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.ImageApplication;
 import com.hillel.evo.adviser.entity.Image;
-import com.hillel.evo.adviser.service.interfaces.ImageService;
+import com.hillel.evo.adviser.service.interfaces.DbImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Sql(value = {"/prepare-image.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class DefaultImageServiceTest {
     @Autowired
-    private ImageService imageService;
+    private DbImageService imageService;
     private Long testId = 1L;
 
     @Test
@@ -26,11 +26,6 @@ class DefaultImageServiceTest {
         Image savedImage = imageService.create(imageToSave);
         //then
         assertNotNull(savedImage.getId());
-    }
-
-    @Test
-    void findAllByBusiness() {
-        assertEquals(null, imageService.findAllByBusiness(null));
     }
 
     @Test
