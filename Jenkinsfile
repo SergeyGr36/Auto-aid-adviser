@@ -1,49 +1,54 @@
 pipeline {
  agent any
  stages{
-​
     stage('Cleanup'){
-        deleteDir()
-    }
-​
-    stage('Pull project from bitbucket'){
-      steps{
-        git branch: 'testing',
-        credentialsId: 'credentials_id_in_jenkins',
-        url: 'git@repository.com:user/repo-name.git'
+        steps{
+            deleteDir()
         }
     }
-​
+    stage('Pull project from bitbucket'){
+      steps{
+        git branch: 'master',
+        //credentialsId: 'none',
+        url: 'https://bitbucket.org/MichailZhurylo/auto-aid-adviser-back-end.git'
+        }
+    }
     stage('Build preparation') {
      steps{
         sh 'echo "Build preparation"'
         sh 'chmod +x gradlew'
         }
     }
-​
     stage('Running test'){
      steps{
-        sh 'echo "Running tests"'
-        sh './gradlew test'
+        sh 'echo "COMMENTED FOR NOW.Running tests"'
+        //sh './gradlew test'
         }
     }
-​
     stage('Building project'){
      steps{
         sh 'echo "Building project"'
         sh './gradlew clean build -x test'
         }
     }
-​
     stage('Deploy to S3'){
      steps{
         sh '''
-            filename=your-jar-name.jar
-            region='us-east-1'
-            buildbucket='bucket-name'
-            buildbucketfolder='dir-inside-bucket'
-​
-            aws s3 cp build/libs/${filename} s3://${buildbucket}/${buildbucketfolder}/${filename} --region ${region}
+            filename=auto-aid-adviser-5.6.2.jar
+            region='eu-west-1b'
+            buildbucket='auto-aid-adviser-bucket'
+            buildbucketfolder='build'
+            aws s3 cp build/libs/${filename} s3://${buildbucket}/${buildbucketfolder}/
+        '''
+         }
+        }
+    }
+    stage('Reboot E2 instance'){
+     steps{
+        sh '''
+            ids=i-052630e2d111d0bed
+            region='eu-west-1b'
+            //aws ec2 reboot-instances --instance-ids ${ids} --region ${region}
         '''
          }
         }
