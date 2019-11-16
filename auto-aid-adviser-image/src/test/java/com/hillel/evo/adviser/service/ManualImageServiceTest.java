@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.service;
 import com.hillel.evo.adviser.ImageApplication;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.service.interfaces.ImageService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,10 +21,12 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
+ * Do the following before running the test methods
  * https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
  */
 @Disabled
 @SpringBootTest(classes = {ImageApplication.class})
+@Slf4j
 public class ManualImageServiceTest {
     @Autowired
     ImageService imageService;
@@ -32,14 +36,26 @@ public class ManualImageServiceTest {
     @Test
     public void doCreate() throws Exception {
         MultipartFile file = getMultipartFile();
-        imageService.create(testBusinessUserId, testBusinessId, file)
+        Image image = imageService.create(testBusinessUserId, testBusinessId, file)
                 .orElseThrow(() -> new RuntimeException("Failed"));
+        log.warn("Key file name: " + image.getKeyFileName());
+    }
+
+    @Test
+    public void doGetPresignedUrl() throws Exception {
+        MultipartFile file = getMultipartFile();
+        //use key file name from doCreate() output
+        String keyFileName = "777/1/ce3073e7-1193-4477-9f4d-81b7da19eb3f-Miner.jpg";
+        Image image = new Image(keyFileName, file.getOriginalFilename());
+        URL url = imageService.generatePresignedURL(image).orElseThrow(() -> new RuntimeException("Failed"));
+        log.warn("Presigned url: " + url);
     }
 
     @Test
     public void doDelete() throws Exception {
         MultipartFile file = getMultipartFile();
-        String keyFileName = imageService.generateKeyFileName(testBusinessUserId, testBusinessId, file);
+        //use key file name from doCreate() output
+        String keyFileName = "777/1/098dd691-09c8-4317-849b-411763797fa0-Miner.jpg";
         Image imageToDelete = new Image(keyFileName, file.getOriginalFilename());
         assertTrue(imageService.delete(imageToDelete));
     }

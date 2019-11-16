@@ -6,6 +6,7 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -13,10 +14,13 @@ import com.hillel.evo.adviser.configuration.ImageConfigurationProperties;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Optional;
 
@@ -31,10 +35,11 @@ public class S3CloudImageService implements CloudImageService {
     @Override
     public boolean uploadFile(String keyFileName, MultipartFile file) {
         try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getBytes().length);
-            metadata.setContentType(file.getContentType());
-            Upload upload = transferManager.upload(properties.getBucketName(), keyFileName, file.getInputStream(), metadata);
+            InputStream inputStream = new ByteArrayInputStream(file.getBytes());
+            ObjectMetadata meta = new ObjectMetadata();
+            meta.setContentLength(file.getBytes().length);
+            meta.setContentType(file.getContentType());
+            amazonS3Client.putObject(new PutObjectRequest(properties.getBucketName(), keyFileName, inputStream, meta));
             return true;
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
