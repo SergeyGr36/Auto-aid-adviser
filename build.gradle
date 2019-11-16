@@ -40,7 +40,9 @@ configure(allprojects) { project ->
     bootRun {
         systemProperties = System.properties
     }
-    
+
+
+
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
@@ -51,6 +53,11 @@ configure(allprojects) { project ->
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
 
+        implementation "org.mapstruct:mapstruct:1.3.1.Final"
+        annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+        testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+
+        testImplementation boot.starterTest
         runtimeOnly db.h2
         runtimeOnly db.postgres
         runtimeOnly db.awsSecretsmanager
@@ -65,12 +72,23 @@ configure(allprojects) { project ->
         annotationProcessor boot.annotationProcessor
         
         compileOnly utils.lombok
-        testImplementation utils.lombok
+        testCompileOnly utils.lombok
+        //testImplementation utils.lombok
 
         testImplementation testing.junit5
 
         implementation boot.starterSecurity
+        implementation spring.messaging
+        implementation spring.webSocket
 
+        implementation hibernate.search
+        testImplementation hibernate.search
+        implementation hibernate.em
+        testImplementation hibernate.em
+        implementation hibernate.spatial
+
+
+        implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }
 
@@ -87,48 +105,6 @@ project(":auto-aid-adviser-user") {
     }
 }
 
-project(':auto-aid-adviser-search-service') {
-    bootJar {
-        enabled = false
-    }
-    jar {
-        enabled = true
-    }
-    dependencies {
-        implementation hibernate.search
-        implementation hibernate.em
-        implementation hibernate.spatial
-
-    }
-}
-project(":auto-aid-adviser-email") {
-    bootJar {
-        enabled = false
-    }
-    jar {
-        enabled = true
-    }
-    dependencies {
-        implementation boot.starterMail
-    }
-}
-
-project(":auto-aid-adviser-main") {
-    jar {
-        enabled = true
-    }
-    bootJar {
-        classifier = 'boot'
-    }
-    dependencies {
-        implementation project(':auto-aid-adviser-user')
-        implementation project(':auto-aid-adviser-search-service')
-        implementation project(':auto-aid-adviser-email')
-        implementation project(':auto-aid-adviser-security')
-        implementation project(':auto-aid-adviser-image')
-    }
-}
-
 project(':auto-aid-adviser-security') {
     dependencies {
         bootJar {
@@ -142,6 +118,54 @@ project(':auto-aid-adviser-security') {
     }
 }
 
+project(':auto-aid-adviser-search-service') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+}
+
+project(':auto-aid-adviser-websockets') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-search-service')
+    }
+}
+
+project(":auto-aid-adviser-email") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation boot.starterMail
+    }
+}
+
+project(':auto-aid-adviser-business') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
+        testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+    }
+}
+
 project(":auto-aid-adviser-image") {
     bootJar {
         enabled = false
@@ -151,3 +175,20 @@ project(":auto-aid-adviser-image") {
     }
 }
 
+project(":auto-aid-adviser-main") {
+    jar {
+        enabled = true
+    }
+    bootJar {
+        classifier = 'boot'
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
+        implementation project(':auto-aid-adviser-email')
+        implementation project(':auto-aid-adviser-security')
+        implementation project(':auto-aid-adviser-websockets')
+        implementation project(':auto-aid-adviser-image')
+    }
+}

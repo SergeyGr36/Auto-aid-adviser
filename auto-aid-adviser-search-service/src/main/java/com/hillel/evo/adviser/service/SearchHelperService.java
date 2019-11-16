@@ -35,6 +35,17 @@ public class SearchHelperService {
         return result;
     }
 
+    public QueryFactory getTextWildcardQuery(final Class clazz, final String field, final String value) {
+        QueryFactory result = () -> getQueryBuilder(clazz)
+                .keyword()
+                .wildcard()
+                .onField(field)
+                .matching(value)
+                .createQuery();
+
+        return result;
+    }
+
     public QueryFactory getSpatialQuery(Class clazz, double radius, double latitude, double longitude) {
         QueryFactory result = () -> getQueryBuilder(clazz)
                 .spatial()

@@ -70,7 +70,7 @@ ext {
 
     //configuration
     lombockVersion = '1.18.4'
-    mapstructVersion = '1.2.0.Final'
+    mapstructVersion = '1.3.1.Final'
     jaxbApiVersion = '2.1'
     jaxbVersion = '2.3.0.1'
     vavrVersion = '0.10.0'
@@ -117,6 +117,7 @@ ext {
             instrument: "org.springframework:spring-instrument:$springVersion",
             data: "org.springframework.data:spring-data-jpa:$springDataVersion",
             securityWeb: "org.springframework.security:spring-security-web:$springSecurityVersion",
+            securityMessaging: "org.springframework.security:spring-security-messaging:$springSecurityVersion",
             securityConfig: "org.springframework.security:spring-security-config:$springSecurityVersion",
             securityTaglibs: "org.springframework.security:spring-security-taglibs:$springSecurityVersion",
             springSecurityTest: "org.springframework.security:spring-security-test:$springSecurityVersion",
@@ -163,6 +164,7 @@ ext {
             starterSecurity: "org.springframework.boot:spring-boot-starter-security:$springBootVersion",
             starterBatch: "org.springframework.boot:spring-boot-starter-batch:$springBootVersion",
             starterWebflux: "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion",
+            starterWebSocket: "org.springframework.boot:spring-boot-starter-websocket:$springBootVersion",
             annotationProcessor: "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"
     ]
 
@@ -296,7 +298,9 @@ ext {
     ]
 
     tomcatEmbedded = [
-            tomcatEmbedJasper: "org.apache.tomcat.embed:tomcat-embed-jasper:$embeddedTomcat"
+            tomcatEmbedJasper: "org.apache.tomcat.embed:tomcat-embed-jasper:$embeddedTomcat",
+            tomcatEmbedCore: "org.apache.tomcat.embed:tomcat-embed-core:$embeddedTomcat",
+            tomcatEmbedWebSocket: "org.apache.tomcat.embed:tomcat-embed-websocket:$embeddedTomcat"
     ]
 
     dependencyInjection = [

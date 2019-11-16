@@ -1,7 +1,9 @@
 package com.hillel.evo.adviser.controller;
 
+import com.hillel.evo.adviser.service.SecurityUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +34,11 @@ public class SecurityExampleController {
      */
     @Secured("ROLE_USER")
     @GetMapping("/secured")
-    public ResponseEntity<String> helloSecured() {
-        return ResponseEntity.status(OK).body("Hello from Secured controller");
+    public ResponseEntity<String> helloSecured(Authentication authentication) {
+
+        SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
+
+        return ResponseEntity.status(OK).body(
+                "Hello from Secured controller, your ID is: " + userDetails.getUserId());
     }
 }
