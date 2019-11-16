@@ -28,6 +28,13 @@ public class EntitySearch<T> implements TextSearch<T>, SpatialSearch<T>, CustomS
     }
 
     @Override
+    public List<T> searchWildcard(Class<T> clazz, String field, String param) {
+        var query = searchService.getTextWildcardQuery(clazz, field, param);
+        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
+        return jpaQuery.getResultList();
+    }
+
+    @Override
     public List<T> search(Class<T> clazz, double radius, double latitude, double longitude) {
         var query = searchService.getSpatialQuery(clazz, radius, latitude, longitude);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);

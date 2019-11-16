@@ -11,6 +11,13 @@ spring:
     database-platform: org.hibernate.dialect.MySQL57Dialect
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: ${HIBERNATE_SEARCH_TEST_INDEX_BASE:/tmp/test/adviser/indexes/}
+          reindex: false
 
 server:
   port: 8080

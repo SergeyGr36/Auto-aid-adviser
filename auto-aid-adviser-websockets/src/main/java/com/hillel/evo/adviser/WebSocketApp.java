@@ -2,12 +2,11 @@ package com.hillel.evo.adviser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
-public class AdviserStarter {
+public class WebSocketApp {
+
     public static void main(String[] args) {
-        SpringApplication.run(AdviserStarter.class, args);
+        SpringApplication.run(WebSocketApp.class, args);
     }
 }

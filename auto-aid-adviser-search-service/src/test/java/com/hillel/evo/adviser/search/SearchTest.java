@@ -24,17 +24,17 @@ public class SearchTest {
     private SearchHelperService searchService;
 
     @Autowired
-    public void setAidTextSearch(EntitySearch<Aid> aidTextSearch) {
+    public void setAidTextSearch(TextSearch<Aid> aidTextSearch) {
         this.aidTextSearch = aidTextSearch;
     }
 
     @Autowired
-    public void setAidSpatialSearch(EntitySearch<Aid> aidSpatialSearch) {
+    public void setAidSpatialSearch(SpatialSearch<Aid> aidSpatialSearch) {
         this.aidSpatialSearch = aidSpatialSearch;
     }
 
     @Autowired
-    public void setAidCustomSearch(EntitySearch<Aid> aidCustomSearch) {
+    public void setAidCustomSearch(CustomSearch<Aid> aidCustomSearch) {
         this.aidCustomSearch = aidCustomSearch;
     }
 
@@ -61,6 +61,16 @@ public class SearchTest {
 
         hibernateSearchConfig.reindex(Aid.class);
         var result = aidTextSearch.search(Aid.class, "name", "BMW");
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    @Sql({"/data-aids.sql"})
+    public void TestSearchTextWildcard() {
+
+        hibernateSearchConfig.reindex(Aid.class);
+        var result = aidTextSearch.searchWildcard(Aid.class, "name", "bm*");
 
         assertEquals(1, result.size());
     }

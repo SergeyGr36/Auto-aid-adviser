@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +21,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Indexed
 @Table(name = "business_type")
 @EqualsAndHashCode(of = {"id"})
 public class BusinessType {
@@ -26,6 +30,7 @@ public class BusinessType {
     private Long id;
 
     @NonNull
+    @Field(store = Store.YES)
     @Column(unique = true)
     private String name;
 }

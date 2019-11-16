@@ -71,8 +71,9 @@ class CatalogControllerTest {
         mockMvc.perform(get(PATH_BUSINESSES_TYPE))
                 //then
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(objectMapper.writeValueAsString(all)));
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().json(objectMapper.writeValueAsString(all)))
+                ;
     }
 
     @Test
@@ -124,7 +125,7 @@ class CatalogControllerTest {
         mockMvc.perform(get(PATH_SERVICE))
                 //then
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.number").value(0))
                 .andExpect(jsonPath("$.size").value(50))
                 .andExpect(jsonPath("$.content").isArray());
@@ -139,7 +140,7 @@ class CatalogControllerTest {
         mockMvc.perform(get(PATH_SERVICE+"?page="+page+"&size="+size))
                 //then
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.number").value(page))
                 .andExpect(jsonPath("$.size").value(size))
                 .andExpect(jsonPath("$.content").isArray());
@@ -168,7 +169,7 @@ class CatalogControllerTest {
                 .content(objectMapper.writeValueAsBytes(newDto)))
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.name").value(newDto.getName()));
     }
 
@@ -183,7 +184,7 @@ class CatalogControllerTest {
                 .content(objectMapper.writeValueAsBytes(serviceForBusinessDto)))
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.name").value(serviceForBusinessDto.getName()));
     }
 }
