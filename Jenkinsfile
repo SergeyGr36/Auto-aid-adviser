@@ -42,7 +42,6 @@ pipeline {
         '''
          }
         }
-    }
     stage('Reboot E2 instance'){
      steps{
         sh '''
@@ -53,3 +52,4 @@ pipeline {
          }
         }
     }
+}
