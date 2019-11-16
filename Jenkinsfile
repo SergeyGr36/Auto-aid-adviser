@@ -1,4 +1,5 @@
-node {
+pipeline {
+ agent any
 ​
     stage('Cleanup'){
         deleteDir()
