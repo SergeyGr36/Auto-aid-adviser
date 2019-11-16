@@ -149,8 +149,5 @@ project(":auto-aid-adviser-image") {
     jar {
         enabled = true
     }
-    dependencies {
-        implementation project(":auto-aid-adviser-user")
-    }
 }
 

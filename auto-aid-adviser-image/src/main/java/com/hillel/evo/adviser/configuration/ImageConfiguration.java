@@ -13,11 +13,4 @@ public class ImageConfiguration {
     public AmazonS3 amazonS3Client() {
         return AmazonS3ClientBuilder.standard().build();
     }
-
-    @Bean
-    public TransferManager amazonS3TransferManager(AmazonS3 s3Client) {
-        return TransferManagerBuilder.standard()
-                .withS3Client(s3Client)
-                .build();
-    }
 }
