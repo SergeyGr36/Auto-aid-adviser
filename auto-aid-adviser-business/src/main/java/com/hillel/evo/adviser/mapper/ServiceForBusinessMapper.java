@@ -17,6 +17,7 @@ public interface ServiceForBusinessMapper {
     ServiceForBusinessShortDto toShortDto(ServiceForBusiness serviceForBusinessService);
 
     @Mapping(target = "serviceType", ignore = true)
+    @Mapping(target = "name", ignore = true)
     ServiceForBusiness toEntity(ServiceForBusinessShortDto dto);
 
 }

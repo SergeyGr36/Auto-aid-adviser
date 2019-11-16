@@ -2,10 +2,10 @@ package com.hillel.evo.adviser.controller;
 
 
 import com.hillel.evo.adviser.dto.BusinessDto;
-import com.hillel.evo.adviser.enums.RoleUser;
-import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
+import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -33,10 +32,12 @@ public class BusinessController {
     private transient final String ROLE_BUSINESS = "ROLE_BUSINESS";
 
     private transient final BusinessService businessService;
+    private transient final ServiceForBusinessService serviceForBusinessService;
 
     @Autowired
-    public BusinessController(BusinessService businessService) {
+    public BusinessController(BusinessService businessService, ServiceForBusinessService serviceForBusinessService) {
         this.businessService = businessService;
+        this.serviceForBusinessService = serviceForBusinessService;
     }
 
     @Secured(ROLE_BUSINESS)
@@ -51,6 +52,13 @@ public class BusinessController {
     public ResponseEntity<BusinessDto> findBusinessById(@PathVariable Long id, Authentication authentication){
         Long userId = getUserFromAuthentication(authentication);
         return ResponseEntity.ok(businessService.findBusinessById(id, userId));
+    }
+
+    @Secured(ROLE_BUSINESS)
+    @GetMapping("/{id}/services")
+    public List<ServiceForBusinessDto> findServiceByBusinessId(@PathVariable Long id, Authentication authentication){
+        Long userId = getUserFromAuthentication(authentication);
+        return businessService.findServicesByBusinessId(id, userId);
     }
 
     @Secured(ROLE_BUSINESS)

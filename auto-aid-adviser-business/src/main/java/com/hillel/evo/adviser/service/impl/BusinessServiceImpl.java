@@ -1,12 +1,15 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
+import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
+import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +19,17 @@ import java.util.List;
 public class BusinessServiceImpl implements BusinessService {
 
     private transient final BusinessMapper mapper;
+    private transient final ServiceForBusinessMapper serviceMapper;
     private transient final BusinessRepository businessRepository;
     private transient final BusinessUserRepository userRepository;
+    private transient final ServiceForBusinessRepository serviceForBusinessRepository;
 
-    public BusinessServiceImpl(BusinessMapper mapper, BusinessRepository businessRepository, BusinessUserRepository userRepository) {
+    public BusinessServiceImpl(BusinessMapper mapper, ServiceForBusinessMapper serviceMapper, BusinessRepository businessRepository, BusinessUserRepository userRepository, ServiceForBusinessRepository serviceForBusinessRepository) {
         this.mapper = mapper;
+        this.serviceMapper = serviceMapper;
         this.businessRepository = businessRepository;
         this.userRepository = userRepository;
+        this.serviceForBusinessRepository = serviceForBusinessRepository;
     }
 
     @Override
@@ -53,5 +60,10 @@ public class BusinessServiceImpl implements BusinessService {
         businessRepository.delete(businessRepository
                             .findByIdAndBusinessUser_Id(id, userId)
                             .orElseThrow(ResourceNotFoundException::new));
+    }
+
+    @Override
+    public List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId) {
+        return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusiness_IdAndBusinessUser_Id(businessId, userId));
     }
 }

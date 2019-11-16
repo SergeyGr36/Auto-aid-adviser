@@ -1,27 +1,16 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:georentdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    platform: h2
-    username: adviser
-    password: arbitrary
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/avtoaid?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    platform: mysql
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    properties:
-      hibernate:
-        search:
-          default:
-            directory_provider: filesystem
-            indexBase: ${HIBERNATE_SEARCH_INDEX_BASE:/tmp/adviser/indexes/}
-          reindex: false
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
     generate-ddl: true
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    hibernate:
+      ddl-auto: create
   mail:
     host: smtp.gmail.com
     port: 587

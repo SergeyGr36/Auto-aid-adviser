@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -176,6 +177,20 @@ public class BusinessControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(business.getId()))
                 .andExpect(jsonPath("$.name").value(businessDto.getName()));
+    }
+
+    @Test
+    public void findServiceByBusinessId() throws Exception {
+        //given
+        Business business = businessRepository.findAllByBusinessUser_Id(user.getId()).get(0);
+        BusinessDto businessDto = createTestDto();
+        businessDto.setId(business.getId());
+        //when
+        mockMvc.perform(get(PATH_BUSINESSES+"/{id}/services", business.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
     }
 
     private BusinessDto createTestDto() {

@@ -29,5 +29,6 @@ public interface ServiceForBusinessRepository extends JpaRepository<ServiceForBu
         countQuery = "select count(sb) from ServiceForBusiness sb")
     Page<ServiceForBusiness> byPages(Pageable pageable);
 
-
+    @Query("select b.serviceForBusinesses from Business b where b.id = :businessId and b.businessUser.id = :userId")
+    List<ServiceForBusiness> findServicesByBusiness_IdAndBusinessUser_Id(Long businessId, Long userId);
 }
