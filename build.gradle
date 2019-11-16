@@ -40,7 +40,9 @@ configure(allprojects) { project ->
     bootRun {
         systemProperties = System.properties
     }
-    
+
+
+
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
@@ -70,11 +72,21 @@ configure(allprojects) { project ->
         annotationProcessor boot.annotationProcessor
         
         compileOnly utils.lombok
-        testImplementation utils.lombok
+        testCompileOnly utils.lombok
+        //testImplementation utils.lombok
 
         testImplementation testing.junit5
 
         implementation boot.starterSecurity
+        implementation spring.messaging
+        implementation spring.webSocket
+
+        implementation hibernate.search
+        testImplementation hibernate.search
+        implementation hibernate.em
+        testImplementation hibernate.em
+        implementation hibernate.spatial
+
 
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
@@ -113,11 +125,18 @@ project(':auto-aid-adviser-search-service') {
     jar {
         enabled = true
     }
-    dependencies {
-        implementation hibernate.search
-        implementation hibernate.em
-        implementation hibernate.spatial
+}
 
+project(':auto-aid-adviser-websockets') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-search-service')
     }
 }
 
@@ -142,6 +161,8 @@ project(':auto-aid-adviser-business') {
     }
     dependencies {
         implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
+        testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }
 
@@ -158,5 +179,6 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
         implementation project(':auto-aid-adviser-security')
+        implementation project(':auto-aid-adviser-websockets')
     }
 }

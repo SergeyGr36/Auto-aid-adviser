@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.entity;
 
+import lombok.Data;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Spatial;
@@ -16,17 +17,16 @@ import javax.persistence.Table;
 @Entity
 @Indexed
 @Spatial
-@Table(name = "aids")
+@Table
 public class Aid {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Field
+    @Field(store = Store.YES)
     private String name;
 
-    @Field(store = Store.YES)
     private String type;
 
     @Latitude

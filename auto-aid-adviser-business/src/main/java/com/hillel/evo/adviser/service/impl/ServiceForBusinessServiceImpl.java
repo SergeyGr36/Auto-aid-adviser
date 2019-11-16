@@ -6,16 +6,13 @@ import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -61,7 +58,7 @@ public class ServiceForBusinessServiceImpl implements ServiceForBusinessService 
 
     @Override
     public Page<ServiceForBusinessDto> byPages(Integer page, Integer size) {
-        Page<ServiceForBusiness> pageServices = repository.byPages(PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "name")));
+        Page<ServiceForBusiness> pageServices = repository.byPages(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name")));
         Page<ServiceForBusinessDto> listDto = pageServices.map(mapper::toDto);
         return listDto;
     }
