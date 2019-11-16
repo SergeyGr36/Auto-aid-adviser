@@ -11,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = {ImageApplication.class})
+@SpringBootTest(classes = {})
 @Sql(value = {"/prepare-image.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class DefaultDbImageServiceTest {
     @Autowired
