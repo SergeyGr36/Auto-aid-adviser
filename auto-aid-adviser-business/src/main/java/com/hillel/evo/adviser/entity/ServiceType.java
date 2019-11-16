@@ -2,9 +2,7 @@ package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +29,7 @@ public class ServiceType {
     @Column(unique = true)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @IndexedEmbedded
+    @ManyToOne//(fetch = FetchType.LAZY)
     private BusinessType businessType;
 }

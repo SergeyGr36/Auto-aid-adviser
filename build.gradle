@@ -72,7 +72,8 @@ configure(allprojects) { project ->
         annotationProcessor boot.annotationProcessor
         
         compileOnly utils.lombok
-        testImplementation utils.lombok
+        testCompileOnly utils.lombok
+        //testImplementation utils.lombok
 
         testImplementation testing.junit5
 
@@ -81,7 +82,9 @@ configure(allprojects) { project ->
         implementation spring.webSocket
 
         implementation hibernate.search
+        testImplementation hibernate.search
         implementation hibernate.em
+        testImplementation hibernate.em
         implementation hibernate.spatial
 
 
@@ -133,6 +136,7 @@ project(':auto-aid-adviser-websockets') {
     }
     dependencies {
         implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-search-service')
     }
 }
 

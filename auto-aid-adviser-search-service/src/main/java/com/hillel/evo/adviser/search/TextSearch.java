@@ -5,4 +5,5 @@ import java.util.List;
 public interface TextSearch<T> {
 
     List<T> search(Class<T> clazz, String field, String param);
+    List<T> searchWildcard(Class<T> clazz, String field, String param);
 }

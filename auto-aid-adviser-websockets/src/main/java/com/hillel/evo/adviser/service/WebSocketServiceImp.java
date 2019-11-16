@@ -6,6 +6,7 @@ import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +32,9 @@ public class WebSocketServiceImp implements WebSocketService {
 
         switch (dto.getSearchType()) {
             case BUSINESS_TYPE:
-                return findBusinessTypeByName(dto.getContent() + "*");
+                return findBusinessTypeByName(dto.getContent());
             case SERVICE_TYPE:
-                return findServiceTypeByName(dto.getContent() + "*");
+                return findServiceTypeByName(dto.getContent(), dto.getInputDTO().getContent());
             default:
                 throw new UnsupportedSearchTypeException("Please specify correct search type, " + dto.getSearchType()
                         + " is not correct. Supported types are: 'BusinessType' and ServiceType");
@@ -42,14 +43,16 @@ public class WebSocketServiceImp implements WebSocketService {
 
     private WSOutputDTO findBusinessTypeByName(String name) {
         WSOutputDTO result = new WSOutputDTO();
-        var businessTypeList = businessTypeService.findAllByName(name);
+        var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase(Locale.ENGLISH) + "*");
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
     }
 
-    private WSOutputDTO findServiceTypeByName(String name) {
+    private WSOutputDTO findServiceTypeByName(String name, String btName) {
         WSOutputDTO result = new WSOutputDTO();
-        var businessTypeList = serviceTypeService.findAllByName(name);
+        var businessTypeList = serviceTypeService.findAllByNameContains(
+                "*" + name.toLowerCase(Locale.ENGLISH) + "*", btName
+                );
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
     }

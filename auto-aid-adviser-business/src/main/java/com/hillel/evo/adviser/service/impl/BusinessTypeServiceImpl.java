@@ -41,6 +41,11 @@ public class BusinessTypeServiceImpl implements BusinessTypeService {
     }
 
     @Override
+    public List<BusinessTypeDto> findAllByNameContains(String name) {
+        return mapper.toAllDto(textSearch.searchWildcard(BusinessType.class, "name", name));
+    }
+
+    @Override
     public BusinessTypeDto findBusinessTypeById(Long id) {
         return mapper.toDto(repository.findById(id).orElseThrow(ResourceNotFoundException::new));
     }

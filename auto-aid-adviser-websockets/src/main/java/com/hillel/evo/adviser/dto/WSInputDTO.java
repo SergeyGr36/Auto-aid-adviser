@@ -7,4 +7,5 @@ public class WSInputDTO {
 
     private String searchType;
     private String content;
+    private WSInputDTO inputDTO;
 }
