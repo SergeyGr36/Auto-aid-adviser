@@ -1,5 +1,6 @@
 pipeline {
  agent any
+ stages{
 ​
     stage('Cleanup'){
         deleteDir()
@@ -35,5 +36,6 @@ pipeline {
 ​
             aws s3 cp build/libs/${filename} s3://${buildbucket}/${buildbucketfolder}/${filename} --region ${region}
         '''
+        }
     }
 }
