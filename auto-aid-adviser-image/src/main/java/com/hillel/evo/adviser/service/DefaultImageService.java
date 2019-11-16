@@ -19,9 +19,10 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     @Override
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
-        String keyFileName = generateKeyFileName(businessUserId, businessId);
-        Image image = new Image(keyFileName);
-        if (cloudService.uploadFile(keyFileName, file, false)) {
+        String keyFileName = generateKeyFileName(businessUserId, businessId, file);
+        String originalFileName = file.getOriginalFilename();
+        Image image = new Image(keyFileName, originalFileName);
+        if (cloudService.uploadFile(keyFileName, file)) {
             return Optional.of(dbService.create(image));
         }
         return Optional.empty();
@@ -41,9 +42,11 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
         return cloudService.generatePresignedURL(image.getKeyFileName());
     }
 
-    public String generateKeyFileName(Long businessUserId, Long businessId) {
+    @Override
+    public String generateKeyFileName(Long businessUserId, Long businessId, MultipartFile file) {
         return businessUserId.toString() + "/"
                 + businessId.toString() + "/"
-                + UUID.randomUUID().toString();
+                + UUID.randomUUID().toString()
+                + "-" + file.getOriginalFilename();
     }
 }

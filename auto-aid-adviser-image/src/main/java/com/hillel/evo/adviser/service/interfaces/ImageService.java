@@ -10,4 +10,5 @@ public interface ImageService {
     Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file);
     boolean delete(Image image);
     Optional<URL> generatePresignedURL(Image image);
+    String generateKeyFileName(Long businessUserId, Long businessId, MultipartFile file);
 }

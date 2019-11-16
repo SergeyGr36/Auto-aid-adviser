@@ -24,7 +24,10 @@ public class Image {
     @NotNull
     private String keyFileName;
 
-    public Image(@NotNull String keyFileName) {
+    private String originalFileName;
+
+    public Image(@NotNull String keyFileName, String originalFileName) {
         this.keyFileName = keyFileName;
+        this.originalFileName = originalFileName;
     }
 }

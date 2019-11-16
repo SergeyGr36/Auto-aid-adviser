@@ -17,11 +17,12 @@ class DefaultDbImageServiceTest {
     @Autowired
     private DbImageService imageService;
     private Long testId = 1L;
+    private String testFileName = "filename.jpg";
 
     @Test
     void whenCreateImageShouldCreateImage() {
         //given
-        Image imageToSave = new Image("filename.jpg");
+        Image imageToSave = new Image(testFileName, testFileName);
         //when
         Image savedImage = imageService.create(imageToSave);
         //then
@@ -40,7 +41,7 @@ class DefaultDbImageServiceTest {
     void update() {
         //given
         String newFileName = "newKeyFileName";
-        Image image = new Image(testId, newFileName);
+        Image image = new Image(testId, newFileName, testFileName);
         //when
         Image updated = imageService.update(image);
         //then
@@ -50,7 +51,7 @@ class DefaultDbImageServiceTest {
     @Test
     void delete() {
         //given
-        Image imageToDelete = new Image(testId, null);
+        Image imageToDelete = new Image(testId, null, null);
         //when
         imageService.delete(imageToDelete);
         Image found = imageService.findById(testId).orElse(null);

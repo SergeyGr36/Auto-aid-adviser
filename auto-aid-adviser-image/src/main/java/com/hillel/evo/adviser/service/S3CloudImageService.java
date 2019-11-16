@@ -29,15 +29,14 @@ public class S3CloudImageService implements CloudImageService {
     private final ImageConfigurationProperties properties;
 
     @Override
-    public boolean uploadFile(String keyFileName, MultipartFile file, boolean wait) {
+    public boolean uploadFile(String keyFileName, MultipartFile file) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getBytes().length);
             metadata.setContentType(file.getContentType());
             Upload upload = transferManager.upload(properties.getBucketName(), keyFileName, file.getInputStream(), metadata);
-            if (wait) upload.waitForCompletion();
             return true;
-        } catch (IOException | InterruptedException ex) {
+        } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return false;
         }
