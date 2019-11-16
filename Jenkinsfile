@@ -47,7 +47,7 @@ pipeline {
         sh '''
             ids=i-052630e2d111d0bed
             region='eu-west-1b'
-            //aws ec2 reboot-instances --instance-ids ${ids} --region ${region}
+            #aws ec2 reboot-instances --instance-ids ${ids} --region ${region}
         '''
          }
         }
