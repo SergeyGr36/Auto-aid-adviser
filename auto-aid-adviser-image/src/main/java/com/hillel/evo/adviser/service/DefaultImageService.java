@@ -20,9 +20,9 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     @Override
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
         String keyFileName = generateKeyFileName(businessUserId, businessId, file);
-        String originalFileName = file.getOriginalFilename();
-        Image image = new Image(keyFileName, originalFileName);
         if (cloudService.uploadFile(keyFileName, file)) {
+            String originalFileName = file.getOriginalFilename();
+            Image image = new Image(keyFileName, originalFileName);
             return Optional.of(dbService.create(image));
         }
         return Optional.empty();
