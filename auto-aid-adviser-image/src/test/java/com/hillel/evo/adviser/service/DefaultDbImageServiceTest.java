@@ -1,27 +1,17 @@
 package com.hillel.evo.adviser.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.hillel.evo.adviser.ImageApplication;
 import com.hillel.evo.adviser.entity.Image;
-import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.DbImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
 
-@SpringBootTest(classes = DefaultDbImageServiceTest.InnerConfiguration.class)
+@SpringBootTest(classes = ImageApplication.class)
 @Sql(value = {"/prepare-image.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class DefaultDbImageServiceTest {
     @Autowired
@@ -67,16 +57,5 @@ class DefaultDbImageServiceTest {
         Image found = imageService.findById(testId).orElse(null);
         //then
         assertEquals(null, found);
-    }
-
-    @Configuration
-    @Import(ImageApplication.class)
-    public static class InnerConfiguration {
-
-        @Bean
-        @Primary
-        public AmazonS3 amazonS3() {
-            return mock(AmazonS3.class);
-        }
     }
 }

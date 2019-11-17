@@ -6,9 +6,11 @@ import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import com.hillel.evo.adviser.service.WebSocketService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,6 +41,7 @@ public class WebSocketServiceImpTest {
     }
 
     @Test
+    //@Disabled("Need to be fixed")
     public void whenSearchServiseTypeThenReturnList() {
 
         config.reindex(ServiceType.class);

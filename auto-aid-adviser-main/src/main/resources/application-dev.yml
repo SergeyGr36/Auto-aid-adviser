@@ -31,6 +31,9 @@ spring:
 email:
   service: aws
 
+image:
+  service: aws
+
 app:
   jwt:
     secretKey: super-secret-test-key

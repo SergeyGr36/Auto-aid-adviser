@@ -66,6 +66,7 @@ public class ServiceTypeServiceImplTest {
         var result = service.findAllByNameContains("ru*", "shinomantazh");
         assertEquals(1, result.size());
     }
+
     @Test
     public void whenFindAllByServiceTypeIdThenReturnThisList() {
         List<ServiceTypeDto> dto = service.findAllByBusinessTypeId(1L);

@@ -6,7 +6,7 @@ import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,14 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceForBusinessServiceImpl implements ServiceForBusinessService {
     private transient final ServiceForBusinessMapper mapper;
     private transient final ServiceForBusinessRepository repository;
-
-    public ServiceForBusinessServiceImpl(ServiceForBusinessMapper mapper, ServiceForBusinessRepository repository) {
-        this.mapper = mapper;
-        this.repository = repository;
-    }
 
     @Override
     @Transactional
@@ -34,7 +30,7 @@ public class ServiceForBusinessServiceImpl implements ServiceForBusinessService 
     @Override
     @Transactional
     public List<ServiceForBusinessDto> getAllByServiceTypeId(Long id) {
-        return mapper.toDto(repository.findAllByServiceType_Id(id));
+        return mapper.toDto(repository.findAllByServiceTypeId(id));
     }
 
     @Override
@@ -59,7 +55,6 @@ public class ServiceForBusinessServiceImpl implements ServiceForBusinessService 
     @Override
     public Page<ServiceForBusinessDto> byPages(Integer page, Integer size) {
         Page<ServiceForBusiness> pageServices = repository.byPages(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name")));
-        Page<ServiceForBusinessDto> listDto = pageServices.map(mapper::toDto);
-        return listDto;
+        return pageServices.map(mapper::toDto);
     }
 }

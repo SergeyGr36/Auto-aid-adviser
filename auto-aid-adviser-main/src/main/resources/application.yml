@@ -43,6 +43,9 @@ server:
 email:
   service: default
 
+image:
+  service: default
+
 app:
   jwt:
     secretKey: super-secret-test-key
