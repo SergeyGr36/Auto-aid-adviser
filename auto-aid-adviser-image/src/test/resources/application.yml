@@ -2,5 +2,3 @@ aws:
   s3:
     bucketName: auto-aid-adviser-bucket
     expiresIn: 60000
-image:
-  service: default

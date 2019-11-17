@@ -31,9 +31,6 @@ spring:
 email:
   service: aws
 
-image:
-  service: aws
-
 app:
   jwt:
     secretKey: super-secret-test-key
@@ -43,3 +40,4 @@ aws:
   s3:
     bucketName: auto-aid-adviser-bucket
     expiresIn: 60000
+    region: eu-east-1

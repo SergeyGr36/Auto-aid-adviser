@@ -68,7 +68,6 @@ public class BusinessTypeServiceImplTest {
     }
 
     @Test
-    @Disabled("does not work")
     public void whenFindAllByNameThenReturnThisList() {
 
         hibernateSearchConfig.reindex(BusinessType.class);

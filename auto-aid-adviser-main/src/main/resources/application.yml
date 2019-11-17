@@ -43,9 +43,6 @@ server:
 email:
   service: default
 
-image:
-  service: default
-
 app:
   jwt:
     secretKey: super-secret-test-key
@@ -55,3 +52,4 @@ aws:
   s3:
     bucketName: auto-aid-adviser-bucket
     expiresIn: 60000
+    region: eu-east-1
