@@ -25,7 +25,7 @@ public class ImageConfiguration {
         return AmazonS3ClientBuilder.standard().withCredentials(new AWSCredentialsProvider() {
             @Override
             public AWSCredentials getCredentials() {
-                return null;
+                return new BasicAWSCredentials("test", "test1");
             }
 
             @Override
