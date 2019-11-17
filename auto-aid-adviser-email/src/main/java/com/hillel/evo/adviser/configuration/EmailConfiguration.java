@@ -9,12 +9,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(prefix = "email", name = "service", havingValue = "aws")
 public class EmailConfiguration {
+
     @Bean
     public AmazonSimpleEmailService amazonMailService() {
-        AmazonSimpleEmailService client =
-        AmazonSimpleEmailServiceClientBuilder.standard()
-        .build();
 
-        return client;
+        return AmazonSimpleEmailServiceClientBuilder.standard()
+                .build();
     }
 }

@@ -1,8 +1,8 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
-import com.hillel.evo.adviser.service.interfaces.DbImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 class DefaultImageServiceTest {
     private static final CloudImageService mockCloudImageService = mock(CloudImageService.class);
-    private static final DbImageService mockDbImageService = mock(DbImageService.class);
+    private static final ImageRepository mockDbImageRepository = mock(ImageRepository.class);
 
     private static final Long testBusinessUserId = 1L;
     private static final Long testBusinessId = 1L;
@@ -32,13 +32,13 @@ class DefaultImageServiceTest {
     private static MultipartFile mockFile = new MockMultipartFile
             (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {0});
 
-    private final DefaultImageService service = new DefaultImageService(mockCloudImageService, mockDbImageService);
+    private final DefaultImageService service = new DefaultImageService(mockCloudImageService, mockDbImageRepository);
 
     @Test
     void whenCreateImageShouldCreateIt() {
         //given
         when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(true);
-        when(mockDbImageService.create(any(Image.class))).thenReturn(testImage);
+        when(mockDbImageRepository.save(any(Image.class))).thenReturn(testImage);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
         //then

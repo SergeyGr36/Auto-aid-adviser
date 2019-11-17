@@ -1,8 +1,8 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
-import com.hillel.evo.adviser.service.interfaces.DbImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DefaultImageService implements com.hillel.evo.adviser.service.interfaces.ImageService {
     private final CloudImageService cloudService;
-    private final DbImageService dbService;
+    private final ImageRepository dbService;
 
     @Override
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
@@ -23,7 +23,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
         if (cloudService.uploadFile(keyFileName, file)) {
             String originalFileName = file.getOriginalFilename();
             Image image = new Image(keyFileName, originalFileName);
-            return Optional.of(dbService.create(image));
+            return Optional.of(dbService.save(image));
         }
         return Optional.empty();
     }

@@ -24,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class S3CloudImageService implements CloudImageService {
+
     private final AmazonS3 amazonS3Client;
     private final ImageConfigurationProperties properties;
 
