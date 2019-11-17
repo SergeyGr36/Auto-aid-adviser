@@ -60,7 +60,6 @@ public class ServiceTypeServiceImplTest {
     }
 
     @Test
-    @Disabled("Need to fixed")
     public void whenFindAllByNameContainsThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByNameContains("ru*", "shinomantazh");
