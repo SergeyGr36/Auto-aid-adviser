@@ -80,7 +80,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public Page<ServiceTypeDto> findAllByPages(Integer page, Integer size) {
-        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "name")));
+        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, Sort.by("name")));
         return pageEntity.map(mapper::toDto);
     }
 }

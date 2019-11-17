@@ -205,7 +205,7 @@ class CatalogControllerTest {
                 .content(objectMapper.writeValueAsString(newBusiness)))
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.name").value(newBusiness.getName()))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
@@ -221,7 +221,7 @@ class CatalogControllerTest {
                 .content(objectMapper.writeValueAsString(newBusiness)))
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.name").value(newBusiness.getName()))
                 .andExpect(jsonPath("$.id").value(newBusiness.getId()));
     }
