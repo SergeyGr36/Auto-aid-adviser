@@ -12,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultDbImageService implements DbImageService {
     private final transient ImageRepository imageRepository;
+
     @Override
     public Image create(Image image) {
         return imageRepository.save(image);
