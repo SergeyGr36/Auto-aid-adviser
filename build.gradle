@@ -20,6 +20,13 @@ configure(allprojects) { project ->
 
     repositories extRepositories
 
+    distributions {
+        distZip.enabled = false
+        distTar.enabled = false
+        bootDistZip.enabled = false
+        bootDistTar.enabled = false
+    }
+
     test {
         useJUnitPlatform {
             excludeTags 'slow'
@@ -48,7 +55,7 @@ configure(allprojects) { project ->
         implementation boot.starterJpa
         implementation boot.starterThyme
         testImplementation boot.starterTest
-        
+
         implementation utils.jaxbApi
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
@@ -63,14 +70,14 @@ configure(allprojects) { project ->
         runtimeOnly db.awsSecretsmanager
         implementation db.postgres
         testImplementation db.h2
-        
+
         implementation misc.awsSdk
         implementation misc.swagger
         implementation misc.swaggerUI
 
         annotationProcessor utils.lombok
         annotationProcessor boot.annotationProcessor
-        
+
         compileOnly utils.lombok
         testCompileOnly utils.lombok
         //testImplementation utils.lombok
@@ -181,4 +188,11 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-security')
         implementation project(':auto-aid-adviser-websockets')
     }
+}
+
+distributions {
+    distZip.enabled = false
+    distTar.enabled = false
+    bootDistZip.enabled = false
+    bootDistTar.enabled = false
 }
