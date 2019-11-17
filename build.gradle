@@ -48,8 +48,6 @@ configure(allprojects) { project ->
         systemProperties = System.properties
     }
 
-
-
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
@@ -71,7 +69,6 @@ configure(allprojects) { project ->
         implementation db.postgres
         testImplementation db.h2
 
-        implementation misc.awsSdk
         implementation misc.swagger
         implementation misc.swaggerUI
 
@@ -154,6 +151,7 @@ project(":auto-aid-adviser-email") {
     }
     dependencies {
         implementation boot.starterMail
+        implementation awsSdk.ses
     }
 }
 
@@ -177,6 +175,10 @@ project(":auto-aid-adviser-image") {
     }
     jar {
         enabled = true
+    }
+
+    dependencies {
+        implementation awsSdk.s3
     }
 }
 

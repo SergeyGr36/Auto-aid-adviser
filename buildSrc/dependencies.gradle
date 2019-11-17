@@ -217,7 +217,11 @@ ext {
             io: "commons-io:commons-io:2.6",
             swagger: "io.springfox:springfox-swagger2:$swaggerVersion",
             swaggerUI: "io.springfox:springfox-swagger-ui:$swaggerVersion",
-            awsSdk: "com.amazonaws:aws-java-sdk:$awsSdkVersion",
+    ]
+
+    awsSdk = [
+            ses: "com.amazonaws:aws-java-sdk-ses:$awsSdkVersion",
+            s3: "com.amazonaws:aws-java-sdk-s3:$awsSdkVersion"
     ]
 
     web = [
