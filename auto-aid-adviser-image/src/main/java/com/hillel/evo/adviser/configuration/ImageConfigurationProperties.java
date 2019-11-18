@@ -11,4 +11,5 @@ public class ImageConfigurationProperties {
     private String bucketName;
     private Long expiresIn;
     private String region;
+    private Long imageMaxSize;
 }

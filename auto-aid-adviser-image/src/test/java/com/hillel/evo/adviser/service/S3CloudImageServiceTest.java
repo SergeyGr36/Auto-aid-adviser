@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.hillel.evo.adviser.configuration.ImageConfigurationProperties;
+import com.hillel.evo.adviser.exception.S3ServiceValidationException;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -32,15 +34,25 @@ class S3CloudImageServiceTest {
     private static final ImageConfigurationProperties mockProperties = mock(ImageConfigurationProperties.class);
     private static final String testKeyFileName = "1/1/testfile.jpg";
     private static final String testFileName = "testfile.jpg";
-    MultipartFile mockFile = new MockMultipartFile
-            (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {0});
     private static final String testBucketName = "testBucket";
-
     private final CloudImageService service = new S3CloudImageService(mockAmazonS3Client, mockProperties);
+
+    private static final MultipartFile mockFile = new MockMultipartFile
+            (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {1});
+
+    private static final MultipartFile mockInvalidEmptyFile = new MockMultipartFile
+            (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {});
+
+    private static final MultipartFile mockInvalidSizeFile = new MockMultipartFile
+            (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {0,1,2,3,4,5,6,7,8,9});
+
+    private static final MultipartFile mockInvalidTypeFile = new MockMultipartFile
+            (testFileName, testFileName, MediaType.IMAGE_PNG_VALUE, new byte [] {1});
 
     static {
         when(mockProperties.getExpiresIn()).thenReturn(1L);
         when(mockProperties.getBucketName()).thenReturn(testBucketName);
+        when(mockProperties.getImageMaxSize()).thenReturn(5L);
     }
 
     @Test
@@ -61,6 +73,21 @@ class S3CloudImageServiceTest {
         boolean result = service.uploadFile(testKeyFileName, mockFile);
         //then
         assertFalse(result);
+    }
+
+    @Test
+    void whenUploadFileShouldThrowEmptyFileException() throws S3ServiceValidationException{
+        assertThrows(S3ServiceValidationException.class, ()->service.uploadFile(testKeyFileName, mockInvalidEmptyFile));
+    }
+
+    @Test
+    void whenUploadFileShouldThrowFileToBigException() throws S3ServiceValidationException{
+        assertThrows(S3ServiceValidationException.class, ()->service.uploadFile(testKeyFileName, mockInvalidSizeFile));
+    }
+
+    @Test
+    void whenUploadFileShouldThrowIncorrectFileTypeException() throws S3ServiceValidationException{
+         assertThrows(S3ServiceValidationException.class, ()->service.uploadFile(testKeyFileName, mockInvalidTypeFile));
     }
 
     @Test
