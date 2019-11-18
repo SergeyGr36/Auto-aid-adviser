@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DefaultImageService implements com.hillel.evo.adviser.service.interfaces.ImageService {
     private final CloudImageService cloudService;
-    private final ImageRepository dbService;
+    private final ImageRepository repository;
 
     @Override
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
@@ -23,7 +23,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
         if (cloudService.uploadFile(keyFileName, file)) {
             String originalFileName = file.getOriginalFilename();
             Image image = new Image(keyFileName, originalFileName);
-            return Optional.of(dbService.save(image));
+            return Optional.of(repository.save(image));
         }
         return Optional.empty();
     }
@@ -31,7 +31,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     @Override
     public boolean delete(Image image) {
         if (cloudService.deleteFile(image.getKeyFileName())) {
-            dbService.delete(image);
+            repository.delete(image);
             return true;
         }
         return false;
