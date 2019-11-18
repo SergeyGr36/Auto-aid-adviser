@@ -34,12 +34,12 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<BusinessDto> findAllByUser(Long userId) {
-        return mapper.listToDto(businessRepository.findBusinessesFetchServicesByBusinessUser_Id(userId));
+        return mapper.listToDto(businessRepository.findBusinessesUserId(userId));
     }
 
     @Override
     public BusinessDto findBusinessById(Long id, Long userId) {
-        return mapper.toDto(businessRepository.findByIdAndBusinessUser_Id(id, userId)
+        return mapper.toDto(businessRepository.findByIdAndBusinessUserId(id, userId)
                      .orElseThrow(ResourceNotFoundException::new));
     }
 
@@ -51,7 +51,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public void deleteBusiness(Long id, Long userId) {
         businessRepository.delete(businessRepository
-                            .findByIdAndBusinessUser_Id(id, userId)
+                            .findByIdAndBusinessUserId(id, userId)
                             .orElseThrow(ResourceNotFoundException::new));
     }
 }

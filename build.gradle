@@ -48,8 +48,6 @@ configure(allprojects) { project ->
         systemProperties = System.properties
     }
 
-
-
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
@@ -71,7 +69,6 @@ configure(allprojects) { project ->
         implementation db.postgres
         testImplementation db.h2
 
-        implementation misc.awsSdk
         implementation misc.swagger
         implementation misc.swaggerUI
 
@@ -89,9 +86,7 @@ configure(allprojects) { project ->
         implementation spring.webSocket
 
         implementation hibernate.search
-        testImplementation hibernate.search
         implementation hibernate.em
-        testImplementation hibernate.em
         implementation hibernate.spatial
 
 
@@ -156,6 +151,7 @@ project(":auto-aid-adviser-email") {
     }
     dependencies {
         implementation boot.starterMail
+        implementation awsSdk.ses
     }
 }
 
@@ -173,6 +169,19 @@ project(':auto-aid-adviser-business') {
     }
 }
 
+project(":auto-aid-adviser-image") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        implementation awsSdk.s3
+    }
+}
+
 project(":auto-aid-adviser-main") {
     jar {
         enabled = true
@@ -187,6 +196,7 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-email')
         implementation project(':auto-aid-adviser-security')
         implementation project(':auto-aid-adviser-websockets')
+        implementation project(':auto-aid-adviser-image')
     }
 }
 

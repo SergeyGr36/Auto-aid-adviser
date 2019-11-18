@@ -11,9 +11,13 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {ServiceTypeMapper.class})
 public interface ServiceForBusinessMapper {
     ServiceForBusiness toEntity(ServiceForBusinessDto serviceForBusinessDto);
+
     ServiceForBusinessDto toDto(ServiceForBusiness businessService);
-    List<ServiceForBusinessDto> toDto (List<ServiceForBusiness> serviceForBusinesses);
-    List<ServiceForBusiness> toEntity (List<ServiceForBusinessDto> serviceForBusinessDtos);
+
+    List<ServiceForBusinessDto> toDto(List<ServiceForBusiness> serviceForBusinesses);
+
+    List<ServiceForBusiness> toEntity(List<ServiceForBusinessDto> serviceForBusinessDtos);
+
     ServiceForBusinessShortDto toShortDto(ServiceForBusiness serviceForBusinessService);
 
     @Mapping(target = "serviceType", ignore = true)

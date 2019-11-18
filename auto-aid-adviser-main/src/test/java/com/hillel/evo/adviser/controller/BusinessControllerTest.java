@@ -86,7 +86,7 @@ public class BusinessControllerTest {
     @Test
     public void deleteBusiness_ReturnOk() throws Exception {
         //given
-        Business business = businessRepository.findAllByBusinessUser_Id(user.getId()).get(0);
+        Business business = businessRepository.findAllByBusinessUserId(user.getId()).get(0);
         //when
         mockMvc.perform(delete(PATH_BUSINESSES+"/{id}", business.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
@@ -98,7 +98,7 @@ public class BusinessControllerTest {
     public void deleteAlienBusiness_Return404() throws Exception {
         //given
         AdviserUserDetails userAlien = userRepository.findByEmail(BUSINESS_EMAIL_ALIEN).get();
-        Business businessAlien = businessRepository.findAllByBusinessUser_Id(userAlien.getId()).get(0);
+        Business businessAlien = businessRepository.findAllByBusinessUserId(userAlien.getId()).get(0);
         //when
         mockMvc.perform(delete(PATH_BUSINESSES+"/{id}", businessAlien.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
@@ -126,7 +126,7 @@ public class BusinessControllerTest {
     @Test
     public void findBusinessById() throws Exception {
         //given
-        Business business = businessRepository.findAllByBusinessUser_Id(user.getId()).get(0);
+        Business business = businessRepository.findAllByBusinessUserId(user.getId()).get(0);
         //when
         mockMvc.perform(get(PATH_BUSINESSES+"/{id}", business.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
@@ -139,7 +139,7 @@ public class BusinessControllerTest {
     public void findAlienBusinessById() throws Exception {
         //given
         AdviserUserDetails userAlien = userRepository.findByEmail(BUSINESS_EMAIL_ALIEN).get();
-        Business businessAlien = businessRepository.findAllByBusinessUser_Id(userAlien.getId()).get(0);
+        Business businessAlien = businessRepository.findAllByBusinessUserId(userAlien.getId()).get(0);
         //when
         mockMvc.perform(get(PATH_BUSINESSES+"/{id}", businessAlien.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
@@ -164,7 +164,7 @@ public class BusinessControllerTest {
     @Test
     public void updateBusiness() throws Exception {
         //given
-        Business business = businessRepository.findAllByBusinessUser_Id(user.getId()).get(0);
+        Business business = businessRepository.findAllByBusinessUserId(user.getId()).get(0);
         BusinessDto businessDto = createTestDto();
         businessDto.setId(business.getId());
         //when
