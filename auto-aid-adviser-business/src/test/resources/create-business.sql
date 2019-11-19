@@ -20,12 +20,17 @@ insert into service(name, service_type_id) values
 ('straightening discs', (select id from service_type where name like 'disk')),
 ('rubber change', (select id from service_type where name like 'gum'));
 
-insert into business(phone, address, latitude, longitude, name, working_days, working_hours, business_user_user_details_id) values
-('098-123-45-67', 'Kiev', 100, 100, 'My first STO', null, null, (select user_details_id from business_usr limit 1)),
-('067-876-32-10', 'Kharkov', 90, 100, 'My second STO', null, null, (select user_details_id from business_usr limit 1));
+insert into business(phone, address, latitude, longitude, name, business_user_user_details_id) values
+('098-123-45-67', 'Kiev', 100, 100, 'My first STO', (select user_details_id from business_usr limit 1)),
+('067-876-32-10', 'Kharkov', 90, 100, 'My second STO', (select user_details_id from business_usr limit 1));
 
 insert into business_has_service(business_id, service_for_businesses_id)
 select b.id, s.id from business b, service s;
+
+insert into work_time(day, from_time, to_time, business_id) values
+(0, now(), now(), (select id from business limit 1)),
+(1, now(), now(), (select id from business limit 1)),
+(2, now(), now(), (select id from business limit 1));
 
 insert into service(name, service_type_id) values
 ('for-delete-test', (select id from service_type where name like 'disk'));

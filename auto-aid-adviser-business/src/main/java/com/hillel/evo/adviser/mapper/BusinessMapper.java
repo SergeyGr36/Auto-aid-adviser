@@ -13,7 +13,8 @@ import java.util.List;
         uses = {BusinessUserRepository.class,
                 ServiceForBusinessMapper.class,
                 BusinessTypeMapper.class,
-                ServiceTypeMapper.class})
+                ServiceTypeMapper.class,
+                WorkTimeMapper.class})
 public interface BusinessMapper {
 
     BusinessDto toDto(Business business);
@@ -24,8 +25,7 @@ public interface BusinessMapper {
     @Mapping(target = "contact", source = "dto.contact")
     @Mapping(target = "location", source = "dto.location")
     @Mapping(target = "serviceForBusinesses", source = "dto.serviceForBusinesses")
-    @Mapping(target = "workingDays", source = "dto.workingDays")
-    @Mapping(target = "workingHours", source = "dto.workingHours")
+    @Mapping(target = "workTimes", source = "dto.workTimes")
     Business toEntity(BusinessDto dto, BusinessUser user);
 
     List<BusinessDto> listToDto(List<Business> businesses);

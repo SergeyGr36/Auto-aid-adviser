@@ -61,11 +61,16 @@ insert into service(name, service_type_id) values
 ('straightening 8', (select id from service_type where name like 'disk')),
 ('rubber change', (select id from service_type where name like 'gum'));
 
-insert into business(phone, address, latitude, longitude, name, working_days, working_hours, business_user_user_details_id) values
-('098-123-45-67', 'Kiev', 100, 100, 'user 1 STO 1', null, null, (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
-('098-123-45-67', 'Kiev', 101, 110, 'user 1 STO 2', null, null, (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
-('066-666-66-66', 'Kiev', 102, 120, 'user 2 STO 1', null, null, (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
-('096-999-99-99', 'Kiev', 103, 130, 'user 2 STO 2', null, null, (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
+insert into business(phone, address, latitude, longitude, name, business_user_user_details_id) values
+('098-123-45-67', 'Kiev', 100, 100, 'user 1 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
+('098-123-45-67', 'Kiev', 101, 110, 'user 1 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
+('066-666-66-66', 'Kiev', 102, 120, 'user 2 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
+('096-999-99-99', 'Kiev', 103, 130, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
+
+insert into work_time(day, from_time, to_time, business_id) values
+(0, now(), now(), (select id from business limit 1)),
+(1, now(), now(), (select id from business limit 1)),
+(2, now(), now(), (select id from business limit 1));
 
 insert into business_has_service(business_id, service_for_businesses_id)
 select b.id, s.id from business b, service s;

@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
+import com.hillel.evo.adviser.dto.WorkTimeDto;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
@@ -18,8 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -95,6 +99,7 @@ public class BusinessServiceImplTest {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         sourceDto.setName("updating name");
         sourceDto.getServiceForBusinesses().remove(0);
+        sourceDto.getWorkTimes().add(new WorkTimeDto(7, LocalTime.of(11, 00), LocalTime.of(20, 00)));
         //when
         BusinessDto updateDto = businessService.updateBusiness(sourceDto, userId);
         //then
@@ -137,6 +142,15 @@ public class BusinessServiceImplTest {
         dto.setContact(contact);
         dto.setLocation(location);
         dto.setServiceForBusinesses(Arrays.asList(serviceBusiness1, serviceBusiness2));
+
+        Set<WorkTimeDto> times = new HashSet<WorkTimeDto>();
+        times.add(new WorkTimeDto(1, LocalTime.of(8, 30), LocalTime.of(18, 30)));
+        times.add(new WorkTimeDto(2, LocalTime.of(8, 30), LocalTime.of(18, 30)));
+        times.add(new WorkTimeDto(3, LocalTime.of(8, 30), LocalTime.of(18, 30)));
+        times.add(new WorkTimeDto(4, LocalTime.of(8, 30), LocalTime.of(18, 30)));
+        times.add(new WorkTimeDto(5, LocalTime.of(8, 30), LocalTime.of(18, 30)));
+        times.add(new WorkTimeDto(6, LocalTime.of(8, 30), LocalTime.of(18, 30)));
+        dto.setWorkTimes(times);
 
         return dto;
     }
