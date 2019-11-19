@@ -42,7 +42,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public List<ServiceTypeDto> findAllByBusinessTypeId(Long id) {
-        return mapper.toDto(repository.findAllByBusinessType_Id(id));
+        return mapper.toDto(repository.findAllByBusinessTypeId(id));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public ServiceTypeDto getServiceTypeById(Long id) {
-        return mapper.toDto(repository.findById_Fetch(id).orElseThrow(ResourceNotFoundException::new));
+        return mapper.toDto(repository.findByIdEagerFetch(id).orElseThrow(ResourceNotFoundException::new));
     }
 
     @Override

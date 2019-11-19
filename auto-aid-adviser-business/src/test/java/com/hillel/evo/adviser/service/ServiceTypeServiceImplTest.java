@@ -3,20 +3,17 @@ package com.hillel.evo.adviser.service;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
-import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
 import com.hillel.evo.adviser.repository.ServiceTypeRepository;
 import com.hillel.evo.adviser.service.impl.ServiceTypeServiceImpl;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
@@ -71,6 +68,7 @@ public class ServiceTypeServiceImplTest {
         var result = service.findAllByNameContains("ru*", "shinomantazh");
         assertEquals(1, result.size());
     }
+
     @Test
     public void whenFindAllByServiceTypeIdThenReturnThisList() {
         List<ServiceTypeDto> dto = service.findAllByBusinessTypeId(1L);
