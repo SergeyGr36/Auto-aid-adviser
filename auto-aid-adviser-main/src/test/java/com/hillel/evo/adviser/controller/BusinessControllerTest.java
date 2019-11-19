@@ -181,7 +181,7 @@ public class BusinessControllerTest {
     @Test
     public void findServiceByBusinessId() throws Exception {
         //given
-        Business business = businessRepository.findAllByBusinessUser_Id(user.getId()).get(0);
+        Business business = businessRepository.findAllByBusinessUserId(user.getId()).get(0);
         BusinessDto businessDto = createTestDto();
         businessDto.setId(business.getId());
         //when

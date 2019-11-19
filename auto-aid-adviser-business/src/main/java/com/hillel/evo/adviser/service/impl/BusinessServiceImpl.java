@@ -41,7 +41,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<BusinessDto> findAllByUser(Long userId) {
-        return mapper.listToDto(businessRepository.findBusinessesUserId(userId));
+        return mapper.listToDto(businessRepository.findBusinessesFetchServicesByBusinessUser_Id(userId));
     }
 
     @Override
@@ -64,6 +64,6 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId) {
-        return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusiness_IdAndBusinessUser_Id(businessId, userId));
+        return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
     }
 }
