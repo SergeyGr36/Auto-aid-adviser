@@ -1,3 +1,4 @@
+delete from image;
 delete from work_time;
 delete from business_has_service;
 delete from business;

@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.repository;
 
 import com.hillel.evo.adviser.entity.Business;
+import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,4 +29,7 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
 
     @Query("select b from Business b join fetch b.serviceForBusinesses where b.id = :id")
     Optional<Business> findById(@Param("id") Long id);
+
+    @Query("select b.images from Business b where b.id = :id")
+    List<Image> findImagesByBusinessId(@Param("id") Long id);
 }

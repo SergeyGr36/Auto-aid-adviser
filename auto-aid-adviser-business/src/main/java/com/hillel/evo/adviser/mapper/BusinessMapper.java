@@ -26,6 +26,7 @@ public interface BusinessMapper {
     @Mapping(target = "location", source = "dto.location")
     @Mapping(target = "serviceForBusinesses", source = "dto.serviceForBusinesses")
     @Mapping(target = "workTimes", source = "dto.workTimes")
+    @Mapping(target = "images", ignore = true)
     Business toEntity(BusinessDto dto, BusinessUser user);
 
     List<BusinessDto> listToDto(List<Business> businesses);

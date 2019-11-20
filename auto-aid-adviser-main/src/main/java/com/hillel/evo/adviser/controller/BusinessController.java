@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
@@ -20,10 +21,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/businesses")
@@ -32,12 +37,10 @@ public class BusinessController {
     private transient final String ROLE_BUSINESS = "ROLE_BUSINESS";
 
     private transient final BusinessService businessService;
-    private transient final ServiceForBusinessService serviceForBusinessService;
 
     @Autowired
-    public BusinessController(BusinessService businessService, ServiceForBusinessService serviceForBusinessService) {
+    public BusinessController(BusinessService businessService) {
         this.businessService = businessService;
-        this.serviceForBusinessService = serviceForBusinessService;
     }
 
     @Secured(ROLE_BUSINESS)
@@ -62,11 +65,31 @@ public class BusinessController {
     }
 
     @Secured(ROLE_BUSINESS)
+    @GetMapping("/{id}/images")
+    public List<ImageDto> findImagesByBusinessId(@PathVariable Long id){
+        return businessService.findImageByBusinessId(id);
+    }
+
+/*
+    @Secured(ROLE_BUSINESS)
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public BusinessDto createBusiness(@Validated @RequestBody final BusinessDto businessDTO, Authentication authentication){
         Long userId = getUserFromAuthentication(authentication);
         return businessService.createBusiness(businessDTO, userId);
+    }
+*/
+
+    @Secured(ROLE_BUSINESS)
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+                 produces = {MediaType.APPLICATION_JSON_VALUE})
+    public BusinessDto createBusiness(
+            @RequestPart(name = "json") @Validated final BusinessDto businessDTO,
+            @RequestPart(name = "file", required = false) MultipartFile file,
+            Authentication authentication) {
+        Long userId = getUserFromAuthentication(authentication);
+        return businessService.createBusiness(businessDTO, userId, Optional.of(file));
     }
 
     @Secured(ROLE_BUSINESS)

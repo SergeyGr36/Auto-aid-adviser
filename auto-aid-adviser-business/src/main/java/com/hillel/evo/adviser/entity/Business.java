@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -49,4 +50,8 @@ public class Business {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "business_has_service")
     private Set<ServiceForBusiness> serviceForBusinesses;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_id")
+    Set<Image> images;
 }

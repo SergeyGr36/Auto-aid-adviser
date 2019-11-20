@@ -8,24 +8,38 @@ import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
+import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
+import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user2.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-business.sql", "/clean-user.sql"},
+@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BusinessControllerTest {
 
@@ -69,11 +83,18 @@ public class BusinessControllerTest {
     @Autowired
     JwtService jwtService;
 
+    @MockBean
+    CloudImageService mockCloudImageService;
+
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         encodeTestUserPassword();
         user = userRepository.findByEmail(BUSINESS_EMAIL).get();
         jwt = jwtService.generateAccessToken(user.getId());
+
+        when(mockCloudImageService.deleteFile(any())).thenReturn(true);
+        when(mockCloudImageService.uploadFile(any(), any())).thenReturn(true);
+        when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
     private void encodeTestUserPassword() {
@@ -162,6 +183,21 @@ public class BusinessControllerTest {
     }
 
     @Test
+    public void createBusinessWithFile() throws Exception {
+        //given
+        BusinessDto businessDto = createTestDto();
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.multipart(PATH_BUSINESSES)
+                    .file(getMultipartFile())
+                    .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
+                )
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(businessDto.getName()));
+    }
+
+    @Test
     public void updateBusiness() throws Exception {
         //given
         Business business = businessRepository.findAllByBusinessUserId(user.getId()).get(0);
@@ -218,4 +254,19 @@ public class BusinessControllerTest {
 
         return dto;
     }
+
+    private MockMultipartFile getMultipartFile() throws IOException {
+        String name = "ny.jpg";
+        Path path = Paths.get("C:/Temp/" + name);
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = Files.readAllBytes(path);
+        return new MockMultipartFile("file", name, contentType, content);
+    }
+
+    private MockMultipartFile getPart(String json) throws IOException {
+        String contentType = MediaType.APPLICATION_JSON_VALUE;
+        byte[] content = json.getBytes();
+        return new MockMultipartFile("json", "json", contentType, content);
+    }
+
 }

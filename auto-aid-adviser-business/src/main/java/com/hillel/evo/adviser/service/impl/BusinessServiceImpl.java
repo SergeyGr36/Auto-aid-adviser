@@ -1,19 +1,31 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
+import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
+import com.hillel.evo.adviser.mapper.ImageMapper;
 import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
+import com.hillel.evo.adviser.service.interfaces.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -23,19 +35,35 @@ public class BusinessServiceImpl implements BusinessService {
     private transient final BusinessRepository businessRepository;
     private transient final BusinessUserRepository userRepository;
     private transient final ServiceForBusinessRepository serviceForBusinessRepository;
+    private transient final ImageService imageService;
+    private transient final ImageMapper imageMapper;
 
-    public BusinessServiceImpl(BusinessMapper mapper, ServiceForBusinessMapper serviceMapper, BusinessRepository businessRepository, BusinessUserRepository userRepository, ServiceForBusinessRepository serviceForBusinessRepository) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessServiceImpl.class);
+
+    @Autowired
+    public BusinessServiceImpl(BusinessMapper mapper, ServiceForBusinessMapper serviceMapper, BusinessRepository businessRepository, BusinessUserRepository userRepository, ServiceForBusinessRepository serviceForBusinessRepository, ImageService imageService, ImageMapper imageMapper) {
         this.mapper = mapper;
         this.serviceMapper = serviceMapper;
         this.businessRepository = businessRepository;
         this.userRepository = userRepository;
         this.serviceForBusinessRepository = serviceForBusinessRepository;
+        this.imageService = imageService;
+        this.imageMapper = imageMapper;
     }
 
     @Override
     public BusinessDto createBusiness(final BusinessDto dto, Long userId) {
+        return createBusiness(dto, userId, Optional.empty());
+    }
+
+    @Override
+    @Transactional
+    public BusinessDto createBusiness(final BusinessDto dto, Long userId, Optional<MultipartFile> file) {
         BusinessUser user = userRepository.getOne(userId);
-        Business business = mapper.toEntity(dto, user);
+        Business business = businessRepository.save(mapper.toEntity(dto, user));
+        business.setImages(new HashSet<>());
+        file.ifPresent(f -> imageService.create(user.getId(), business.getId(), f)
+                            .ifPresent(img -> business.getImages().add(img)));
         return mapper.toDto(businessRepository.save(business));
     }
 
@@ -56,14 +84,22 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
+    @Transactional
     public void deleteBusiness(Long id, Long userId) {
-        businessRepository.delete(businessRepository
-                            .findByIdAndBusinessUserId(id, userId)
-                            .orElseThrow(ResourceNotFoundException::new));
+        Business business = businessRepository
+                .findByIdAndBusinessUserId(id, userId)
+                .orElseThrow(ResourceNotFoundException::new);
+        business.getImages().forEach(img -> imageService.delete(img));
+        businessRepository.delete(business);
     }
 
     @Override
     public List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId) {
         return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
+    }
+
+    @Override
+    public List<ImageDto> findImageByBusinessId(Long businessId) {
+        return imageMapper.toListDto(businessRepository.findImagesByBusinessId(businessId));
     }
 }
