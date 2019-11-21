@@ -172,7 +172,19 @@ project(':auto-aid-adviser-business') {
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }
+project(':auto-aid-adviser-user-profile'){
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(":auto-aid-adviser-user")
+        implementation project(':auto-aid-adviser-business')
+    }
 
+}
 project(":auto-aid-adviser-main") {
     jar {
         enabled = true
@@ -187,6 +199,8 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-email')
         implementation project(':auto-aid-adviser-security')
         implementation project(':auto-aid-adviser-websockets')
+        implementation project(':auto-aid-adviser-user-profile')
+
     }
 }
 
