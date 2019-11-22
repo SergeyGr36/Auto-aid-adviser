@@ -74,7 +74,7 @@ public class BusinessServiceImplTest {
 
     @BeforeEach
     private void init() throws Exception {
-        goodFile = getMultipartFile();
+        goodFile = getGoodMultipartFile();
         badFile = getBadMultipartFile();
         userId = repository.findByEmail("bvg@mail.com").get().getId();
         when(mockCloudImageService.deleteFile(any())).thenReturn(true);
@@ -170,10 +170,8 @@ public class BusinessServiceImplTest {
 
     @Test
     public void whenAddImageThenReturnNotFoundException() throws Exception {
-        //given
-        MultipartFile file = getMultipartFile();
         //then
-        assertThrows(ResourceNotFoundException.class, () -> businessService.addImage(userId, 99L, file));
+        assertThrows(ResourceNotFoundException.class, () -> businessService.addImage(userId, 99L, goodFile));
     }
 
     @Test
@@ -229,6 +227,7 @@ public class BusinessServiceImplTest {
         return dto;
     }
 
+/*
     private MultipartFile getMultipartFile() throws IOException {
         String name = "ny.jpg";
         Path path = Paths.get("C:/Temp/" + name);
@@ -236,8 +235,15 @@ public class BusinessServiceImplTest {
         byte[] content = Files.readAllBytes(path);
         return new MockMultipartFile("file", name, contentType, content);
     }
+*/
 
-    private MultipartFile getBadMultipartFile() throws IOException {
+    private MultipartFile getGoodMultipartFile() {
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = {11, 12, 13, 14, 15};
+        return new MockMultipartFile("file", "file.good", contentType, content);
+    }
+
+    private MultipartFile getBadMultipartFile() {
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = {1, 2, 3, 4, 5};
         return new MockMultipartFile("file", "file.bad", contentType, content);

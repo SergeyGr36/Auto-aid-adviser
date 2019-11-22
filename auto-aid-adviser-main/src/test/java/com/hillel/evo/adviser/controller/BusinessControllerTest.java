@@ -324,11 +324,20 @@ public class BusinessControllerTest {
         return dto;
     }
 
+/*
     private MockMultipartFile getMultipartFile() throws IOException {
         String name = "ny.jpg";
         Path path = Paths.get("C:/Temp/" + name);
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = Files.readAllBytes(path);
+        return new MockMultipartFile("file", name, contentType, content);
+    }
+*/
+
+    private MockMultipartFile getMultipartFile() throws IOException {
+        String name = "ny.jpg";
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = {11, 12, 13, 14, 15};
         return new MockMultipartFile("file", name, contentType, content);
     }
 
