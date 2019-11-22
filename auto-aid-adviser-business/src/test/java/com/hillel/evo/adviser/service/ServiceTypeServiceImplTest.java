@@ -87,9 +87,9 @@ public class ServiceTypeServiceImplTest {
         //when
         Page<ServiceTypeDto> allByPages = service.findAllByPages(page, size);
         //then
-        assertEquals(allByPages.getNumber(), page);
-        assertEquals(allByPages.getSize(), size);
-        assertEquals(allByPages.getContent().size(), size);
+        assertEquals(page, allByPages.getNumber());
+        assertEquals(size, allByPages.getSize());
+        assertEquals(size, allByPages.getContent().size());
     }
 
     @Test

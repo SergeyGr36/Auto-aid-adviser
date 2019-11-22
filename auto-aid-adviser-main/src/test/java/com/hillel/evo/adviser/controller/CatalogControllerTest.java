@@ -2,10 +2,12 @@ package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
+import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
 import com.hillel.evo.adviser.entity.BusinessType;
+import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user2.sql", "/create-business.sql"},
+@Sql(value = {"/create-user2.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -57,6 +59,9 @@ class CatalogControllerTest {
 
     @Autowired
     private BusinessTypeRepository businessTypeRepository;
+
+    @Autowired
+    private HibernateSearchConfig hibernateSearchConfig;
 
     @Test
     public void findBusinessTypeById_Test() throws Exception {
@@ -236,5 +241,44 @@ class CatalogControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void saveServiceType() throws Exception {
+        //given
+        BusinessTypeDto businessTypeDto =  businessTypeService.findAll().get(0);
+        ServiceTypeDto serviceTypeDto = new ServiceTypeDto("test2", businessTypeDto);
+        //when
+        mockMvc.perform(post(PATH_SERVICE_TYPE)
+                .content(objectMapper.writeValueAsString(serviceTypeDto))
+                .contentType(MediaType.APPLICATION_JSON))
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(serviceTypeDto.getName()));
+    }
+
+    @Test
+    public void updateServiceType() throws Exception {
+        //given
+        hibernateSearchConfig.reindex(ServiceType.class);
+        ServiceTypeDto serviceTypeDto = serviceTypeService.findAllByName("test").get(0);
+        serviceTypeDto.setName("newName");
+        //when
+        mockMvc.perform(put(PATH_SERVICE_TYPE)
+                .content(objectMapper.writeValueAsString(serviceTypeDto))
+                .contentType(MediaType.APPLICATION_JSON))
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(serviceTypeDto.getName()));
+    }
+
+    @Test
+    public void deleteServiceType() throws Exception {
+        //given
+        hibernateSearchConfig.reindex(ServiceType.class);
+        ServiceTypeDto serviceTypeDto = serviceTypeService.findAllByName("test").get(0);
+        //when
+        mockMvc.perform(delete(PATH_SERVICE_TYPE+"/{id}", serviceTypeDto.getId()))
+                //then
+                .andExpect(status().isOk());
+    }
 
 }

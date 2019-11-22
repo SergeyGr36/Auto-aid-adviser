@@ -16,5 +16,7 @@ public interface BusinessService {
     BusinessDto updateBusiness(BusinessDto dto, Long userId);
     void deleteBusiness(Long id, Long userId);
     List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId);
-    List<ImageDto> findImageByBusinessId(Long businessId);
+    List<ImageDto> findImagesByBusinessId(Long businessId);
+    ImageDto addImage(Long userId, Long businessId, MultipartFile file);
+    boolean deleteImage(ImageDto dto);
 }

@@ -6,6 +6,7 @@ import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.exception.CreateResourceException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.mapper.ImageMapper;
@@ -25,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -38,7 +38,7 @@ public class BusinessServiceImpl implements BusinessService {
     private transient final ImageService imageService;
     private transient final ImageMapper imageMapper;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessServiceImpl.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(BusinessServiceImpl.class);
 
     @Autowired
     public BusinessServiceImpl(BusinessMapper mapper, ServiceForBusinessMapper serviceMapper, BusinessRepository businessRepository, BusinessUserRepository userRepository, ServiceForBusinessRepository serviceForBusinessRepository, ImageService imageService, ImageMapper imageMapper) {
@@ -99,7 +99,24 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<ImageDto> findImageByBusinessId(Long businessId) {
+    public List<ImageDto> findImagesByBusinessId(Long businessId) {
         return imageMapper.toListDto(businessRepository.findImagesByBusinessId(businessId));
+    }
+
+    @Override
+    @Transactional
+    public ImageDto addImage(Long userId, Long businessId, MultipartFile file) {
+        Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
+        Image image = imageService.create(userId, businessId, file)
+                .orElseThrow(() -> new CreateResourceException("Image not saved"));
+        business.getImages().add(image);
+        businessRepository.save(business);
+        return imageMapper.toDto(image);
+    }
+
+    @Override
+    public boolean deleteImage(ImageDto dto) {
+        return imageService.delete(imageMapper.toEntity(dto));
     }
 }
