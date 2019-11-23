@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,8 +32,10 @@ class DefaultImageServiceTest extends BaseTest {
     private static final String testKeyFileName = "1/1/testfile.jpg";
     private static final String testFileName = "testfile.jpg";
     private static final Image testImage = new Image(testKeyFileName, testFileName);
-    private static MultipartFile mockFile = new MockMultipartFile
+    private static final MultipartFile mockFile = new MockMultipartFile
             (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {0});
+    private static final List<MultipartFile> mockListFiles = new ArrayList<>();
+    private static final List<Image> testListImages = new ArrayList<>();
 
     private final DefaultImageService service = new DefaultImageService(mockCloudImageService, mockDbImageRepository);
 
@@ -52,6 +56,31 @@ class DefaultImageServiceTest extends BaseTest {
         when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(false);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
+        //then
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void whenCreateListImagesShouldCreateIt() {
+        //given
+        mockListFiles.add(mockFile);
+        mockListFiles.add(mockFile);
+        testListImages.add(testImage);
+        testListImages.add(testImage);
+        when(mockCloudImageService.uploadFileList(any(Long.class), any(Long.class), any(List.class), eq(mockListFiles))).thenReturn(true);
+        when(mockDbImageRepository.saveAll(any(List.class))).thenReturn(testListImages);
+        //when
+        Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
+        //then
+        assertEquals(testListImages, result.get());
+    }
+
+    @Test
+    void whenCreateListImagesShouldNotCreateIt() {
+        //given
+        when(mockCloudImageService.uploadFileList(any(Long.class), any(Long.class), any(List.class), eq(mockListFiles))).thenReturn(false);
+        //when
+        Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
         //then
         assertTrue(result.isEmpty());
     }

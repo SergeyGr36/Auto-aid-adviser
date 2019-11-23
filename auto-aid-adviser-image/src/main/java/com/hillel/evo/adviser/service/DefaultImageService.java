@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +26,20 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
             String originalFileName = file.getOriginalFilename();
             Image image = new Image(keyFileName, originalFileName);
             return Optional.of(repository.save(image));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<List<Image>> create(Long businessUserId, Long businessId, List<MultipartFile> files) {
+        List<String> keyFileNames = new ArrayList<>();
+        files.forEach(f->keyFileNames.add(generateKeyFileName(businessUserId,businessId,f)));
+        if(cloudService.uploadFileList(businessUserId, businessId, keyFileNames, files)){
+            List<Image> images = new ArrayList<>();
+            for (int k = 0, f = 0; f < files.size(); k++, f++){
+                images.add(new Image(keyFileNames.get(k), files.get(f).getOriginalFilename()));
+            }
+            return Optional.of(repository.saveAll(images));
         }
         return Optional.empty();
     }
