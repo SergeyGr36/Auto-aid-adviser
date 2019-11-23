@@ -53,5 +53,5 @@ public class Business {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id")
-    Set<Image> images;
+    Set<Image> images = new HashSet<>();
 }

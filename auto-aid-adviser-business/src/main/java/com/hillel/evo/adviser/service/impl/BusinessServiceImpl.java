@@ -16,8 +16,6 @@ import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.interfaces.ImageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -61,10 +60,9 @@ public class BusinessServiceImpl implements BusinessService {
     public BusinessDto createBusiness(final BusinessDto dto, Long userId, Optional<MultipartFile> file) {
         BusinessUser user = userRepository.getOne(userId);
         Business business = businessRepository.save(mapper.toEntity(dto, user));
-        business.setImages(new HashSet<>());
-        file.ifPresent(f -> imageService.create(user.getId(), business.getId(), f)
-                            .ifPresent(img -> business.getImages().add(img)));
-        return mapper.toDto(businessRepository.save(business));
+        Optional<Image> image = file.flatMap((f) -> imageService.create(userId, business.getId(), f));
+        image.ifPresent(business.getImages()::add);
+        return mapper.toDto(business);
     }
 
     @Override

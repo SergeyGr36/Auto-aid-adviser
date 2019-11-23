@@ -26,11 +26,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -89,7 +85,8 @@ public class BusinessServiceImplTest {
         BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId);
         //then
         assertNotNull(saveDto);
-        assertEquals(saveDto.getServiceForBusinesses().size(), 2);
+        assertEquals(2, saveDto.getServiceForBusinesses().size());
+        assertEquals(6, saveDto.getWorkTimes().size());
     }
 
     @Test
@@ -99,7 +96,8 @@ public class BusinessServiceImplTest {
         BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId, multipartFile);
         //then
         assertNotNull(saveDto);
-        assertEquals(saveDto.getServiceForBusinesses().size(), 2);
+        assertEquals(2, saveDto.getServiceForBusinesses().size());
+        assertEquals(6, saveDto.getWorkTimes().size());
     }
 
     @Test

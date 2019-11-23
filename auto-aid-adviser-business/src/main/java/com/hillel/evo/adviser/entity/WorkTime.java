@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"id", "day"})
 public class WorkTime {
 
     @Id

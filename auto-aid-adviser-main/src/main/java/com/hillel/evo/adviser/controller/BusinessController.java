@@ -75,10 +75,10 @@ public class BusinessController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
                  produces = {MediaType.APPLICATION_JSON_VALUE})
     public BusinessDto createBusiness(@RequestPart(name = "json") @Validated final BusinessDto businessDTO,
-                                      @RequestPart(name = "file", required = false) MultipartFile file,
+                                      @RequestPart(name = "file", required = false) Optional<MultipartFile> file,
                                       Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        return businessService.createBusiness(businessDTO, userId, Optional.of(file));
+        return businessService.createBusiness(businessDTO, userId, file);
     }
 
     @Secured(ROLE_BUSINESS)
