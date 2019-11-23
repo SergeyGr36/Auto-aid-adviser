@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.transfer.MultipleFileUpload;
+import com.amazonaws.services.s3.transfer.TransferManager;
 import com.hillel.evo.adviser.configuration.ImageConfigurationProperties;
 import com.hillel.evo.adviser.exception.S3ServiceValidationException;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
@@ -13,9 +15,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,10 +37,17 @@ import static org.mockito.Mockito.when;
 class S3CloudImageServiceTest {
     private static final AmazonS3 mockAmazonS3Client = mock(AmazonS3.class);
     private static final ImageConfigurationProperties mockProperties = mock(ImageConfigurationProperties.class);
+    private static final TransferManager mockTransferManager = mock(TransferManager.class);
+    private static final MultipleFileUpload mockUpload = mock(MultipleFileUpload.class);
     private static final String testKeyFileName = "1/1/testfile.jpg";
     private static final String testFileName = "testfile.jpg";
     private static final String testBucketName = "testBucket";
-    private final CloudImageService service = new S3CloudImageService(mockAmazonS3Client, mockProperties);
+    private static final Long testBusinessUserId = 1L;
+    private static final Long testBusinessId = 1L;
+    private static final List<String> testKeyFileNames = new ArrayList<>();
+    private static final List<MultipartFile> testFiles = new ArrayList<>();
+    private final CloudImageService service =
+            new S3CloudImageService(mockAmazonS3Client, mockTransferManager, mockProperties);
 
     private static final MultipartFile mockFile = new MockMultipartFile
             (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {1});
@@ -71,6 +83,35 @@ class S3CloudImageServiceTest {
         given(mockAmazonS3Client.putObject(any(PutObjectRequest.class))).willAnswer( invocation -> { throw new IOException("msg"); });
         //when
         boolean result = service.uploadFile(testKeyFileName, mockFile);
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void whenUploadFileListShouldUploadIt() throws Exception {
+        //given
+        when(mockTransferManager.uploadDirectory(
+                any(String.class),
+                any(String.class),
+                any(File.class),
+                any(Boolean.class))).thenReturn(mockUpload);
+        doNothing().when(mockUpload).waitForCompletion();
+        //when
+        boolean result = service.uploadFileList(testBusinessUserId, testBusinessId, testKeyFileNames, testFiles);
+        //then
+        assertTrue(result);
+    }
+
+    @Test
+    void whenUploadFileListShouldThrowException() {
+        //given
+        given(mockTransferManager.uploadDirectory(
+                any(String.class),
+                any(String.class),
+                any(File.class),
+                any(Boolean.class))).willAnswer(invocation -> {throw new SdkClientException("msg");});
+        //when
+        boolean result = service.uploadFileList(testBusinessUserId, testBusinessId, testKeyFileNames, testFiles);
         //then
         assertFalse(result);
     }

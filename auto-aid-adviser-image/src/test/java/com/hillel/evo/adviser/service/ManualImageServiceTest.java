@@ -18,6 +18,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,15 +29,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Disabled
 @SpringBootTest(classes = {ImageApplication.class})
-public class ManualImageServiceTest {
+class ManualImageServiceTest {
     @Autowired
-    ImageService imageService;
-    final Long testBusinessUserId = 777L;
-    final Long testBusinessId = 1L;
-    final Logger log = LoggerFactory.getLogger(ManualImageServiceTest.class);
+    private ImageService imageService;
+    private static final Long testBusinessUserId = 777L;
+    private static final Long testBusinessId = 1L;
+    private static final Logger log = LoggerFactory.getLogger(ManualImageServiceTest.class);
 
     @Test
-    public void doCreate() throws Exception {
+    void doCreate() throws Exception {
         MultipartFile file = getMultipartFile();
         Image image = imageService.create(testBusinessUserId, testBusinessId, file)
                 .orElseThrow(() -> new RuntimeException("Failed"));
@@ -43,7 +45,15 @@ public class ManualImageServiceTest {
     }
 
     @Test
-    public void doGetPresignedUrl() throws Exception {
+    void doCreateList() throws Exception{
+        List<MultipartFile> testImages = getListMultipartFile();
+        List<Image> list = imageService.create(testBusinessUserId,testBusinessId,testImages)
+                .orElseThrow(()-> new RuntimeException("Failed"));
+        log.warn(() -> "Fail to load list of images");
+    }
+
+    @Test
+    void doGetPresignedUrl() throws Exception {
         MultipartFile file = getMultipartFile();
         //use key file name from doCreate() output
         String keyFileName = "777/1/ce3073e7-1193-4477-9f4d-81b7da19eb3f-Miner.jpg";
@@ -53,7 +63,7 @@ public class ManualImageServiceTest {
     }
 
     @Test
-    public void doDelete() throws Exception {
+    void doDelete() throws Exception {
         MultipartFile file = getMultipartFile();
         //use key file name from doCreate() output
         String keyFileName = "777/1/0947d9eb-d5d0-444c-8b79-8a3bfcbd1ac4-Miner.jpg";
@@ -67,5 +77,16 @@ public class ManualImageServiceTest {
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = Files.readAllBytes(path);
         return new MockMultipartFile(name, name, contentType, content);
+    }
+
+    private List<MultipartFile> getListMultipartFile() throws IOException {
+        List<MultipartFile> testImages = new ArrayList<>();
+        String name = "test.jpg";
+        Path path = Paths.get("C:\\Users\\ItsTi\\OneDrive\\Изображения\\" + name);
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = Files.readAllBytes(path);
+        testImages.add(new MockMultipartFile(name, name, contentType, content));
+        testImages.add(new MockMultipartFile(name, name, contentType, content));
+        return testImages;
     }
 }
