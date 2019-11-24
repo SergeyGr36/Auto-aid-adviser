@@ -38,7 +38,7 @@ pipeline {
             region='eu-west-1b'
             buildbucket='auto-aid-adviser-bucket'
             buildbucketfolder='build'
-            aws s3 cp build/libs/${filename} s3://${buildbucket}/${buildbucketfolder}/
+            aws s3 cp ${filename} s3://${buildbucket}/${buildbucketfolder}/
         '''
          }
         }
