@@ -34,7 +34,7 @@ pipeline {
     stage('Deploy to S3'){
      steps{
         sh '''
-            filename=auto-aid-adviser-5.6.2.jar
+            filename=auto-aid-adviser-main/build/libs/auto-aid-adviser-main-boot.jar
             region='eu-west-1b'
             buildbucket='auto-aid-adviser-bucket'
             buildbucketfolder='build'
