@@ -273,7 +273,7 @@ public class BusinessControllerTest {
         Business business = allBusinessByName.get(0);
         ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId()).get(0);
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/images")
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(imagesDto)))
@@ -282,14 +282,30 @@ public class BusinessControllerTest {
     }
 
     @Test
-    public void deleteImageFromBusinessReturnBabRequest() throws Exception {
+    public void deleteImageFromBusinessReturn404() throws Exception {
         //given
         List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
         Business business = allBusinessByName.get(0);
         ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId()).get(0);
-        imagesDto.setKeyFileName("1/1/qwerty.bad");
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/images")
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", 99L)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(imagesDto)))
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteImageFromBusinessReturnBabRequest() throws Exception {
+        //given
+        List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
+        Business business = allBusinessByName.get(0);
+        ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId())
+                .stream().filter(dto -> dto.getKeyFileName().endsWith(".bad"))
+                .findFirst().get();
+        //when
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(imagesDto)))

@@ -8,11 +8,11 @@ import lombok.Data;
 public class AdviserUserDetailsDto {
     private Long id;
     private String email;
-    private RoleUser roleUser;
+    private RoleUser role;
 
     public AdviserUserDetailsDto(AdviserUserDetails adviserUserDetails) {
         this.id = adviserUserDetails.getId();
         this.email = adviserUserDetails.getEmail();
-        this.roleUser = adviserUserDetails.getRole();
+        this.role = adviserUserDetails.getRole();
     }
 }

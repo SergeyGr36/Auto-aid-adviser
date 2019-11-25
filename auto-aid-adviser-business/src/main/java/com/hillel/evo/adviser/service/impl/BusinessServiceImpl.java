@@ -114,7 +114,9 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public boolean deleteImage(ImageDto dto) {
-        return imageService.delete(imageMapper.toEntity(dto));
+    public boolean deleteImage(Long userId, Long businessId, ImageDto dto) {
+        Image image = businessRepository.findImageByBusinessUserIdAndBusinessIdAndImageId(userId, businessId, dto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
+        return imageService.delete(image);
     }
 }

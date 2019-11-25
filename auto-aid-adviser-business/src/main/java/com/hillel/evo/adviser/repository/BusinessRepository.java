@@ -34,4 +34,10 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
     List<Image> findImagesByBusinessId(@Param("id") Long id);
 
     List<Business> findAllByName(String name);
+
+    @Query("select img from Business b join b.images img " +
+            "where b.id = :businessId and b.businessUser.id = :userId and img.id = :imageId")
+    Optional<Image> findImageByBusinessUserIdAndBusinessIdAndImageId(@Param("userId") Long userId,
+                                                                     @Param("businessId") Long businessId,
+                                                                     @Param("imageId") Long imageId);
 }

@@ -156,6 +156,9 @@ project(":auto-aid-adviser-email") {
 }
 
 project(':auto-aid-adviser-business') {
+    repositories {
+        mavenLocal()
+    }
     bootJar {
         enabled = false
     }
@@ -168,6 +171,7 @@ project(':auto-aid-adviser-business') {
         implementation project(':auto-aid-adviser-image')
 
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+        testImplementation group: 'io.hypersistence', name: 'hypersistence-optimizer', version: '1.2.3-trial'
     }
 }
 

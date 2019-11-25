@@ -116,9 +116,12 @@ public class BusinessController {
     }
 
     @Secured(ROLE_BUSINESS)
-    @DeleteMapping("/images")
-    public ResponseEntity<String> deleteImageFromBusiness(@RequestBody @Validated ImageDto dto) {
-        if(businessService.deleteImage(dto)) {
+    @DeleteMapping("/{id}/images")
+    public ResponseEntity<String> deleteImageFromBusiness(@PathVariable("id") Long businessId,
+                                                          @RequestBody @Validated ImageDto dto,
+                                                          Authentication authentication) {
+        Long userId = getUserFromAuthentication(authentication);
+        if(businessService.deleteImage(userId, businessId, dto)) {
             return new ResponseEntity<>("The deleted image is successful", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to delete image", HttpStatus.BAD_REQUEST);

@@ -14,6 +14,9 @@ import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
+import io.hypersistence.optimizer.HypersistenceOptimizer;
+import io.hypersistence.optimizer.core.config.HibernateConfig;
+import io.hypersistence.optimizer.core.config.JpaConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +29,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -36,6 +42,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,15 +75,26 @@ public class BusinessServiceImplTest {
     MultipartFile goodFile;
     MultipartFile badFile;
 
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
     @BeforeEach
     private void init() throws Exception {
         goodFile = getGoodMultipartFile();
         badFile = getBadMultipartFile();
         userId = repository.findByEmail("bvg@mail.com").get().getId();
+
         when(mockCloudImageService.deleteFile(any())).thenReturn(true);
         when(mockCloudImageService.uploadFile(any(), eq(goodFile))).thenReturn(true);
         when(mockCloudImageService.uploadFile(any(), eq(badFile))).thenReturn(false);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
+    }
+
+    @Test
+    public void testOptimizer() {
+        new HypersistenceOptimizer(
+                new JpaConfig(entityManagerFactory)
+        ).init();
     }
 
     @Test
@@ -186,7 +204,26 @@ public class BusinessServiceImplTest {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         ImageDto dto = businessService.findImagesByBusinessId(sourceDto.getId()).get(0);
         //then
-        assertTrue(businessService.deleteImage(dto));
+        assertTrue(businessService.deleteImage(userId, sourceDto.getId(), dto));
+    }
+
+    @Test
+    public void whenDeleteImageThenReturnException() {
+        //given
+        BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        ImageDto dto = businessService.findImagesByBusinessId(sourceDto.getId()).get(0);
+        //then
+        assertThrows(ResourceNotFoundException.class, () -> businessService.deleteImage(99L, 99L, dto));
+    }
+
+    @Test
+    public void whenAllImageByBusinessIdThenReturnSetImages() {
+        //given
+        BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        //when
+        List<ImageDto> images = businessService.findImagesByBusinessId(sourceDto.getId());
+        //then
+        assertEquals(1, images.size());
     }
 
     private BusinessDto createTestDto() {

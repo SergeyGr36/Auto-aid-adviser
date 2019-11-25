@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.net.URL;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +17,6 @@ public class ImageDto {
     private String keyFileName;
 
     private String originalFileName;
+
+    private URL urlImage;
 }
