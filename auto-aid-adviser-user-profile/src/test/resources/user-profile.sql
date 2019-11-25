@@ -12,6 +12,16 @@ insert into simple_usr(first_name, last_name, user_details_id) values
 -- ((select id from simple_usr where first_name like 'Vasya'), null, null, null ),
 -- ((select id from simple_usr where first_name like 'Katya'), null, null, null );
 
-insert into UserProfile(user_profile_id ) values
-(select id from simple_usr where first_name like 'Vasya'),
-(select id from simple_usr where first_name like 'Katya');
+
+insert into user_profile(simple_usr_id) values
+(select user_details_id from simple_usr where first_name like 'Vasya'),
+(select user_details_id from simple_usr where first_name like 'Katya');
+
+insert into car(user_profile_id) values
+(select id from user_profile where id = 1);
+
+insert into car_identification(name) values
+('Audi' where type_ident = 'CarBrand'),
+('BMW' where type_ident = 'CarBrand'),
+('Automatic' where type_ident = 'MotorType'),
+('Mechanic' where type_ident = 'MotorType');

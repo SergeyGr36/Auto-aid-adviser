@@ -1,4 +1,4 @@
-package com.hillell.evo.adviser;
+package com.hillel.evo.adviser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

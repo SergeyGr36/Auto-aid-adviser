@@ -1,7 +1,7 @@
-package com.hillell.evo.adviser.service;
+package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillell.evo.adviser.dto.UserProfileDto;
+import com.hillel.evo.adviser.dto.UserProfileDto;
 
 public interface UserProfileService {
     UserProfileDto getByUserId(Long id);

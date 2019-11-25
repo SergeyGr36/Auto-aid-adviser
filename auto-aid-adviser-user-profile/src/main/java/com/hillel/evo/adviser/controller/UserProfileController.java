@@ -1,8 +1,8 @@
-package com.hillell.evo.adviser.controller;
+package com.hillel.evo.adviser.controller;
 
 import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillell.evo.adviser.dto.UserProfileDto;
-import com.hillell.evo.adviser.service.UserProfileService;
+import com.hillel.evo.adviser.service.UserProfileService;
+import com.hillel.evo.adviser.dto.UserProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

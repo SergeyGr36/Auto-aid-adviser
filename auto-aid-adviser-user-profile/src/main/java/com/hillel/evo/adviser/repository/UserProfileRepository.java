@@ -1,6 +1,6 @@
-package com.hillell.evo.adviser.repository;
+package com.hillel.evo.adviser.repository;
 
-import com.hillell.evo.adviser.entity.UserProfile;
+import com.hillel.evo.adviser.entity.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

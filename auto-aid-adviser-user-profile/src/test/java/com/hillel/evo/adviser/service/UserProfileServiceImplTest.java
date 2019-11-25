@@ -1,8 +1,11 @@
-package com.hillell.evo.adviser.service;
+package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.UserProfileStarter;
+import com.hillel.evo.adviser.dto.UserProfileDto;
 import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillell.evo.adviser.dto.UserProfileDto;
-import com.hillell.evo.adviser.repository.UserProfileRepository;
+import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.repository.UserProfileRepository;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,18 +16,21 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(classes = UserProfileStarter.class)
 @Sql(value = {"/clean-user-profile.sql", "/user-profile.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserProfileServiceImplTest {
+
+    private Long userId;
     private UserProfileDto dto;
     @Autowired
     private UserProfileServiceImpl service;
     @Autowired
+    private AdviserUserDetailRepository userRepository;
+    @Autowired
     private UserProfileRepository repository;
     @BeforeEach
     private void createDto(){
-        dto.setId(1L);
-        dto.setUser(new SimpleUser());
+        userId = userRepository.findByEmail("svg@mail.com").get().getId();
     }
     @Test
     public void whenCreateUserProfileThenReturnDto(){

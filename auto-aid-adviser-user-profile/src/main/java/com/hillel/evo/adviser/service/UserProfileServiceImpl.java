@@ -1,10 +1,10 @@
-package com.hillell.evo.adviser.service;
+package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.SimpleUser;
+import com.hillel.evo.adviser.mapper.UserProfileMapper;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
-import com.hillell.evo.adviser.dto.UserProfileDto;
-import com.hillell.evo.adviser.mapper.UserProfileMapper;
-import com.hillell.evo.adviser.repository.UserProfileRepository;
+import com.hillel.evo.adviser.repository.UserProfileRepository;
+import com.hillel.evo.adviser.dto.UserProfileDto;
 import org.springframework.stereotype.Service;
 
 @Service

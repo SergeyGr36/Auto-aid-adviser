@@ -180,8 +180,7 @@ project(':auto-aid-adviser-user-profile'){
         enabled = true
     }
     dependencies {
-        implementation project(":auto-aid-adviser-user")
-        implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-user')
     }
 
 }
