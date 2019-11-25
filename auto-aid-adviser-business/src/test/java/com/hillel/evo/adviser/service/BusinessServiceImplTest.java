@@ -14,9 +14,6 @@ import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
-import io.hypersistence.optimizer.HypersistenceOptimizer;
-import io.hypersistence.optimizer.core.config.HibernateConfig;
-import io.hypersistence.optimizer.core.config.JpaConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +26,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import java.net.URL;
@@ -42,7 +38,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -88,13 +83,6 @@ public class BusinessServiceImplTest {
         when(mockCloudImageService.uploadFile(any(), eq(goodFile))).thenReturn(true);
         when(mockCloudImageService.uploadFile(any(), eq(badFile))).thenReturn(false);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
-    }
-
-    @Test
-    public void testOptimizer() {
-        new HypersistenceOptimizer(
-                new JpaConfig(entityManagerFactory)
-        ).init();
     }
 
     @Test
