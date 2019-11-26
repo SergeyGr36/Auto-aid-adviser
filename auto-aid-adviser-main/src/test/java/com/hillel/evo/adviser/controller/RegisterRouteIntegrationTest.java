@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.enums.RoleUser;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class RegisterRouteIntegrationTest {
+public class RegisterRouteIntegrationTest extends BaseTest {
 
     private static final String REGISTER_ROUTE = "/user/register";
 

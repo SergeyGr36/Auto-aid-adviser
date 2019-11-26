@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class CatalogControllerTest {
+class CatalogControllerTest extends BaseTest {
 
     private static final String PATH_BUSINESSES_TYPE = "/catalog/business_types";
     private static final String PATH_SERVICE_TYPE = "/catalog/service_types";
