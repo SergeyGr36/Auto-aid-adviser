@@ -48,19 +48,6 @@ configure(allprojects) { project ->
         systemProperties = System.properties
     }
 
-//    configurations {
-//        testArtifacts.extendsFrom testRuntime
-//    }
-//
-//    task testJar(type: Jar) {
-//        archiveClassifier.set('test')
-//        from sourceSets.test.output
-//    }
-//
-//    artifacts {
-//        testArtifacts testJar
-//    }
-
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
