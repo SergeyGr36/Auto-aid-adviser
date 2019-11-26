@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(classes = {WebSocketApp.class})
 @Sql(value = {"/clean-business.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class WebSocketServiceImpTest {
+public class WebSocketServiceImpTest extends BaseTest {
 
     @Autowired
     private WebSocketService webSocketService;

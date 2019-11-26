@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.ImageDto;
@@ -58,7 +59,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class BusinessControllerTest {
+public class BusinessControllerTest extends BaseTest {
 
     private static final String BUSINESS_EMAIL = "bvg@mail.com";
     private static final String BUSINESS_EMAIL_ALIEN = "bkc@mail.com";

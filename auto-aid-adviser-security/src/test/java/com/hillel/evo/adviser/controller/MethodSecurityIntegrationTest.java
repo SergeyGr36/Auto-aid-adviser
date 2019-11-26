@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.controller;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SecurityAppStarter;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestController.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class MethodSecurityIntegrationTest {
+public class MethodSecurityIntegrationTest extends BaseTest {
 
     private static final String EMAIL = "test@gmail.com";
     private static final String PASSWORD = "testtest123";
