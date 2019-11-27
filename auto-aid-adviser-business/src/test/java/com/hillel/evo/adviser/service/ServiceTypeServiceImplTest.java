@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class ServiceTypeServiceImplTest {
+public class ServiceTypeServiceImplTest extends BaseTest {
     @Autowired
     private ServiceTypeRepository repo;
     @Autowired
@@ -55,7 +56,6 @@ public class ServiceTypeServiceImplTest {
         assertEquals(type.getId(), dto.getId());
     }
 
-/*
     @Test
     public void whenFindAllByNameThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
@@ -69,7 +69,6 @@ public class ServiceTypeServiceImplTest {
         var result = service.findAllByNameContains("ru*", "shinomantazh");
         assertEquals(1, result.size());
     }
-*/
 
     @Test
     public void whenFindAllByServiceTypeIdThenReturnThisList() {
