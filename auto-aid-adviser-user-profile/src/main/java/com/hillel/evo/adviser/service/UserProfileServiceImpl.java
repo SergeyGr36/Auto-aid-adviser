@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.entity.SimpleUser;
+import com.hillel.evo.adviser.entity.UserProfile;
 import com.hillel.evo.adviser.mapper.UserProfileMapper;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import com.hillel.evo.adviser.repository.UserProfileRepository;
@@ -25,7 +26,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfileDto createUserProfile(UserProfileDto dto, SimpleUser user) {
-        return mapper.toDto(repository.save(mapper.toUser(dto, user)));
+        UserProfile profile = mapper.toUser(dto, user);
+        return mapper.toDto(repository.save(profile));
     }
 
     @Override

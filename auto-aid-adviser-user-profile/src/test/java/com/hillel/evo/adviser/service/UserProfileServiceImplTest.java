@@ -22,6 +22,7 @@ public class UserProfileServiceImplTest {
 
     private Long userId;
     private UserProfileDto dto;
+    private SimpleUser user;
     @Autowired
     private UserProfileServiceImpl service;
     @Autowired
@@ -31,10 +32,14 @@ public class UserProfileServiceImplTest {
     @BeforeEach
     private void createDto(){
         userId = userRepository.findByEmail("svg@mail.com").get().getId();
+        user=new SimpleUser();
+        user.setFirstName("testName");
+        user.setLastName("testLastName");
+        dto = new UserProfileDto();
+        dto.setUser(user);
     }
     @Test
     public void whenCreateUserProfileThenReturnDto(){
-        SimpleUser user = new SimpleUser();
         UserProfileDto test = service.createUserProfile(dto, user);
        assertEquals(dto.getId(), test.getId());
     }

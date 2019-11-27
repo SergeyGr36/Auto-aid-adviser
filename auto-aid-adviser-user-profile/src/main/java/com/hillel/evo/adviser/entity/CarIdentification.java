@@ -11,8 +11,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
-
-
+import javax.validation.constraints.NotNull;
 
 
 @Data
@@ -22,12 +21,10 @@ import javax.persistence.Inheritance;
 @DiscriminatorColumn(name = "type_ident")
 public class CarIdentification {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserCar car;
-//    private CarBrand brand;
-//    private MotorType motorType;
-//    private TypeCar typeCar;
+    @NotNull
     private String name;
 }
