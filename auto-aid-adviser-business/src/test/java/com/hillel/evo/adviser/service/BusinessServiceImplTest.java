@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(classes = {BusinessApplication.class})
 @Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class BusinessServiceImplTest {
+public class BusinessServiceImplTest extends BaseTest {
 
     @Autowired
     private BusinessServiceImpl businessService;

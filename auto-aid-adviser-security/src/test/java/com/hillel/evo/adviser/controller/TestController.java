@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/test")
-public class TestController extends BaseTest {
+public class TestController {
 
     @GetMapping("/unsecured")
     public ResponseEntity<String> helloUnsecured() {

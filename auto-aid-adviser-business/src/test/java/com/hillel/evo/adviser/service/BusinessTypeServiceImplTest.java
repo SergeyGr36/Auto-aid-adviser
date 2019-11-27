@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {BusinessApplication.class})
 @Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class BusinessTypeServiceImplTest {
+public class BusinessTypeServiceImplTest extends BaseTest {
     @Autowired
     private BusinessTypeServiceImpl businessTypeService;
     @Autowired

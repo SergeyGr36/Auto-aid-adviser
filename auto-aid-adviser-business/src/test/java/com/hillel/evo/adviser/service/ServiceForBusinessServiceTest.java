@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(classes = {BusinessApplication.class})
 @Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class ServiceForBusinessServiceTest {
+public class ServiceForBusinessServiceTest extends BaseTest {
     @Autowired
     private ServiceForBusinessRepository repo;
     @Autowired
