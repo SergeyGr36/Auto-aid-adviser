@@ -36,15 +36,9 @@ spring:
       writetimeout: 5000
 
 server:
-  port: 443
+  port: 8080
   servlet:
     context-path: /api
-  ssl:
-    enabled: false
-    key-store-type: PKCS12
-    key-store: classpath:aaasslkey.p12
-    key-store-password: aaa881KeyPass
-    key-alias: aaa-ssl-key
 
 email:
   service: default

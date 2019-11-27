@@ -24,10 +24,16 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
             "where b.businessUser.id = :id")
     List<Business> findBusinessesFetchServicesByBusinessUser_Id(@Param("id") Long id);
 
-    @Query("select b from Business b join fetch b.serviceForBusinesses where b.id = :id and b.businessUser.id = :userId")
+    @Query("select b from Business b " +
+            "join fetch b.serviceForBusinesses " +
+            "left join fetch  b.workTimes " +
+            "where b.id = :id and b.businessUser.id = :userId")
     Optional<Business> findByIdAndBusinessUserId(@Param("id") Long id, @Param("userId") Long userId);
 
-    @Query("select b from Business b join fetch b.serviceForBusinesses where b.id = :id")
+    @Query("select b from Business b " +
+            "join fetch b.serviceForBusinesses " +
+            "left join fetch b.workTimes " +
+            "where b.id = :id")
     Optional<Business> findById(@Param("id") Long id);
 
     @Query("select b.images from Business b where b.id = :id")

@@ -10,7 +10,6 @@ import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
@@ -30,21 +29,15 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.endsWith;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -253,7 +246,7 @@ public class BusinessControllerTest extends BaseTest {
     }
 
     @Test
-    public void addImageFromBusinessReturnDto() throws Exception {
+    public void addImageToBusinessReturnDto() throws Exception {
         //given
         List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
         Business business = allBusinessByName.get(0);

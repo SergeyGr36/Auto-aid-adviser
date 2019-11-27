@@ -2,6 +2,7 @@ package com.hillel.evo.adviser;
 
 import io.hypersistence.optimizer.HypersistenceOptimizer;
 import io.hypersistence.optimizer.core.config.JpaConfig;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
@@ -12,7 +13,7 @@ public class BaseTest {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
-    @PostConstruct
+    @Test // поставил @Test потому что с @PostConstructor HypersistenceOptimizer не дает открыть транзакцию
     public void initOptimizer() {
         new HypersistenceOptimizer(
                 new JpaConfig(entityManagerFactory)

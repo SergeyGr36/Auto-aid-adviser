@@ -46,11 +46,13 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     }
 
     @Override
+    @Transactional
     public List<ServiceTypeDto> findAllByName(String name) {
         return mapper.toDto(textSearch.search(ServiceType.class, "name", name));
     }
 
     @Override
+    @Transactional
     public List<ServiceTypeDto> findAllByNameContains(String name, String btName) {
         var clazz = ServiceType.class;
         var btQuery = searchHelperService.getTextQuery(clazz, "businessType.name", btName);

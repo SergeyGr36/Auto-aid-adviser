@@ -40,7 +40,7 @@ public class Business {
     @Embedded
     private Contact contact;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "business_id")
     private Set<WorkTime> workTimes;
 

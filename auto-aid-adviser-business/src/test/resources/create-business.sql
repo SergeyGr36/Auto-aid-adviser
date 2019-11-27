@@ -21,8 +21,10 @@ insert into service(name, service_type_id) values
 ('rubber change', (select id from service_type where name like 'gum'));
 
 insert into business(phone, address, latitude, longitude, name, business_user_user_details_id) values
-('098-123-45-67', 'Kiev', 100, 100, 'My first STO', (select user_details_id from business_usr limit 1)),
-('067-876-32-10', 'Kharkov', 90, 100, 'My second STO', (select user_details_id from business_usr limit 1));
+('098-123-45-67', 'Kiev', 100, 100, 'user 1 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'bvg@mail.com')),
+('098-123-45-67', 'Kiev', 101, 110, 'user 1 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'bvg@mail.com')),
+('066-666-66-66', 'Kharkov', 102, 120, 'user 2 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'bkc@mail.com')),
+('096-999-99-99', 'Kharkov', 103, 130, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'bkc@mail.com'));
 
 insert into business_has_service(business_id, service_for_businesses_id)
 select b.id, s.id from business b, service s;
