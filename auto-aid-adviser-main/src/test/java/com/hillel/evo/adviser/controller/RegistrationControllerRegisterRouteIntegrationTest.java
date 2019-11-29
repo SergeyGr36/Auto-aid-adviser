@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class RegisterRouteIntegrationTest {
+public class RegistrationControllerRegisterRouteIntegrationTest {
 
     private static final String REGISTER_ROUTE = "/user/register";
 

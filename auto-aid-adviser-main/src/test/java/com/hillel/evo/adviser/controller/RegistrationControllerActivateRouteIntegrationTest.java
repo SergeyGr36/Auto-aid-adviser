@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class ActivateRouteIntegrationTest {
+public class RegistrationControllerActivateRouteIntegrationTest {
 
     private static final String ACTIVATE_ROUTE = "/user/activate";
 
