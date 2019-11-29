@@ -2,11 +2,15 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
+import com.hillel.evo.adviser.dto.UserTokenResponseDto;
+import org.springframework.boot.web.server.Http2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -48,11 +52,11 @@ public class RegistrationService {
      * @param activationCode - registration dto
      * @return user dto of created user
      */
-    public ResponseEntity<AdviserUserDetailsDto> activateUser(String activationCode) {
+    public ResponseEntity<UserTokenResponseDto> activateUser(String activationCode) {
 
-        AdviserUserDetailsDto userDto =  userService.activation(activationCode);
+        AdviserUserDetailsDto userDetailsDto =  userService.activation(activationCode);
 
-        long userId = userDto.getId();
+        long userId = userDetailsDto.getId();
 
         Authentication trustedAuthentication = detailsService.createTrustedAuthenticationWithUserId(userId);
 
@@ -63,6 +67,17 @@ public class RegistrationService {
         return ResponseEntity
                 .status(OK)
                 .header(AUTHORIZATION, JwtService.TOKEN_PREFIX + accessToken)
-                .body(userDto);
+                .header(ACCESS_CONTROL_ALLOW_HEADERS, AUTHORIZATION)
+                .body(createDto(userDetailsDto, accessToken));
+    }
+
+    UserTokenResponseDto createDto(AdviserUserDetailsDto userDetailsDto, String token) {
+        UserTokenResponseDto dto = new UserTokenResponseDto(
+                userDetailsDto.getId(),
+                userDetailsDto.getEmail(),
+                userDetailsDto.getRoleUser(),
+                token
+        );
+        return dto;
     }
 }

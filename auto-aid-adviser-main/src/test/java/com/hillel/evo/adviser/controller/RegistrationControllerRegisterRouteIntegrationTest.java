@@ -23,13 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class RegisterRouteIntegrationTest {
+public class RegistrationControllerRegisterRouteIntegrationTest {
 
     private static final String REGISTER_ROUTE = "/user/register";
 
 
     private static final String EXISTING_USER_EMAIL = "test@gmail.com";
-    private static final String EXISTING_USER_PASSWORD = "testtest123";
+    private static final String EXISTING_USER_PASSWORD = "Testtest123";
 
     private static final String NEW_USER_EMAIL = "new@gmail.com";
     private static final String NEW_USER_PASSWORD = "TestTest123";

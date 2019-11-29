@@ -22,12 +22,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class LoginRouteIntegrationTest {
+class RegistrationControllerLoginRouteIntegrationTest {
 
     private static final String LOGIN_ROUTE = "/user/login";
 
     private static final String EMAIL = "test@gmail.com";
-    private static final String PASSWORD = "testtest123";
+    private static final String PASSWORD = "Testtest123";
 
     private LoginRequestDto loginRequestDto;
 
