@@ -3,9 +3,11 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.BaseTest;
+import com.hillel.evo.adviser.dto.UserTokenResponseDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.service.EncoderService;
+import com.hillel.evo.adviser.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class ActivateRouteIntegrationTest extends BaseTest {
+public class RegistrationControllerActivateRouteIntegrationTest extends BaseTest {
 
     private static final String ACTIVATE_ROUTE = "/user/activate";
 
@@ -41,6 +44,9 @@ public class ActivateRouteIntegrationTest extends BaseTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    JwtService jwtService;
 
     @BeforeEach
     public void setUp() {
@@ -66,6 +72,39 @@ public class ActivateRouteIntegrationTest extends BaseTest {
 
         assertTrue(userRepository.findByEmail(USER_EMAIL).get().isActive());
     }
+
+    @Test
+    public void whenValidActivationCodeProvided_thenValidTokenIsReturned() throws Exception {
+
+        String body = mockMvc.perform(
+                post(ACTIVATE_ROUTE + "/" + ACTIVATION_CODE))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        UserTokenResponseDto dto = objectMapper.readValue(body, UserTokenResponseDto.class);
+
+        assertTrue(jwtService.isTokenValid(dto.getToken()));
+    }
+
+    @Test
+    public void whenValidActivationCodeProvided_thenUserIdIsReturned() throws Exception {
+
+        AdviserUserDetails user = userRepository.findByEmail(USER_EMAIL).get();
+
+        String body = mockMvc.perform(
+                post(ACTIVATE_ROUTE + "/" + ACTIVATION_CODE))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        UserTokenResponseDto dto = objectMapper.readValue(body, UserTokenResponseDto.class);
+
+        assertEquals(user.getId(), dto.getId());
+    }
+
 
     @Test
     public void whenWrongActivationCodeProvided_thenReturnStatusIsBadRequest400() throws Exception {
