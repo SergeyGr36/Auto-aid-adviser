@@ -21,5 +21,7 @@
         <appender-ref ref = "FILE"/>
     </logger>
 
+    <logger name="Hypersistence Optimizer" level="info"/>
+
 
 </configuration>

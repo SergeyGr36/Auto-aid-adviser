@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.dto.UserTokenResponseDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class RegistrationControllerActivateRouteIntegrationTest {
+public class RegistrationControllerActivateRouteIntegrationTest extends BaseTest {
 
     private static final String ACTIVATE_ROUTE = "/user/activate";
 
