@@ -296,7 +296,7 @@ public class BusinessControllerTest extends BaseTest {
         List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
         Business business = allBusinessByName.get(0);
         ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId())
-                .stream().filter(dto -> dto.getKeyFileName().endsWith(".bad"))
+                .stream().filter(dto -> dto.getOriginalFileName().endsWith(".bad"))
                 .findFirst().get();
         //when
         mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
@@ -333,16 +333,6 @@ public class BusinessControllerTest extends BaseTest {
 
         return dto;
     }
-
-/*
-    private MockMultipartFile getMultipartFile() throws IOException {
-        String name = "ny.jpg";
-        Path path = Paths.get("C:/Temp/" + name);
-        String contentType = MediaType.IMAGE_JPEG_VALUE;
-        byte[] content = Files.readAllBytes(path);
-        return new MockMultipartFile("file", name, contentType, content);
-    }
-*/
 
     private MockMultipartFile getMultipartFile() throws IOException {
         String name = "ny.jpg";

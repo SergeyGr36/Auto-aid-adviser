@@ -13,9 +13,6 @@ import java.net.URL;
 public class ImageDto {
     private Long id;
 
-    @NotNull
-    private String keyFileName;
-
     private String originalFileName;
 
     private URL urlImage;

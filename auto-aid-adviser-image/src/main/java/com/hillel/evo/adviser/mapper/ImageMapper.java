@@ -15,8 +15,6 @@ public abstract class ImageMapper {
     @Autowired
     CloudImageService cloudImageService;
 
-    public abstract Image toEntity(ImageDto dto);
-
     @Mapping(target = "urlImage", expression = "java(cloudImageService.generatePresignedURL(image.getKeyFileName()).get())")
     public abstract ImageDto toDto(Image image);
 

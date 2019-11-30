@@ -40,9 +40,9 @@ public class ImageMapperTest {
                 new Image(3L, "0/1/file3.jpg", "file3.jpg")
         );
         imageDtos = Arrays.asList(
-                new ImageDto(1L, "0/1/file1.jpg", "file1.jpg", url),
-                new ImageDto(2L, "0/1/file2.jpg", "file2.jpg", url),
-                new ImageDto(3L, "0/1/file3.jpg", "file3.jpg", url)
+                new ImageDto(1L, "file1.jpg", url),
+                new ImageDto(2L, "file2.jpg", url),
+                new ImageDto(3L, "file3.jpg", url)
         );
         image = images.get(0);
         dto = imageDtos.get(0);
@@ -55,7 +55,6 @@ public class ImageMapperTest {
         Assertions.assertEquals(resultDtos.size(), this.imageDtos.size());
         Assertions.assertEquals(resultDtos.get(0).getId(), this.imageDtos.get(0).getId());
         Assertions.assertEquals(resultDtos.get(0).getOriginalFileName(), this.imageDtos.get(0).getOriginalFileName());
-        Assertions.assertEquals(resultDtos.get(0).getKeyFileName(), this.imageDtos.get(0).getKeyFileName());
     }
 
     @Test
@@ -75,7 +74,6 @@ public class ImageMapperTest {
         //then
         Assertions.assertEquals(resultDto.getId(), this.dto.getId());
         Assertions.assertEquals(resultDto.getOriginalFileName(), this.dto.getOriginalFileName());
-        Assertions.assertEquals(resultDto.getKeyFileName(), this.dto.getKeyFileName());
     }
 
     @Test
@@ -83,13 +81,4 @@ public class ImageMapperTest {
         Assertions.assertNull(imageMapper.toDto(null));
     }
 
-    @Test
-    public void toEntityThenDto() {
-        Assertions.assertEquals(imageMapper.toEntity(dto), image);
-    }
-
-    @Test
-    public void toEntityThenNull() {
-        Assertions.assertNull(imageMapper.toEntity(null));
-    }
 }
