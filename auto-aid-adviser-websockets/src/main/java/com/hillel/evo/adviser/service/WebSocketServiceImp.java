@@ -43,7 +43,7 @@ public class WebSocketServiceImp implements WebSocketService {
 
     private WSOutputDTO findBusinessTypeByName(String name) {
         WSOutputDTO result = new WSOutputDTO();
-        var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase(Locale.ENGLISH) + "*");
+        var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase(new Locale("ru", "RU")) + "*");
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
     }
@@ -51,7 +51,7 @@ public class WebSocketServiceImp implements WebSocketService {
     private WSOutputDTO findServiceTypeByName(String name, String btName) {
         WSOutputDTO result = new WSOutputDTO();
         var businessTypeList = serviceTypeService.findAllByNameContains(
-                "*" + name.toLowerCase(Locale.ENGLISH) + "*", btName
+                "*" + name.toLowerCase(new Locale("ru", "RU")) + "*", btName
                 );
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
