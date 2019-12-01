@@ -4,18 +4,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -36,13 +40,18 @@ public class Business {
     @Embedded
     private Contact contact;
 
-    private String workingDays;
-    private String workingHours;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_id")
+    private Set<WorkTime> workTimes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private BusinessUser businessUser;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "business_has_service")
-    private List<ServiceForBusiness> serviceForBusinesses;
+    private Set<ServiceForBusiness> serviceForBusinesses;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_id")
+    Set<Image> images = new HashSet<>();
 }
