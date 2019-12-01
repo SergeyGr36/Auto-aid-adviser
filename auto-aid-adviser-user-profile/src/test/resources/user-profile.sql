@@ -19,7 +19,7 @@ insert into car_identification(type_ident,name, car_id) values
 ('TypeCar', 'coupe', (select id from car where id=1)),
 ('TypeCar', 'crossover', (select id from car where id=2));
 
-insert into car(brand_id, motor_type_id, profile_id, type_car_id) values
+insert into user_car(brand_id, motor_type_id, profile_id, type_car_id) values
 ((select id from car_identification where name like 'Audi' and type_ident like 'CarBrand'),
  (select id from car_identification where name like 'mechanic' and type_ident like 'MotorType'),
  (select id from user_profile where id = 1),

@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,4 +12,8 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("TypeCar")
 public class TypeCar extends CarIdentification{
+    @Builder
+    public  TypeCar(Long id, String name){
+        super(id, name);
+    }
 }

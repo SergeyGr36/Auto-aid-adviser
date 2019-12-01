@@ -8,20 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
 
-@Entity(name = "car")
+@Entity(name = "user_car")
 @Data
 public class UserCar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserProfile profile;
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    private SimpleUser simpleUser;
+    @ManyToOne
     private CarBrand brand;
-    @OneToOne
+    @ManyToOne
     private MotorType motorType;
-    @OneToOne
+    @ManyToOne
     private  TypeCar typeCar;
 }

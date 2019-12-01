@@ -181,6 +181,8 @@ project(':auto-aid-adviser-user-profile'){
     }
     dependencies {
         implementation project(':auto-aid-adviser-user')
+//        testImplementation project(':auto-aid-adviser-base-module')
+//        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 
 }

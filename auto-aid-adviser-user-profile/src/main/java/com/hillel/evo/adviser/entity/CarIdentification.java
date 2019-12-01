@@ -1,6 +1,8 @@
 package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.GeneratedValue;
@@ -15,7 +17,8 @@ import javax.validation.constraints.NotNull;
 
 
 @Data
-
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity(name = "car_identification")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type_ident")
@@ -27,4 +30,8 @@ public class CarIdentification {
     private UserCar car;
     @NotNull
     private String name;
+    public CarIdentification(Long id, String name){
+        this.id = id;
+        this.name = name;
+    }
 }
