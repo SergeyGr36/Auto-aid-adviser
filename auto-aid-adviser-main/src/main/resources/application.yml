@@ -25,8 +25,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: xxxxxxxxx@gmail.com
-    password: xxxxxxx
+    username: autoaidadviser@gmail.com
+    password: 1qazse$RFV
     properties.mail.smtp:
       auth: true
       starttls.enable: true
@@ -54,3 +54,8 @@ aws:
     expiresIn: 60000
     region: eu-west-1
     imageMaxSize: 200000
+
+frontend:
+  host: http://localhost
+  router:
+    activation: /user/activation/

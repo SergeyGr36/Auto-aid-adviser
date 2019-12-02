@@ -105,6 +105,7 @@ project(":auto-aid-adviser-user") {
         enabled = true
     }
     dependencies {
+        implementation project(':auto-aid-adviser-email')
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
