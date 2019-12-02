@@ -14,7 +14,8 @@ public interface ImageService {
 
     boolean delete(Image image);
 
+    boolean delete(List<Image> images);
+
     Optional<URL> generatePresignedURL(Image image);
 
-    String generateKeyFileName(Long businessUserId, Long businessId, MultipartFile file);
 }

@@ -1,5 +1,7 @@
 package com.hillel.evo.adviser.service;
 
+import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
+import com.hillel.evo.adviser.dto.S3FileDTO;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
@@ -12,16 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class DefaultImageService implements com.hillel.evo.adviser.service.interfaces.ImageService {
     private final CloudImageService cloudService;
     private final ImageRepository repository;
 
     @Override
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
-        String keyFileName = generateKeyFileName(businessUserId, businessId, file);
+        String keyFileName = generateKeyFileName(
+                generateDirectoryKeyPrefix(businessUserId, businessId), generateUniqFileName(file));
         if (cloudService.uploadFile(keyFileName, file)) {
             String originalFileName = file.getOriginalFilename();
             Image image = new Image(keyFileName, originalFileName);
@@ -32,13 +37,17 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     @Override
     public Optional<List<Image>> create(Long businessUserId, Long businessId, List<MultipartFile> files) {
-        List<String> keyFileNames = new ArrayList<>();
-        files.forEach(f->keyFileNames.add(generateKeyFileName(businessUserId,businessId,f)));
-        if(cloudService.uploadFileList(businessUserId, businessId, keyFileNames, files)){
-            List<Image> images = new ArrayList<>();
-            for (int k = 0, f = 0; f < files.size(); k++, f++){
-                images.add(new Image(keyFileNames.get(k), files.get(f).getOriginalFilename()));
-            }
+        List<S3FileDTO> s3FileDTOs = new ArrayList<>();
+        String virtualDirectoryKeyPrefix = generateDirectoryKeyPrefix(businessUserId, businessId);
+        for (MultipartFile file : files) {
+            String uniqFileName = generateUniqFileName(file);
+            String keyFileName = generateKeyFileName(virtualDirectoryKeyPrefix, uniqFileName);
+            s3FileDTOs.add(new S3FileDTO(file, uniqFileName, keyFileName));
+        }
+        if(cloudService.uploadFileList(virtualDirectoryKeyPrefix, s3FileDTOs)){
+            List<Image> images = s3FileDTOs.stream().map(
+                    s3FileDTO -> new Image(s3FileDTO.getKeyFileName(), s3FileDTO.getFile().getOriginalFilename()))
+                    .collect(Collectors.toList());
             return Optional.of(repository.saveAll(images));
         }
         return Optional.empty();
@@ -54,15 +63,29 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     }
 
     @Override
+    public boolean delete(List<Image> images) {
+        if (cloudService.deleteFileList(images.stream().map(
+                image -> new KeyVersion(image.getKeyFileName())).collect(Collectors.toList()))) {
+            repository.deleteAll(images);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Optional<URL> generatePresignedURL(Image image) {
         return cloudService.generatePresignedURL(image.getKeyFileName());
     }
 
-    @Override
-    public String generateKeyFileName(Long businessUserId, Long businessId, MultipartFile file) {
-        return businessUserId.toString() + "/"
-                + businessId.toString() + "/"
-                + UUID.randomUUID().toString()
-                + "-" + file.getOriginalFilename();
+    private String generateKeyFileName(String virtualDirectoryKeyPrefix, String uniqFileName) {
+        return virtualDirectoryKeyPrefix + "/" + uniqFileName;
+    }
+
+    private String generateUniqFileName(MultipartFile file) {
+        return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+    }
+
+    private String generateDirectoryKeyPrefix (Long businessUserId, Long businessId) {
+        return businessUserId.toString() + "/" + businessId.toString();
     }
 }
