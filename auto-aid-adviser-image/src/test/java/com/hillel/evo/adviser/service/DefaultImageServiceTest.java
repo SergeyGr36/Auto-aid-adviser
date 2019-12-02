@@ -64,11 +64,9 @@ class DefaultImageServiceTest extends BaseTest {
     void whenCreateListImagesShouldCreateIt() {
         //given
         mockListFiles.add(mockFile);
-        mockListFiles.add(mockFile);
         testListImages.add(testImage);
-        testListImages.add(testImage);
-        when(mockCloudImageService.uploadFileList(any(Long.class), any(Long.class), any(List.class), eq(mockListFiles))).thenReturn(true);
-        when(mockDbImageRepository.saveAll(any(List.class))).thenReturn(testListImages);
+        when(mockCloudImageService.uploadFileList(anyString(), anyList())).thenReturn(true);
+        when(mockDbImageRepository.saveAll(anyList())).thenReturn(testListImages);
         //when
         Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
         //then
@@ -78,7 +76,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenCreateListImagesShouldNotCreateIt() {
         //given
-        when(mockCloudImageService.uploadFileList(any(Long.class), any(Long.class), any(List.class), eq(mockListFiles))).thenReturn(false);
+        when(mockCloudImageService.uploadFileList(anyString(), anyList())).thenReturn(false);
         //when
         Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
         //then
@@ -101,6 +99,26 @@ class DefaultImageServiceTest extends BaseTest {
         when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(false);
         //when
         boolean result = service.delete(testImage);
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void whenDeleteListImagesShouldDeleteIt() {
+        //given
+        when(mockCloudImageService.deleteFileList(anyList())).thenReturn(true);
+        //when
+        boolean result = service.delete(testListImages);
+        //then
+        assertTrue(result);
+    }
+
+    @Test
+    void whenDeleteListImagesShouldNotDeleteIt() {
+        //given
+        when(mockCloudImageService.deleteFileList(anyList())).thenReturn(false);
+        //when
+        boolean result = service.delete(testListImages);
         //then
         assertFalse(result);
     }

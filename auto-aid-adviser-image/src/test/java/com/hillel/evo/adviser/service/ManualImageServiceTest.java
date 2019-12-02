@@ -33,7 +33,7 @@ class ManualImageServiceTest {
     @Autowired
     private ImageService imageService;
     private static final Long testBusinessUserId = 777L;
-    private static final Long testBusinessId = 1L;
+    private static final Long testBusinessId = 2L;
     private static final Logger log = LoggerFactory.getLogger(ManualImageServiceTest.class);
 
     @Test
@@ -49,7 +49,7 @@ class ManualImageServiceTest {
         List<MultipartFile> testImages = getListMultipartFile();
         List<Image> list = imageService.create(testBusinessUserId,testBusinessId,testImages)
                 .orElseThrow(()-> new RuntimeException("Failed"));
-        log.warn(() -> "Fail to load list of images");
+        log.warn(() -> "Fail to load list of images " + list.toString());
     }
 
     @Test
@@ -69,6 +69,17 @@ class ManualImageServiceTest {
         String keyFileName = "777/1/0947d9eb-d5d0-444c-8b79-8a3bfcbd1ac4-Miner.jpg";
         Image imageToDelete = new Image(keyFileName, file.getOriginalFilename());
         assertTrue(imageService.delete(imageToDelete));
+    }
+
+    @Test
+    void doDeleteList() throws Exception{
+        List<MultipartFile> testImages = getListMultipartFile();
+        String keyFileName1 = "999/1/ccc8fb4f-c70c-49c2-9064-ed92e851e130-test.jpg";
+        String keyFileName2 = "999/1/f847e5f7-a0af-4c52-9151-946715008121-test.jpg";
+        List<Image> imagesToDelete = new ArrayList<>();
+        imagesToDelete.add(new Image(keyFileName1, testImages.get(0).getOriginalFilename()));
+        imagesToDelete.add(new Image(keyFileName2, testImages.get(1).getOriginalFilename()));
+        assertTrue(imageService.delete(imagesToDelete));
     }
 
     private MultipartFile getMultipartFile() throws IOException {
