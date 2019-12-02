@@ -89,7 +89,6 @@ configure(allprojects) { project ->
         implementation hibernate.em
         implementation hibernate.spatial
 
-
         implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }
@@ -105,6 +104,10 @@ project(":auto-aid-adviser-user") {
     jar {
         enabled = true
     }
+    dependencies {
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
 }
 
 project(':auto-aid-adviser-security') {
@@ -117,6 +120,8 @@ project(':auto-aid-adviser-security') {
         }
         implementation project(":auto-aid-adviser-user")
         implementation security.jwt
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 
@@ -126,6 +131,10 @@ project(':auto-aid-adviser-search-service') {
     }
     jar {
         enabled = true
+    }
+    dependencies {
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 
@@ -139,6 +148,8 @@ project(':auto-aid-adviser-websockets') {
     dependencies {
         implementation project(':auto-aid-adviser-business')
         implementation project(':auto-aid-adviser-search-service')
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 
@@ -152,6 +163,8 @@ project(":auto-aid-adviser-email") {
     dependencies {
         implementation boot.starterMail
         implementation awsSdk.ses
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 
@@ -165,7 +178,11 @@ project(':auto-aid-adviser-business') {
     dependencies {
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-search-service')
+        implementation project(':auto-aid-adviser-image')
+
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 
@@ -179,6 +196,21 @@ project(":auto-aid-adviser-image") {
 
     dependencies {
         implementation awsSdk.s3
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
+project(":auto-aid-adviser-base-module") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        implementation files('../lib/hypersistence-optimizer-1.2.3.jar', '../lib/hypersistence-optimizer-1.2.3-javadoc.jar')
     }
 }
 
@@ -197,6 +229,8 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-security')
         implementation project(':auto-aid-adviser-websockets')
         implementation project(':auto-aid-adviser-image')
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 

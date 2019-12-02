@@ -1,7 +1,7 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.LoginRequestDto;
-import com.hillel.evo.adviser.dto.LoginResponseDto;
+import com.hillel.evo.adviser.dto.UserTokenResponseDto;
 
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -38,14 +39,14 @@ public class AuthenticationService {
      * Authenticates the user with provided credentials - email and password.
      * If authentication fails, throws AuthenticationException.
      *
-     * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
+     * Returns a response with jwt token in "Authorization" header, a UserTokenResponseDto body, and status ok.
      * Jwt holds user id.
      * @param loginRequestDTO the request, containing user credentials.
      * @return An http response with jwt token.
      *
      * @throws org.springframework.security.core.AuthenticationException
      */
-    public ResponseEntity<LoginResponseDto> authenticateAndResponse(LoginRequestDto loginRequestDTO) {
+    public ResponseEntity<UserTokenResponseDto> authenticateAndResponse(LoginRequestDto loginRequestDTO) {
 
         final String userName = loginRequestDTO.getEmail();
         final String password = loginRequestDTO.getPassword();
@@ -61,7 +62,8 @@ public class AuthenticationService {
         return ResponseEntity
                 .status(OK)
                 .header(AUTHORIZATION, JwtService.TOKEN_PREFIX + accessToken)
-                .body(new LoginResponseDto(accessToken));
+                .header(ACCESS_CONTROL_ALLOW_HEADERS, AUTHORIZATION)
+                .body(createDto(user, accessToken));
     }
 
     /** Creates an untrusted (isAuthenticated = false) Authentication with user credentials,
@@ -78,5 +80,15 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(userName, password);
 
         return authenticationManager.authenticate(authenticationToken);
+    }
+
+    private UserTokenResponseDto createDto(AdviserUserDetails user, String token) {
+        UserTokenResponseDto dto = new UserTokenResponseDto(
+                user.getId(),
+                user.getEmail(),
+                user.getRole(),
+                token
+        );
+        return dto;
     }
 }

@@ -30,3 +30,10 @@ server:
 
 image:
   service: default
+
+aws:
+  s3:
+    bucketName: auto-aid-adviser-bucket
+    expiresIn: 60000
+    region: eu-east-1
+    imageMaxSize: 200000

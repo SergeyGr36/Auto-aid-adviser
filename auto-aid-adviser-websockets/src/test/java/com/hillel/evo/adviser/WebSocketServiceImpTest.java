@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(classes = {WebSocketApp.class})
 @Sql(value = {"/clean-business.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class WebSocketServiceImpTest {
+public class WebSocketServiceImpTest extends BaseTest {
 
     @Autowired
     private WebSocketService webSocketService;
@@ -28,7 +28,7 @@ public class WebSocketServiceImpTest {
     private HibernateSearchConfig config;
 
     @Test
-    public void whenSearchBisnessTypeThenReturnList() {
+    public void whenSearchBusinessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
@@ -42,7 +42,7 @@ public class WebSocketServiceImpTest {
 
     @Test
     //@Disabled("Need to be fixed")
-    public void whenSearchServiseTypeThenReturnList() {
+    public void whenSearchServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
         var btInputDTO = new WSInputDTO();

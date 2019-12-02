@@ -8,7 +8,9 @@ import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +54,27 @@ public class CatalogController {
         return serviceTypeService.findAllByBusinessTypeId(id);
     }
 
+    //    @Secured(value = {"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @PostMapping("/business_types")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public BusinessTypeDto saveBusinessType(@RequestBody BusinessTypeDto dto) {
+        return businessTypeService.createBusinessType(dto);
+    }
+
+    //    @Secured(value = {"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @PutMapping("/business_types")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public BusinessTypeDto updateBusinessType(@RequestBody BusinessTypeDto dto) {
+        return businessTypeService.updateBusinessType(dto);
+    }
+
+    //    @Secured(value = {"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @DeleteMapping("/business_types/{id}")
+    public void deleteBusinessType(@PathVariable Long id) {
+        businessTypeService.deleteBusinessType(id);
+    }
+
+
     @GetMapping("/service_types/{id}")
     public ServiceTypeDto findServiceTypeById(@PathVariable Long id) {
         return serviceTypeService.getServiceTypeById(id);
@@ -60,6 +83,26 @@ public class CatalogController {
     @GetMapping("/service_types/{id}/services")
     public List<ServiceForBusinessDto> findServiceByServiceTypeId(@PathVariable Long id) {
         return serviceForBusinessService.getAllByServiceTypeId(id);
+    }
+
+    //    @Secured(value = {"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @PostMapping("/service_types")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ServiceTypeDto saveServiceType(@RequestBody ServiceTypeDto dto) {
+        return serviceTypeService.createServiceType(dto);
+    }
+
+    //    @Secured(value = {"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @PutMapping("/service_types")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ServiceTypeDto updateServiceType(@RequestBody ServiceTypeDto dto) {
+        return serviceTypeService.updateServiceType(dto);
+    }
+
+    //    @Secured(value = {"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @DeleteMapping("/service_types/{id}")
+    public void deleteServiceType(@PathVariable Long id) {
+        serviceTypeService.deleteServiceType(id);
     }
 
     @GetMapping("/services")
@@ -85,4 +128,5 @@ public class CatalogController {
     public ServiceForBusinessDto updateService(@RequestBody ServiceForBusinessDto dto) {
         return serviceForBusinessService.updateServiceBusiness(dto);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.search;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Aid;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = SearchApp.class)
 @AutoConfigureTestEntityManager
-public class SearchTest {
+public class SearchTest extends BaseTest {
 
     private TextSearch<Aid> aidTextSearch;
     private SpatialSearch<Aid> aidSpatialSearch;

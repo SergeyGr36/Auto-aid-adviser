@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.enums.RoleUser;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Sql(value = {"/create-user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class UserServiceImplTest {
+public class UserServiceImplTest extends BaseTest {
 
     @Autowired
     private UserService service;
@@ -37,7 +38,7 @@ public class UserServiceImplTest {
         AdviserUserDetailsDto dto = service.activation(activeCode);
         //then
         assertNotNull(dto);
-        assertEquals(dto.getRoleUser(), RoleUser.ROLE_USER);
+        assertEquals(dto.getRole(), RoleUser.ROLE_USER);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class UserServiceImplTest {
         AdviserUserDetailsDto returnDto = service.registration(registrationDto);
         //then
         assertNotNull(returnDto);
-        assertEquals(returnDto.getRoleUser(), RoleUser.ROLE_BUSINESS);
+        assertEquals(returnDto.getRole(), RoleUser.ROLE_BUSINESS);
     }
 
     @Test
@@ -84,7 +85,7 @@ public class UserServiceImplTest {
         AdviserUserDetailsDto returnDto = service.registration(registrationDto);
         //then
         assertNotNull(returnDto);
-        assertEquals(returnDto.getRoleUser(), RoleUser.ROLE_USER);
+        assertEquals(returnDto.getRole(), RoleUser.ROLE_USER);
     }
 
     @Test

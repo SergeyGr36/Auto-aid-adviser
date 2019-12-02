@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-class DefaultImageServiceTest {
+class DefaultImageServiceTest extends BaseTest {
     private static final CloudImageService mockCloudImageService = mock(CloudImageService.class);
     private static final ImageRepository mockDbImageRepository = mock(ImageRepository.class);
 
