@@ -26,10 +26,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -70,9 +69,6 @@ public class BusinessServiceImplTest {
     MultipartFile goodFile;
     MultipartFile badFile;
 
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
-
     @BeforeEach
     private void init() throws Exception {
         goodFile = getGoodMultipartFile();
@@ -96,14 +92,19 @@ public class BusinessServiceImplTest {
     }
 
     @Test
-    public void whenCreateBusinessWithFileThenReturnDto() {
+    public void whenCreateBusinessWithListFilesThenReturnDto() {
         //when
-        Optional<MultipartFile> multipartFile = Optional.of(goodFile);
-        BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId, multipartFile);
+        List<MultipartFile> listFiles = new ArrayList<>();
+        listFiles.add(goodFile);
+        listFiles.add(goodFile);
+        listFiles.add(goodFile);
+        listFiles.add(goodFile);
+        BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId, listFiles);
         //then
         assertNotNull(saveDto);
         assertEquals(2, saveDto.getServiceForBusinesses().size());
         assertEquals(6, saveDto.getWorkTimes().size());
+        assertEquals(listFiles.size(), businessService.findImagesByBusinessId(saveDto.getId()).size());
     }
 
     @Test
