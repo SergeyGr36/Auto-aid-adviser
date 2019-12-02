@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,16 +51,18 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public BusinessDto createBusiness(final BusinessDto dto, Long userId) {
-        return createBusiness(dto, userId, Optional.empty());
+        return createBusiness(dto, userId, new ArrayList<>());
     }
 
     @Override
     @Transactional
-    public BusinessDto createBusiness(final BusinessDto dto, Long userId, Optional<MultipartFile> file) {
+    public BusinessDto createBusiness(BusinessDto dto, Long userId, List<MultipartFile> files) {
         BusinessUser user = userRepository.getOne(userId);
         Business business = businessRepository.save(mapper.toEntity(dto, user));
-        Optional<Image> image = file.flatMap((f) -> imageService.create(userId, business.getId(), f));
-        image.ifPresent(business.getImages()::add);
+        files.forEach(f -> {
+            Optional<Image> image = imageService.create(userId, business.getId(), f);
+            image.ifPresent(business.getImages()::add);
+        });
         return mapper.toDto(business);
     }
 

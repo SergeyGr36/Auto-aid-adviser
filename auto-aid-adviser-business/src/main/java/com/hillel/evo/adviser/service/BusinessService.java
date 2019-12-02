@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface BusinessService {
     BusinessDto createBusiness(BusinessDto dto, Long userId);
-    BusinessDto createBusiness(BusinessDto dto, Long userId, Optional<MultipartFile> file);
+    BusinessDto createBusiness(BusinessDto dto, Long userId, List<MultipartFile> files);
     List<BusinessDto> findAllByUser(Long userId);
     BusinessDto findBusinessById(Long id, Long userId);
     BusinessDto updateBusiness(BusinessDto dto, Long userId);

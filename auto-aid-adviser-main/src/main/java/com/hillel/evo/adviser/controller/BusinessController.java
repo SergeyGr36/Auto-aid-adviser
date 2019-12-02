@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,10 +76,10 @@ public class BusinessController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
                  produces = {MediaType.APPLICATION_JSON_VALUE})
     public BusinessDto createBusiness(@RequestPart(name = "json") @Validated final BusinessDto businessDTO,
-                                      @RequestPart(name = "file", required = false) Optional<MultipartFile> file,
+                                      @RequestPart(name = "files") List<MultipartFile> files,
                                       Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        return businessService.createBusiness(businessDTO, userId, file);
+        return businessService.createBusiness(businessDTO, userId, files);
     }
 
     @Secured(ROLE_BUSINESS)

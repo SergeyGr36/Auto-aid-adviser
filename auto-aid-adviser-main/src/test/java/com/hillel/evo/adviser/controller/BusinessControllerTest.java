@@ -28,10 +28,15 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -186,13 +191,15 @@ public class BusinessControllerTest extends BaseTest {
     }
 
     @Test
-    public void createBusinessWithFile() throws Exception {
+    public void createBusinessWithFiles() throws Exception {
         //given
         BusinessDto businessDto = createTestDto();
         //when
-        mockMvc.perform(MockMvcRequestBuilders.multipart(PATH_BUSINESSES)
-                    .file(getMultipartFile())
-                    .file(getPart(objectMapper.writeValueAsString(businessDto)))
+        MockMultipartHttpServletRequestBuilder multipart = MockMvcRequestBuilders.multipart(PATH_BUSINESSES);
+        mockMvc.perform(multipart
+                .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .file(getPart(objectMapper.writeValueAsString(businessDto)))
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
                 )
                 //then
@@ -338,7 +345,7 @@ public class BusinessControllerTest extends BaseTest {
         String name = "ny.jpg";
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = {11, 12, 13, 14, 15};
-        return new MockMultipartFile("file", name, contentType, content);
+        return new MockMultipartFile("files", name, contentType, content);
     }
 
     private MockMultipartFile getPart(String json) {
