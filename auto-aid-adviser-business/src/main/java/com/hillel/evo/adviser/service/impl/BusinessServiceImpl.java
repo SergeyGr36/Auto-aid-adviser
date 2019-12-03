@@ -21,9 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -59,10 +62,9 @@ public class BusinessServiceImpl implements BusinessService {
     public BusinessDto createBusiness(BusinessDto dto, Long userId, List<MultipartFile> files) {
         BusinessUser user = userRepository.getOne(userId);
         Business business = businessRepository.save(mapper.toEntity(dto, user));
-        files.forEach(f -> {
-            Optional<Image> image = imageService.create(userId, business.getId(), f);
-            image.ifPresent(business.getImages()::add);
-        });
+        List<Image> images = imageServiceCreate(userId, business.getId(), files);
+        business.getImages().addAll(images);
+
         return mapper.toDto(business);
     }
 
@@ -102,9 +104,10 @@ public class BusinessServiceImpl implements BusinessService {
         return imageMapper.toListDto(businessRepository.findImagesByBusinessId(businessId));
     }
 
+/*
     @Override
     @Transactional
-    public ImageDto addImage(Long userId, Long businessId, MultipartFile file) {
+    public ImageDto addImage(@NotNull Long userId, @NotNull Long businessId, @NotNull MultipartFile file) {
         Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
         Image image = imageService.create(userId, businessId, file)
@@ -113,10 +116,34 @@ public class BusinessServiceImpl implements BusinessService {
         businessRepository.save(business);
         return imageMapper.toDto(image);
     }
+*/
 
     @Override
-    public boolean deleteImage(Long userId, Long businessId, ImageDto dto) {
-        Image image = businessRepository.findImageByBusinessUserIdAndBusinessIdAndImageId(userId, businessId, dto.getId())
+    @Transactional
+    public List<ImageDto> addImages(@NotNull Long userId, @NotNull Long businessId, @NotEmpty List<MultipartFile> files) {
+        Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
+        // этот метот в дальнейшем будет заменен на метод imageService.create (для списка)
+        List<Image> imageList = imageServiceCreate(userId, businessId, files);
+        business.getImages().addAll(imageList);
+        businessRepository.save(business);
+        return imageMapper.toListDto(imageList);
+    }
+
+    // этот метот в дальнейшем будет заменен на метод imageService.create (для списка)
+    private List<Image> imageServiceCreate(Long userId, Long businessId, List<MultipartFile> files) {
+        List<Optional<Image>> optionalListImages = files.stream()
+                .map(f -> imageService.create(userId, businessId, f))
+                .collect(Collectors.toList());
+        List<Image> images = optionalListImages.stream()
+                .map(img -> img.orElseThrow(() -> new CreateResourceException("Image not saved")))
+                .collect(Collectors.toList());
+        return images;
+    }
+
+    @Override
+    public boolean deleteImage(@NotNull Long userId, @NotNull Long businessId, @NotNull Long imageId) {
+        Image image = businessRepository.findImageByBusinessUserIdAndBusinessIdAndImageId(userId, businessId, imageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
         return imageService.delete(image);
     }

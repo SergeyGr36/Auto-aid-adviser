@@ -109,20 +109,20 @@ public class BusinessController {
     @Secured(ROLE_BUSINESS)
     @PostMapping("/{id}/images")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ImageDto addImageToBusiness(@PathVariable("id") Long businessId,
-                                       @RequestPart("file") MultipartFile file,
+    public List<ImageDto> addImageToBusiness(@PathVariable("id") Long businessId,
+                                       @RequestPart("files") List<MultipartFile> files,
                                        Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        return businessService.addImage(userId, businessId, file);
+        return businessService.addImages(userId, businessId, files);
     }
 
     @Secured(ROLE_BUSINESS)
-    @DeleteMapping("/{id}/images")
-    public ResponseEntity<String> deleteImageFromBusiness(@PathVariable("id") Long businessId,
-                                                          @RequestBody @Validated ImageDto dto,
+    @DeleteMapping("/{businessId}/images/{imageId}")
+    public ResponseEntity<String> deleteImageFromBusiness(@PathVariable("businessId") Long businessId,
+                                                          @PathVariable("imageId") Long imageId,
                                                           Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        if(businessService.deleteImage(userId, businessId, dto)) {
+        if(businessService.deleteImage(userId, businessId, imageId)) {
             return new ResponseEntity<>("The deleted image is successful", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to delete image", HttpStatus.BAD_REQUEST);
