@@ -264,7 +264,7 @@ public class BusinessControllerTest extends BaseTest {
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.originalFileName").value(multipartFile.getOriginalFilename()));
+                .andExpect(jsonPath("$[0].originalFileName").value(multipartFile.getOriginalFilename()));
     }
 
     @Test
@@ -274,10 +274,8 @@ public class BusinessControllerTest extends BaseTest {
         Business business = allBusinessByName.get(0);
         ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId()).get(0);
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(imagesDto)))
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{businessId}/images/{imageId}", business.getId(), imagesDto.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isOk());
     }
@@ -287,12 +285,9 @@ public class BusinessControllerTest extends BaseTest {
         //given
         List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
         Business business = allBusinessByName.get(0);
-        ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId()).get(0);
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", 99L)
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(imagesDto)))
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{businessId}/images/{imageId}", business.getId(), 99L)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isNotFound());
     }
@@ -306,10 +301,8 @@ public class BusinessControllerTest extends BaseTest {
                 .stream().filter(dto -> dto.getOriginalFileName().endsWith(".bad"))
                 .findFirst().get();
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(imagesDto)))
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{businessId}/images/{imageId}", business.getId(), imagesDto.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isBadRequest());
     }

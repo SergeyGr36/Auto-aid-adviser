@@ -167,24 +167,31 @@ public class BusinessServiceImplTest {
     public void whenAddImageThenReturnImageDto() {
         //given
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(goodFile);
         //when
-        ImageDto imageDto = businessService.addImage(userId, sourceDto.getId(), goodFile);
+        List<ImageDto> listDto = businessService.addImages(userId, sourceDto.getId(), list);
         //then
-        assertEquals(imageDto.getOriginalFileName(), goodFile.getOriginalFilename());
+        assertEquals(listDto.get(0).getOriginalFileName(), goodFile.getOriginalFilename());
     }
 
     @Test
     public void whenAddImageThenReturnNotFoundException() throws Exception {
+        //given
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(goodFile);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> businessService.addImage(userId, 99L, goodFile));
+        assertThrows(ResourceNotFoundException.class, () -> businessService.addImages(userId, 99L, list));
     }
 
     @Test
     public void whenAddImageThenReturnCreateResourceException() {
         //given
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(badFile);
         //then
-        assertThrows(CreateResourceException.class, () -> businessService.addImage(userId, sourceDto.getId(), badFile));
+        assertThrows(CreateResourceException.class, () -> businessService.addImages(userId, sourceDto.getId(), list));
     }
 
     @Test
@@ -193,7 +200,7 @@ public class BusinessServiceImplTest {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         ImageDto dto = businessService.findImagesByBusinessId(sourceDto.getId()).get(0);
         //then
-        assertTrue(businessService.deleteImage(userId, sourceDto.getId(), dto));
+        assertTrue(businessService.deleteImage(userId, sourceDto.getId(), dto.getId()));
     }
 
     @Test
@@ -202,7 +209,7 @@ public class BusinessServiceImplTest {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         ImageDto dto = businessService.findImagesByBusinessId(sourceDto.getId()).get(0);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> businessService.deleteImage(99L, 99L, dto));
+        assertThrows(ResourceNotFoundException.class, () -> businessService.deleteImage(99L, 99L, dto.getId()));
     }
 
     @Test
