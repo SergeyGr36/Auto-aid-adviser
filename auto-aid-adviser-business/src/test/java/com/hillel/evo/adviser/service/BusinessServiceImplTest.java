@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.LocationDto;
@@ -37,6 +38,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -220,6 +222,16 @@ public class BusinessServiceImplTest {
         List<ImageDto> images = businessService.findImagesByBusinessId(sourceDto.getId());
         //then
         assertEquals(1, images.size());
+    }
+
+    @Test
+    public void whenCreateTemplateBusinessThenReturnDto() {
+        //when
+        BusinessFullDto templateBusiness = businessService.createTemplateBusiness();
+        //then
+        assertNotNull(templateBusiness);
+        assertEquals(7, templateBusiness.getWorkTimes().size());
+        assertFalse(templateBusiness.getServiceForBusinesses().isEmpty());
     }
 
     private BusinessDto createTestDto() {

@@ -1,11 +1,16 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
+import com.hillel.evo.adviser.entity.Contact;
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.entity.Location;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
+import com.hillel.evo.adviser.entity.WorkTime;
 import com.hillel.evo.adviser.exception.CreateResourceException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
@@ -23,9 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,5 +156,28 @@ public class BusinessServiceImpl implements BusinessService {
         Image image = businessRepository.findImageByBusinessUserIdAndBusinessIdAndImageId(userId, businessId, imageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
         return imageService.delete(image);
+    }
+
+    @Override
+    public BusinessFullDto createTemplateBusiness() {
+        Business business = new Business();
+        business.setLocation(new Location());
+        business.setContact(new Contact());
+        business.setWorkTimes(getTemplateWorkTime());
+        business.setServiceForBusinesses(getAllServices());
+        return mapper.toFullDto(business);
+    }
+
+    private Set<ServiceForBusiness> getAllServices() {
+        Set<ServiceForBusiness> set = serviceForBusinessRepository.getFetchAll();
+        return set;
+    }
+
+    private Set<WorkTime> getTemplateWorkTime() {
+        Set<WorkTime> set = new HashSet();
+        Arrays.asList(DayOfWeek.values()).forEach(
+                dayOfWeek -> set.add(new WorkTime(dayOfWeek, LocalTime.MIN, LocalTime.MAX))
+        );
+        return set;
     }
 }

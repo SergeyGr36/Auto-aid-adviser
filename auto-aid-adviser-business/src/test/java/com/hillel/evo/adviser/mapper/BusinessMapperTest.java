@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
@@ -98,4 +99,19 @@ public class BusinessMapperTest {
         Assertions.assertNull(dto.getContact());
     }
 
+    @Test
+    public void whenToFullDto_ReturnDto() {
+        //given
+        Business business = new Business();
+        //when
+        BusinessFullDto dto = businessMapper.toFullDto(business);
+        Assertions.assertNotNull(dto);
+    }
+
+    @Test
+    public void whenToFullDto_ReturnNull() {
+        //when
+        BusinessFullDto dto = businessMapper.toFullDto(null);
+        Assertions.assertNull(dto);
+    }
 }

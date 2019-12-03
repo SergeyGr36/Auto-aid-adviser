@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ServiceForBusinessRepository extends JpaRepository<ServiceForBusiness, Long> {
@@ -27,4 +28,7 @@ public interface ServiceForBusinessRepository extends JpaRepository<ServiceForBu
 
     @Query("select b.serviceForBusinesses from Business b where b.id = :businessId and b.businessUser.id = :userId")
     List<ServiceForBusiness> findServicesByBusinessIdAndBusinessUserId(Long businessId, Long userId);
+
+    @Query("select sb from ServiceForBusiness sb join fetch sb.serviceType st join fetch st.businessType")
+    Set<ServiceForBusiness> getFetchAll();
 }
