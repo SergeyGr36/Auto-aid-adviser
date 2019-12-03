@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.service.BusinessService;
@@ -127,6 +128,12 @@ public class BusinessController {
         } else {
             return new ResponseEntity<>("Failed to delete image", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Secured(ROLE_BUSINESS)
+    @GetMapping("/templates")
+    public BusinessFullDto getTemplateBusiness() {
+        return businessService.createTemplateBusiness();
     }
 
     private Long getUserFromAuthentication(Authentication authentication) {
