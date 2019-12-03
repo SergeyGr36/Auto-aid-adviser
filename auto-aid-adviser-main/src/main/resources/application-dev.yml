@@ -31,8 +31,14 @@ spring:
 email:
   service: aws
 
-
 app:
   jwt:
     secretKey: super-secret-test-key
     expirationMillis: 3600000
+
+aws:
+  s3:
+    bucketName: auto-aid-adviser-bucket
+    expiresIn: 60000
+    region: eu-east-1
+    imageMaxSize: 200000

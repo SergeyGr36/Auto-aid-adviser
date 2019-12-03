@@ -14,7 +14,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
@@ -36,14 +38,30 @@ public class ServiceForBusinessMapperTest {
     }
 
     @Test
+    public void whenToDto_NullSet_ReturnEmptySet() {
+        Assertions.assertNull(mapper.toDto((Set<ServiceForBusiness>) null));
+    }
+
+    @Test
     public void whenToDto_SetEmptyList_ReturnEmptyList() {
         Assertions.assertTrue(mapper.toDto(new ArrayList<>()).isEmpty());
+    }
+
+    @Test
+    public void whenToDto_EmptySet_ReturnEmptySet() {
+        Assertions.assertTrue(mapper.toDto(new HashSet<>()).isEmpty());
     }
 
     @Test
     public void whenToDto_SetList_ReturnListDto() {
         List<ServiceForBusiness> list = Arrays.asList(new ServiceForBusiness());
         Assertions.assertEquals(mapper.toDto(list).size(), list.size());
+    }
+
+    @Test
+    public void whenToDto_ReturnSetDto() {
+        Set<ServiceForBusiness> set = new HashSet<>(Arrays.asList(new ServiceForBusiness()));
+        Assertions.assertEquals(mapper.toDto(set).size(), set.size());
     }
 
     @Test
@@ -57,14 +75,31 @@ public class ServiceForBusinessMapperTest {
     }
 
     @Test
+    public void whenToEntity_SetNullSet_ReturnEmptySet() {
+        Assertions.assertNull(mapper.toEntity((Set<ServiceForBusinessDto>) null));
+    }
+
+    @Test
     public void whenToEntity_SetEmptyList_ReturnEmptyList() {
         List<ServiceForBusinessDto> list = new ArrayList<>();
         Assertions.assertTrue(mapper.toEntity(list).isEmpty());
     }
 
     @Test
-    public void whenToEntity_SetList_ReturnListEntity() {
+    public void whenToEntity_EmptySet_ReturnEmptySet() {
+        Set<ServiceForBusinessDto> list = new HashSet<>();
+        Assertions.assertTrue(mapper.toEntity(list).isEmpty());
+    }
+
+    @Test
+    public void whenToEntity_ReturnListEntity() {
         List<ServiceForBusinessDto> list = Arrays.asList(new ServiceForBusinessDto());
+        Assertions.assertEquals(mapper.toEntity(list).size(), list.size());
+    }
+
+    @Test
+    public void whenToEntity_ReturnSetEntity() {
+        Set<ServiceForBusinessDto> list = new HashSet<>(Arrays.asList(new ServiceForBusinessDto()));
         Assertions.assertEquals(mapper.toEntity(list).size(), list.size());
     }
 

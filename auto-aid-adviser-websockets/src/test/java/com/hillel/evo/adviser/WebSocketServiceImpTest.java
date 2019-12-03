@@ -6,9 +6,11 @@ import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import com.hillel.evo.adviser.service.WebSocketService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(classes = {WebSocketApp.class})
 @Sql(value = {"/clean-business.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class WebSocketServiceImpTest {
+public class WebSocketServiceImpTest extends BaseTest {
 
     @Autowired
     private WebSocketService webSocketService;
@@ -26,7 +28,7 @@ public class WebSocketServiceImpTest {
     private HibernateSearchConfig config;
 
     @Test
-    public void whenSearchBisnessTypeThenReturnList() {
+    public void whenSearchBusinessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
@@ -39,7 +41,8 @@ public class WebSocketServiceImpTest {
     }
 
     @Test
-    public void whenSearchServiseTypeThenReturnList() {
+    //@Disabled("Need to be fixed")
+    public void whenSearchServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
         var btInputDTO = new WSInputDTO();

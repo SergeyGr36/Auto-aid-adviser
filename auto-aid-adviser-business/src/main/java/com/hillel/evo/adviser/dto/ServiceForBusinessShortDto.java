@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ServiceForBusinessShortDto {
     private Long id;
-    private String name;
+    //private String name;
 }
