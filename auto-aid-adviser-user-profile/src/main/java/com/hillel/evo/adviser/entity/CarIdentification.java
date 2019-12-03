@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity(name = "car_identification")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type_ident")

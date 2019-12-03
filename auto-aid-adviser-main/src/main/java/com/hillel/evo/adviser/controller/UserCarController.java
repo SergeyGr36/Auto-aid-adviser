@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.controller;
 
+import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
 import com.hillel.evo.adviser.service.UserCarService;
@@ -30,28 +31,28 @@ public class UserCarController {
     }
     @Secured(ROLE)
     @GetMapping("/{userId}/{id}")
-    public ResponseEntity<UserCar> getCarByUserIdAndCarId(@PathVariable Long userId, @PathVariable Long id){
+    public ResponseEntity<UserCarDto> getCarByUserIdAndCarId(@PathVariable Long userId, @PathVariable Long id){
         return ResponseEntity.ok(service.getCarByUserIdAndCarId(userId, id));
     }
     @Secured(ROLE)
     @GetMapping("/{id}")
-    public ResponseEntity<List<UserCar>> getCarsByUserId(@PathVariable Long id){
+    public ResponseEntity<List<UserCarDto>> getCarsByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.getByUserId(id));
     }
     @Secured(ROLE)
     @DeleteMapping
-    public ResponseEntity<String> deleteUserCar(@RequestBody UserCar car, Authentication authentication){
+    public ResponseEntity<String> deleteUserCar(@RequestBody UserCarDto car, Authentication authentication){
         service.deleteUserCar(car, getUserFromAuthentication(authentication));
     return new ResponseEntity<String>("Deleted successful", HttpStatus.OK);
 }
     @Secured(ROLE)
     @PostMapping
-    public ResponseEntity<UserCar> createUserCar(@RequestBody final UserCar car, Authentication authentication){
+    public ResponseEntity<UserCarDto> createUserCar(@RequestBody final UserCarDto car, Authentication authentication){
         return ResponseEntity.ok(service.createUserCar(car, getUserFromAuthentication(authentication)));
     }
     @Secured(ROLE)
     @PutMapping
-    public ResponseEntity<UserCar> updateUserCar(@RequestBody final UserCar car, Authentication authentication){
+    public ResponseEntity<UserCarDto> updateUserCar(@RequestBody final UserCarDto car, Authentication authentication){
             return ResponseEntity.ok(service.updateUserCar(car, getUserFromAuthentication(authentication)));
     }
     private Long getUserFromAuthentication(Authentication authentication) {

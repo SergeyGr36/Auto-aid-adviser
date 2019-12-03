@@ -1,45 +1,58 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.dto.UserCarDto;
+import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
+import com.hillel.evo.adviser.mapper.UserCarMapper;
+import com.hillel.evo.adviser.repository.SimpleUserRepository;
+import com.hillel.evo.adviser.repository.UserCarRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserCarServiceImpl implements UserCarService {
 
-//    private transient final UserProfileRepository repository;
-//    private transient final UserProfileMapper mapper;
-//    private transient final SimpleUserRepository userRepository;
-//
-//    public UserCarServiceImpl(UserProfileRepository repository, UserProfileMapper mapper, SimpleUserRepository userRepository) {
-//        this.repository = repository;
-//        this.mapper = mapper;
-//        this.userRepository = userRepository;
-//    }
-    @Override
-    public UserCar getCarByUserIdAndCarId(Long userId, Long carId) {
-        return null;
+    private transient final UserCarRepository repository;
+    private transient final UserCarMapper mapper;
+    private transient final SimpleUserRepository userRepository;
+
+    public UserCarServiceImpl(UserCarRepository repository, UserCarMapper mapper, SimpleUserRepository userRepository) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<UserCar> getByUserId(Long userId) {
-        return null;
+    public UserCarDto getCarByUserIdAndCarId(Long userId, Long carId) {
+        UserCar userCar = (repository.findBySimpleUserIdAndUserCarId(userId, carId)).get();
+        UserCarDto userCarDto = mapper.toDto(userCar);
+        return userCarDto;
     }
 
     @Override
-    public UserCar createUserCar(UserCar car, Long userId) {
-        return null;
+    public List<UserCarDto> getByUserId(Long userId) {
+
+        return mapper.toDtoList(repository.findAllById(Collections.singleton(userId)));
     }
 
     @Override
-    public UserCar updateUserCar(UserCar car, Long userId) {
-        return null;
+    public UserCarDto createUserCar(UserCarDto car, Long userId) {
+        SimpleUser simpleUser = userRepository.getOne(userId);
+        UserCar userCar = mapper.toCar(car, simpleUser);
+        return mapper.toDto(repository.save(userCar));
     }
 
     @Override
-    public void deleteUserCar(UserCar car, Long userId) {
+    public UserCarDto updateUserCar(UserCarDto car, Long userId) {
+        return createUserCar(car, userId);
+    }
 
+    @Override
+    public void deleteUserCar(UserCarDto car, Long userId) {
+        SimpleUser simpleUser = userRepository.getOne(userId);
+        repository.delete(mapper.toCar(car, simpleUser));
     }
 
 
