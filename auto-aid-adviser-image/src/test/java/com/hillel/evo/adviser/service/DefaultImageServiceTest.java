@@ -42,7 +42,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenCreateImageShouldCreateIt() {
         //given
-        when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(true);
+        when(mockCloudImageService.hasUploaded(any(String.class), eq(mockFile))).thenReturn(true);
         when(mockDbImageRepository.save(any(Image.class))).thenReturn(testImage);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
@@ -53,7 +53,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenCreateImageShouldNotCreateIt() {
         //given
-        when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(false);
+        when(mockCloudImageService.hasUploaded(any(String.class), eq(mockFile))).thenReturn(false);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
         //then
@@ -65,7 +65,7 @@ class DefaultImageServiceTest extends BaseTest {
         //given
         mockListFiles.add(mockFile);
         testListImages.add(testImage);
-        when(mockCloudImageService.uploadFileList(anyString(), anyList())).thenReturn(true);
+        when(mockCloudImageService.hasUploaded(anyString(), anyList())).thenReturn(true);
         when(mockDbImageRepository.saveAll(anyList())).thenReturn(testListImages);
         //when
         Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
@@ -76,7 +76,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenCreateListImagesShouldNotCreateIt() {
         //given
-        when(mockCloudImageService.uploadFileList(anyString(), anyList())).thenReturn(false);
+        when(mockCloudImageService.hasUploaded(anyString(), anyList())).thenReturn(false);
         //when
         Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
         //then
@@ -86,7 +86,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenDeleteImageShouldDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(true);
+        when(mockCloudImageService.hasDeleted(testKeyFileName)).thenReturn(true);
         //when
         boolean result = service.delete(testImage);
         //then
@@ -96,7 +96,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenDeleteImageShouldNotDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(false);
+        when(mockCloudImageService.hasDeleted(testKeyFileName)).thenReturn(false);
         //when
         boolean result = service.delete(testImage);
         //then
@@ -106,7 +106,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenDeleteListImagesShouldDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFileList(anyList())).thenReturn(true);
+        when(mockCloudImageService.hasDeleted(anyList())).thenReturn(true);
         //when
         boolean result = service.delete(testListImages);
         //then
@@ -116,7 +116,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenDeleteListImagesShouldNotDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFileList(anyList())).thenReturn(false);
+        when(mockCloudImageService.hasDeleted(anyList())).thenReturn(false);
         //when
         boolean result = service.delete(testListImages);
         //then
