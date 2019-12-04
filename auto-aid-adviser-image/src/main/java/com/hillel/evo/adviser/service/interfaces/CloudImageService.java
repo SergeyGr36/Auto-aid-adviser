@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CloudImageService {
-    boolean uploadFile(String keyName, MultipartFile file);
+    boolean hasUploaded(String keyName, MultipartFile file);
 
-    boolean uploadFileList(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs);
+    boolean hasUploaded(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs);
 
-    boolean deleteFile(String keyFileName);
+    boolean hasDeleted(String keyFileName);
 
-    boolean deleteFileList(List<KeyVersion> keyFileNames);
+    boolean hasDeleted(List<KeyVersion> keyFileNames);
 
     Optional<URL> generatePresignedURL(String keyFileName);
 }

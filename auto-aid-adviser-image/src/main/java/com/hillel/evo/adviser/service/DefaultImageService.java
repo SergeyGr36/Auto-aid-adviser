@@ -27,7 +27,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
         String keyFileName = generateKeyFileName(
                 generateDirectoryKeyPrefix(businessUserId, businessId), generateUniqFileName(file));
-        if (cloudService.uploadFile(keyFileName, file)) {
+        if (cloudService.hasUploaded(keyFileName, file)) {
             String originalFileName = file.getOriginalFilename();
             Image image = new Image(keyFileName, originalFileName);
             return Optional.of(repository.save(image));
@@ -39,7 +39,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     public Optional<List<Image>> create(Long businessUserId, Long businessId, List<MultipartFile> files) {
         String virtualDirectoryKeyPrefix = generateDirectoryKeyPrefix(businessUserId, businessId);
         List<S3FileDTO> s3FileDTOs = createListDTOs(files, virtualDirectoryKeyPrefix);
-        if(cloudService.uploadFileList(virtualDirectoryKeyPrefix, s3FileDTOs)){
+        if(cloudService.hasUploaded(virtualDirectoryKeyPrefix, s3FileDTOs)){
             List<Image> images = s3FileDTOs.stream().map(
                     s3FileDTO -> new Image(s3FileDTO.getKeyFileName(), s3FileDTO.getFile().getOriginalFilename()))
                     .collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     @Override
     public boolean delete(Image image) {
-        if (cloudService.deleteFile(image.getKeyFileName())) {
+        if (cloudService.hasDeleted(image.getKeyFileName())) {
             repository.delete(image);
             return true;
         }
@@ -61,7 +61,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     public boolean delete(List<Image> images) {
         List<KeyVersion> keyFileNames = images.stream()
                 .map(image -> new KeyVersion(image.getKeyFileName())).collect(Collectors.toList());
-        if (cloudService.deleteFileList(keyFileNames)) {
+        if (cloudService.hasDeleted(keyFileNames)) {
             repository.deleteAll(images);
             return true;
         }
