@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEnti
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = SearchApp.class)
@@ -78,12 +80,23 @@ public class SearchTest extends BaseTest {
 
     @Test
     @Sql({"/data-aids.sql"})
+    public void TestSearchTextWildcardUA() {
+
+        hibernateSearchConfig.reindex(Aid.class);
+        var searchVal = "Хон";
+        var result = aidTextSearch.searchWildcard(Aid.class, "name", searchVal.toLowerCase() + "*");
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    @Sql({"/data-aids.sql"})
     public void TestSearchSpatial() {
 
         hibernateSearchConfig.reindex(Aid.class);
         var result = aidSpatialSearch.search(Aid.class, 100, 11.125, 12.365);
 
-        assertEquals(5, result.size());
+        assertEquals(10, result.size());
     }
 
     @Test

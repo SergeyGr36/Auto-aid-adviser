@@ -28,7 +28,7 @@ public class WebSocketServiceImpTest extends BaseTest {
     private HibernateSearchConfig config;
 
     @Test
-    public void whenSearchBusinessTypeThenReturnList() {
+    public void whenSearchBisnessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
@@ -41,8 +41,20 @@ public class WebSocketServiceImpTest extends BaseTest {
     }
 
     @Test
-    //@Disabled("Need to be fixed")
-    public void whenSearchServiceTypeThenReturnList() {
+    public void whenSearchUABisnessTypeThenReturnList() {
+        config.reindex(BusinessType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("BusinessType");
+        wsInputDTO.setContent("магаз");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+
+    }
+
+    @Test
+    public void whenSearchServiseTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
         var btInputDTO = new WSInputDTO();
@@ -51,6 +63,23 @@ public class WebSocketServiceImpTest extends BaseTest {
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("ServiceType");
         wsInputDTO.setContent("ru");
+        wsInputDTO.setInputDTO(btInputDTO);
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(1, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchUAServiseTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var btInputDTO = new WSInputDTO();
+        btInputDTO.setSearchType("BusinessType");
+        btInputDTO.setContent("шиномонтаж");
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("дв");
         wsInputDTO.setInputDTO(btInputDTO);
 
         var result = webSocketService.find(wsInputDTO);
