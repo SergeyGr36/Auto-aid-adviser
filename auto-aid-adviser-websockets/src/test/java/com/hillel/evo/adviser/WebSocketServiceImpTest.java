@@ -28,7 +28,7 @@ public class WebSocketServiceImpTest extends BaseTest {
     private HibernateSearchConfig config;
 
     @Test
-    public void whenSearchBisnessTypeThenReturnList() {
+    public void whenSearchBusinessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
@@ -55,7 +55,7 @@ public class WebSocketServiceImpTest extends BaseTest {
 
     @Test
     //@Disabled("Need to be fixed")
-    public void whenSearchServiseTypeThenReturnList() {
+    public void whenSearchServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
         var btInputDTO = new WSInputDTO();

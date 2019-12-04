@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:georentdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     platform: h2
     username: adviser
     password: arbitrary
@@ -12,7 +12,7 @@ spring:
           default:
             directory_provider: filesystem
             indexBase: ${HIBERNATE_SEARCH_INDEX_BASE:/tmp/adviser/indexes/}
-          reindex: true
+          reindex: false
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
@@ -42,15 +42,7 @@ server:
 
 email:
   service: default
-
 app:
   jwt:
     secretKey: super-secret-test-key
     expirationMillis: 3600000
-
-aws:
-  s3:
-    bucketName: auto-aid-adviser-bucket
-    expiresIn: 60000
-    region: eu-west-1
-    imageMaxSize: 200000

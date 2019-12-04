@@ -75,7 +75,7 @@ public class RegistrationService {
         UserTokenResponseDto dto = new UserTokenResponseDto(
                 userDetailsDto.getId(),
                 userDetailsDto.getEmail(),
-                userDetailsDto.getRoleUser(),
+                userDetailsDto.getRole(),
                 token
         );
         return dto;

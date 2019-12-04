@@ -38,7 +38,7 @@ public class UserServiceImplTest extends BaseTest {
         AdviserUserDetailsDto dto = service.activation(activeCode);
         //then
         assertNotNull(dto);
-        assertEquals(dto.getRoleUser(), RoleUser.ROLE_USER);
+        assertEquals(dto.getRole(), RoleUser.ROLE_USER);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class UserServiceImplTest extends BaseTest {
         AdviserUserDetailsDto returnDto = service.registration(registrationDto);
         //then
         assertNotNull(returnDto);
-        assertEquals(returnDto.getRoleUser(), RoleUser.ROLE_BUSINESS);
+        assertEquals(returnDto.getRole(), RoleUser.ROLE_BUSINESS);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class UserServiceImplTest extends BaseTest {
         AdviserUserDetailsDto returnDto = service.registration(registrationDto);
         //then
         assertNotNull(returnDto);
-        assertEquals(returnDto.getRoleUser(), RoleUser.ROLE_USER);
+        assertEquals(returnDto.getRole(), RoleUser.ROLE_USER);
     }
 
     @Test

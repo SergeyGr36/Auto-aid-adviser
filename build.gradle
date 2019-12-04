@@ -178,6 +178,8 @@ project(':auto-aid-adviser-business') {
     dependencies {
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-search-service')
+        implementation project(':auto-aid-adviser-image')
+
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
