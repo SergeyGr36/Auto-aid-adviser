@@ -44,7 +44,7 @@ public class S3CloudImageService implements CloudImageService {
     private final ImageConfigurationProperties properties;
 
     @Override
-    public boolean hasUploaded(String keyFileName, MultipartFile file) {
+    public boolean hasUploadedFile(String keyFileName, MultipartFile file) {
         try {
             isValid(file);
             InputStream inputStream = new ByteArrayInputStream(file.getBytes());
@@ -60,7 +60,7 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     @Override
-    public boolean hasUploaded(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs) {
+    public boolean hasUploadedFileList(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs) {
         try {
             s3FileDTOs.stream().map(S3FileDTO::getFile).forEach(this::isValid);
             Path tmpDirPath = Files.createTempDirectory("tmp-images");
@@ -106,7 +106,7 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     @Override
-    public boolean hasDeleted(String keyFileName) {
+    public boolean hasDeletedFile(String keyFileName) {
         try {
             amazonS3Client.deleteObject(new DeleteObjectRequest(properties.getBucketName(), keyFileName));
             return true;
@@ -117,7 +117,7 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     @Override
-    public boolean hasDeleted(List<KeyVersion> keyFileNames) {
+    public boolean hasDeletedFileList(List<KeyVersion> keyFileNames) {
         try {
             amazonS3Client.deleteObjects(new DeleteObjectsRequest(
                     properties.getBucketName()).withKeys(keyFileNames).withQuiet(false));

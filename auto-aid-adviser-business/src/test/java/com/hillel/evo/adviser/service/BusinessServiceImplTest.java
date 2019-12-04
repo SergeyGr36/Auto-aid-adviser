@@ -80,9 +80,9 @@ public class BusinessServiceImplTest extends BaseTest {
         badFile = getBadMultipartFile();
         userId = repository.findByEmail("bvg@mail.com").get().getId();
 
-        when(mockCloudImageService.deleteFile(any())).thenReturn(true);
-        when(mockCloudImageService.uploadFile(any(), eq(goodFile))).thenReturn(true);
-        when(mockCloudImageService.uploadFile(any(), eq(badFile))).thenReturn(false);
+        when(mockCloudImageService.hasDeletedFile(any())).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFile(any(), eq(goodFile))).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFile(any(), eq(badFile))).thenReturn(false);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
