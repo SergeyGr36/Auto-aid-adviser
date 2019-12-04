@@ -41,7 +41,7 @@ public class WebSocketServiceImpTest extends BaseTest {
     }
 
     @Test
-    public void whenSearchUABisnessTypeThenReturnList() {
+    public void whenSearchUABusinessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
@@ -72,7 +72,7 @@ public class WebSocketServiceImpTest extends BaseTest {
     }
 
     @Test
-    public void whenSearchUAServiseTypeThenReturnList() {
+    public void whenSearchUAServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
         var btInputDTO = new WSInputDTO();
