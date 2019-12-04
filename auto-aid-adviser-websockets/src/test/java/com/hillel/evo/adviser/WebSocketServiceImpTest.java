@@ -54,6 +54,7 @@ public class WebSocketServiceImpTest extends BaseTest {
     }
 
     @Test
+    //@Disabled("Need to be fixed")
     public void whenSearchServiseTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
