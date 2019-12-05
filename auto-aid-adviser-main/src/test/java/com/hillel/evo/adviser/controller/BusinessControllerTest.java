@@ -94,9 +94,9 @@ public class BusinessControllerTest extends BaseTest {
         user = userRepository.findByEmail(BUSINESS_EMAIL).get();
         jwt = jwtService.generateAccessToken(user.getId());
 
-        when(mockCloudImageService.deleteFile(endsWith(".jpg"))).thenReturn(true);
-        when(mockCloudImageService.deleteFile(endsWith(".bad"))).thenReturn(false);
-        when(mockCloudImageService.uploadFile(any(), any())).thenReturn(true);
+        when(mockCloudImageService.hasDeletedFile(endsWith(".jpg"))).thenReturn(true);
+        when(mockCloudImageService.hasDeletedFile(endsWith(".bad"))).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFile(any(), any())).thenReturn(true);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
