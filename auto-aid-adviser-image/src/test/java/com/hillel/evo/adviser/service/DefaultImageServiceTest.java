@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 class DefaultImageServiceTest extends BaseTest {
     private static final CloudImageService mockCloudImageService = mock(CloudImageService.class);
     private static final ImageRepository mockDbImageRepository = mock(ImageRepository.class);
-
     private static final Long testBusinessUserId = 1L;
     private static final Long testBusinessId = 1L;
     private static final String testKeyFileName = "1/1/testfile.jpg";
