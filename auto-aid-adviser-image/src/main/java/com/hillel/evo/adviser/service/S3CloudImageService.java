@@ -44,9 +44,9 @@ public class S3CloudImageService implements CloudImageService {
     private final ImageConfigurationProperties properties;
 
     @Override
-    public boolean uploadFile(String keyFileName, MultipartFile file) {
+    public boolean hasUploadedFile(String keyFileName, MultipartFile file) {
         try {
-            imageValidation(file);
+            isValid(file);
             InputStream inputStream = new ByteArrayInputStream(file.getBytes());
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(file.getBytes().length);
@@ -60,9 +60,9 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     @Override
-    public boolean uploadFileList(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs) {
+    public boolean hasUploadedFileList(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs) {
         try {
-            s3FileDTOs.stream().map(S3FileDTO::getFile).forEach(this::imageValidation);
+            s3FileDTOs.stream().map(S3FileDTO::getFile).forEach(this::isValid);
             Path tmpDirPath = Files.createTempDirectory("tmp-images");
             for (S3FileDTO dto : s3FileDTOs) {
                 imageToTmpDir(dto.getFile(), dto.getUniqFileName(), tmpDirPath);
@@ -93,20 +93,20 @@ public class S3CloudImageService implements CloudImageService {
         }
     }
 
-    private void imageValidation (MultipartFile file)throws S3ServiceValidationException {
-        if (file.isEmpty()){
+    private void isValid (MultipartFile file) throws S3ServiceValidationException {
+        if (file.isEmpty()) {
             throw new S3ServiceValidationException("Image must be not empty: " + file.getOriginalFilename());
         }
-        if(file.getSize() > properties.getImageMaxSize()){
+        if (file.getSize() > properties.getImageMaxSize()) {
             throw new S3ServiceValidationException("Image is to big: " + file.getOriginalFilename());
         }
-        if (!file.getContentType().contains(MediaType.IMAGE_JPEG_VALUE)){
+        if (!file.getContentType().contains(MediaType.IMAGE_JPEG_VALUE)) {
             throw new S3ServiceValidationException("Only JPEG image is accepted: " + file.getOriginalFilename());
         }
     }
 
     @Override
-    public boolean deleteFile(String keyFileName) {
+    public boolean hasDeletedFile(String keyFileName) {
         try {
             amazonS3Client.deleteObject(new DeleteObjectRequest(properties.getBucketName(), keyFileName));
             return true;
@@ -117,7 +117,7 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     @Override
-    public boolean deleteFileList(List<KeyVersion> keyFileNames) {
+    public boolean hasDeletedFileList(List<KeyVersion> keyFileNames) {
         try {
             amazonS3Client.deleteObjects(new DeleteObjectsRequest(
                     properties.getBucketName()).withKeys(keyFileNames).withQuiet(false));

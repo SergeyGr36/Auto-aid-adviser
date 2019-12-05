@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-class DefaultImageServiceTest {
+class DefaultImageServiceTest extends BaseTest {
     private static final CloudImageService mockCloudImageService = mock(CloudImageService.class);
     private static final ImageRepository mockDbImageRepository = mock(ImageRepository.class);
 
@@ -44,7 +45,7 @@ class DefaultImageServiceTest {
     @Test
     void whenCreateImageShouldCreateIt() {
         //given
-        when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFile(any(String.class), eq(mockFile))).thenReturn(true);
         when(mockDbImageRepository.save(any(Image.class))).thenReturn(testImage);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
@@ -55,7 +56,7 @@ class DefaultImageServiceTest {
     @Test
     void whenCreateImageShouldNotCreateIt() {
         //given
-        when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFile(any(String.class), eq(mockFile))).thenReturn(false);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
         //then
@@ -67,7 +68,7 @@ class DefaultImageServiceTest {
         //given
         mockListFiles.add(mockFile);
         testListImages.add(testImage);
-        when(mockCloudImageService.uploadFileList(anyString(), anyList())).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFileList(anyString(), anyList())).thenReturn(true);
         when(mockDbImageRepository.saveAll(anyList())).thenReturn(testListImages);
         //when
         Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
@@ -78,7 +79,7 @@ class DefaultImageServiceTest {
     @Test
     void whenCreateListImagesShouldNotCreateIt() {
         //given
-        when(mockCloudImageService.uploadFileList(anyString(), anyList())).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFileList(anyString(), anyList())).thenReturn(false);
         //when
         Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
         //then
@@ -88,7 +89,7 @@ class DefaultImageServiceTest {
     @Test
     void whenDeleteImageShouldDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(true);
+        when(mockCloudImageService.hasDeletedFile(testKeyFileName)).thenReturn(true);
         //when
         boolean result = service.delete(testImage);
         //then
@@ -98,7 +99,7 @@ class DefaultImageServiceTest {
     @Test
     void whenDeleteImageShouldNotDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(false);
+        when(mockCloudImageService.hasDeletedFile(testKeyFileName)).thenReturn(false);
         //when
         boolean result = service.delete(testImage);
         //then
@@ -108,7 +109,7 @@ class DefaultImageServiceTest {
     @Test
     void whenDeleteListImagesShouldDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFileList(anyList())).thenReturn(true);
+        when(mockCloudImageService.hasDeletedFileList(anyList())).thenReturn(true);
         //when
         boolean result = service.delete(testListImages);
         //then
@@ -118,7 +119,7 @@ class DefaultImageServiceTest {
     @Test
     void whenDeleteListImagesShouldNotDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFileList(anyList())).thenReturn(false);
+        when(mockCloudImageService.hasDeletedFileList(anyList())).thenReturn(false);
         //when
         boolean result = service.delete(testListImages);
         //then

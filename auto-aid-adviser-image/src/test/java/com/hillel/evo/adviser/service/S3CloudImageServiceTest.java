@@ -75,7 +75,7 @@ class S3CloudImageServiceTest {
         //given
         when(mockAmazonS3Client.putObject(any(PutObjectRequest.class))).thenReturn(null);
         //when
-        boolean result = service.uploadFile(testKeyFileName, mockFileTest);
+        boolean result = service.hasUploadedFile(testKeyFileName, mockFileTest);
         //then
         assertTrue(result);
     }
@@ -85,7 +85,7 @@ class S3CloudImageServiceTest {
         //given
         given(mockAmazonS3Client.putObject(any(PutObjectRequest.class))).willAnswer( invocation -> { throw new IOException("msg"); });
         //when
-        boolean result = service.uploadFile(testKeyFileName, mockFile);
+        boolean result = service.hasUploadedFile(testKeyFileName, mockFile);
         //then
         assertFalse(result);
     }
@@ -95,7 +95,7 @@ class S3CloudImageServiceTest {
         //given
         when(mockFile.isEmpty()).thenReturn(true);
         //when
-        boolean result = service.uploadFile(testKeyFileName, mockFile);
+        boolean result = service.hasUploadedFile(testKeyFileName, mockFile);
         //then
         assertFalse(result);
     }
@@ -105,7 +105,7 @@ class S3CloudImageServiceTest {
         //given
         when(mockFile.getSize()).thenReturn(10L);
         //when
-        boolean result = service.uploadFile(testKeyFileName, mockFile);
+        boolean result = service.hasUploadedFile(testKeyFileName, mockFile);
         //then
         assertFalse(result);
     }
@@ -115,7 +115,7 @@ class S3CloudImageServiceTest {
         //given
         when(mockFile.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
         //when
-        boolean result = service.uploadFile(testKeyFileName, mockFile);
+        boolean result = service.hasUploadedFile(testKeyFileName, mockFile);
         //then
         assertFalse(result);
     }
@@ -130,7 +130,7 @@ class S3CloudImageServiceTest {
                 any(Boolean.class))).thenReturn(mockUpload);
         doNothing().when(mockUpload).waitForCompletion();
         //when
-        boolean result = service.uploadFileList(testDirectoryKeyPrefix, testS3FileDTOs);
+        boolean result = service.hasUploadedFileList(testDirectoryKeyPrefix, testS3FileDTOs);
         //then
         assertTrue(result);
     }
@@ -144,7 +144,7 @@ class S3CloudImageServiceTest {
                 any(File.class),
                 any(Boolean.class))).willAnswer(invocation -> {throw new SdkClientException("msg");});
         //when
-        boolean result = service.uploadFileList(testDirectoryKeyPrefix, testS3FileDTOs);
+        boolean result = service.hasUploadedFileList(testDirectoryKeyPrefix, testS3FileDTOs);
         //then
         assertFalse(result);
     }
@@ -154,7 +154,7 @@ class S3CloudImageServiceTest {
         //given
         doThrow(IOException.class).when(mockFile).transferTo(any(Path.class));
         //when
-        boolean result = service.uploadFileList(testDirectoryKeyPrefix, testS3FileDTOs);
+        boolean result = service.hasUploadedFileList(testDirectoryKeyPrefix, testS3FileDTOs);
         //then
         assertFalse(result);
     }
@@ -164,7 +164,7 @@ class S3CloudImageServiceTest {
         //given
         doNothing().when(mockAmazonS3Client).deleteObject(any(DeleteObjectRequest.class));
         //when
-        boolean result = service.deleteFile(testKeyFileName);
+        boolean result = service.hasDeletedFile(testKeyFileName);
         //then
         assertTrue(result);
     }
@@ -174,7 +174,7 @@ class S3CloudImageServiceTest {
         //given
         doThrow(new SdkClientException("Test")).when(mockAmazonS3Client).deleteObject(any(DeleteObjectRequest.class));
         //when
-        boolean result = service.deleteFile(testKeyFileName);
+        boolean result = service.hasDeletedFile(testKeyFileName);
         //then
         assertFalse(result);
     }
@@ -184,7 +184,7 @@ class S3CloudImageServiceTest {
         //given
         when(mockAmazonS3Client.deleteObjects(any(DeleteObjectsRequest.class))).thenReturn(null);
         //when
-        boolean result = service.deleteFileList(testKeysToDelete);
+        boolean result = service.hasDeletedFileList(testKeysToDelete);
         //then
         assertTrue(result);
     }

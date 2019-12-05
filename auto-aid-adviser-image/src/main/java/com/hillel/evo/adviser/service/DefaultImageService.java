@@ -27,7 +27,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     public Optional<Image> create(Long businessUserId, Long businessId, MultipartFile file) {
         String keyFileName = generateKeyFileName(
                 generateDirectoryKeyPrefix(businessUserId, businessId), generateUniqFileName(file));
-        if (cloudService.uploadFile(keyFileName, file)) {
+        if (cloudService.hasUploadedFile(keyFileName, file)) {
             String originalFileName = file.getOriginalFilename();
             Image image = new Image(keyFileName, originalFileName);
             return Optional.of(repository.save(image));
@@ -37,14 +37,9 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     @Override
     public Optional<List<Image>> create(Long businessUserId, Long businessId, List<MultipartFile> files) {
-        List<S3FileDTO> s3FileDTOs = new ArrayList<>();
         String virtualDirectoryKeyPrefix = generateDirectoryKeyPrefix(businessUserId, businessId);
-        for (MultipartFile file : files) {
-            String uniqFileName = generateUniqFileName(file);
-            String keyFileName = generateKeyFileName(virtualDirectoryKeyPrefix, uniqFileName);
-            s3FileDTOs.add(new S3FileDTO(file, uniqFileName, keyFileName));
-        }
-        if(cloudService.uploadFileList(virtualDirectoryKeyPrefix, s3FileDTOs)){
+        List<S3FileDTO> s3FileDTOs = createListDTOs(files, virtualDirectoryKeyPrefix);
+        if(cloudService.hasUploadedFileList(virtualDirectoryKeyPrefix, s3FileDTOs)){
             List<Image> images = s3FileDTOs.stream().map(
                     s3FileDTO -> new Image(s3FileDTO.getKeyFileName(), s3FileDTO.getFile().getOriginalFilename()))
                     .collect(Collectors.toList());
@@ -55,7 +50,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     @Override
     public boolean delete(Image image) {
-        if (cloudService.deleteFile(image.getKeyFileName())) {
+        if (cloudService.hasDeletedFile(image.getKeyFileName())) {
             repository.delete(image);
             return true;
         }
@@ -64,8 +59,9 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     @Override
     public boolean delete(List<Image> images) {
-        if (cloudService.deleteFileList(images.stream().map(
-                image -> new KeyVersion(image.getKeyFileName())).collect(Collectors.toList()))) {
+        List<KeyVersion> keyFileNames = images.stream()
+                .map(image -> new KeyVersion(image.getKeyFileName())).collect(Collectors.toList());
+        if (cloudService.hasDeletedFileList(keyFileNames)) {
             repository.deleteAll(images);
             return true;
         }
@@ -87,5 +83,15 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
 
     private String generateDirectoryKeyPrefix (Long businessUserId, Long businessId) {
         return businessUserId.toString() + "/" + businessId.toString();
+    }
+
+    private List<S3FileDTO> createListDTOs (List<MultipartFile> files, String virtualDirectoryKeyPrefix) {
+        List<S3FileDTO> s3FileDTOs = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String uniqFileName = generateUniqFileName(file);
+            String keyFileName = generateKeyFileName(virtualDirectoryKeyPrefix, uniqFileName);
+            s3FileDTOs.add(new S3FileDTO(file, uniqFileName, keyFileName));
+        }
+        return s3FileDTOs;
     }
 }

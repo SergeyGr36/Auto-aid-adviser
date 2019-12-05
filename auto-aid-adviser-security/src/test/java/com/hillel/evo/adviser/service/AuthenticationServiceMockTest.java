@@ -1,7 +1,7 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.LoginRequestDto;
-import com.hillel.evo.adviser.dto.LoginResponseDto;
+import com.hillel.evo.adviser.dto.UserTokenResponseDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class AuthenticationServiceMockTest {
 
     private static final String USER_MAIL = "test@gmail.com";
-    private static final String USER_PASSWORD = "testtest123";
+    private static final String USER_PASSWORD = "Testtest123";
     private static final String TOKEN = "token";
     private static final Long USER_ID = 100L;
 
@@ -60,13 +60,23 @@ public class AuthenticationServiceMockTest {
     }
 
     @Test
-    public void whenAuthenticateAndResponce_thenResponseWithBodyIsReturned() {
+    public void whenAuthenticateAndResponse_thenTokenIsReturnedInResponseBody() {
         //given
         when(jwtService.generateAccessToken(anyLong())).thenReturn(TOKEN);
         //when
-        ResponseEntity<LoginResponseDto> responseEntity = authenticationService.authenticateAndResponse(loginRequestDto);
-        LoginResponseDto responseDto = responseEntity.getBody();
+        ResponseEntity<UserTokenResponseDto> responseEntity = authenticationService.authenticateAndResponse(loginRequestDto);
+        UserTokenResponseDto responseDto = responseEntity.getBody();
         //then
         assertEquals(TOKEN, responseDto.getToken());
     }
+
+    @Test
+    public void whenAuthenticateAndResponse_thenUserIdIsReturnedInResponseBody() {
+        //when
+        ResponseEntity<UserTokenResponseDto> responseEntity = authenticationService.authenticateAndResponse(loginRequestDto);
+        UserTokenResponseDto responseDto = responseEntity.getBody();
+        //then
+        assertEquals(USER_ID, responseDto.getId());
+    }
+
 }
