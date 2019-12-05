@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserCarRepository extends JpaRepository<UserCar, Long> {
-    @Query("select  '*' from UserCar c"+
-            " where  c.id = :userCarId and c.simpleUser =:id")
-    Optional<UserCar> findBySimpleUserIdAndUserCarId(@Param("id") Long userId, @Param("userCarId") Long userCarId);
+//    @Query("select  '*' from UserCar c"+
+//            " where  c.id = :userCarId and c.simpleUser.id =:id")
+//    Optional<UserCar> findBySimpleUserIdAndUserCarId(@Param("id") Long userId, @Param("userCarId") Long userCarId);
 }

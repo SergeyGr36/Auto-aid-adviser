@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@DiscriminatorValue("MotorType")
+@DiscriminatorValue("motor_type")
 public class MotorType extends CarIdentification {
     @Builder
     public  MotorType(Long id, String name){

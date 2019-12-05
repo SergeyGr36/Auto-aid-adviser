@@ -6,6 +6,7 @@ import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import com.hillel.evo.adviser.repository.UserCarRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -17,7 +18,7 @@ public class UserCarServiceImpl implements UserCarService {
     private transient final UserCarRepository repository;
     private transient final UserCarMapper mapper;
     private transient final SimpleUserRepository userRepository;
-
+    @Autowired
     public UserCarServiceImpl(UserCarRepository repository, UserCarMapper mapper, SimpleUserRepository userRepository) {
         this.repository = repository;
         this.mapper = mapper;
@@ -26,9 +27,10 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public UserCarDto getCarByUserIdAndCarId(Long userId, Long carId) {
-        UserCar userCar = (repository.findBySimpleUserIdAndUserCarId(userId, carId)).get();
-        UserCarDto userCarDto = mapper.toDto(userCar);
-        return userCarDto;
+//        UserCar userCar = (repository.findBySimpleUserIdAndUserCarId(userId, carId)).get();
+//        UserCarDto userCarDto = mapper.toDto(userCar);
+//        return userCarDto;
+        return null;
     }
 
     @Override

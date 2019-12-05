@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
 import javax.persistence.GenerationType;

@@ -2,7 +2,6 @@ package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.GeneratedValue;

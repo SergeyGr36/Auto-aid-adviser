@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {SimpleUserRepository.class,
-        CarBrandMapper.class, MotorTypeMapper.class, TypeCarMapper.class})
+        CarIdentificationMapper.class})
 public interface UserCarMapper {
 
     @Mapping(target = "simpleUser", source = "user")
@@ -21,9 +21,9 @@ public interface UserCarMapper {
     UserCar toCar(UserCarDto dto, SimpleUser user);
 
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "brand", source = "brandDto")
-    @Mapping(target = "motorType", source = "motorTypeDto")
-    @Mapping(target = "typeCar", source = "typeCarDto")
+    @Mapping(target = "brandDto", source = "brand")
+    @Mapping(target = "motorTypeDto", source = "motorType")
+    @Mapping(target = "typeCarDto", source = "typeCar")
     UserCarDto toDto(UserCar car);
     List<UserCarDto> toDtoList(List<UserCar> cars);
 }
