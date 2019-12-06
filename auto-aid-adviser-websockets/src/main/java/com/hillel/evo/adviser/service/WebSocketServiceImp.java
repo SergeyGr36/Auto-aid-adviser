@@ -41,6 +41,7 @@ public class WebSocketServiceImp implements WebSocketService {
         }
     }
 
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findBusinessTypeByName(String name) {
         WSOutputDTO result = new WSOutputDTO();
         var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase() + "*");
@@ -48,6 +49,7 @@ public class WebSocketServiceImp implements WebSocketService {
         return result;
     }
 
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findServiceTypeByName(String name, String btName) {
         WSOutputDTO result = new WSOutputDTO();
         var businessTypeList = serviceTypeService.findAllByNameContains(
