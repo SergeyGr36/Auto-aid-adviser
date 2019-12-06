@@ -49,4 +49,17 @@ public class EntitySearch<T> implements TextSearch<T>, SpatialSearch<T>, CustomS
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query, clazz);
         return jpaQuery.getResultList();
     }
+
+
+    public List<T> search(Class<T> clazz, FacetingRequestFactory... facetingRequests) {
+        var query = searchService.getQueryBuilder(clazz).all().createQuery();
+        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query, clazz);
+        var facetManager = jpaQuery.getFacetManager();
+        Arrays.asList(facetingRequests).forEach(f -> facetManager.enableFaceting(f.get()));
+
+        jpaQuery.getResultList();
+
+
+        return jpaQuery.getResultList();
+    }
 }
