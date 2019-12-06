@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
@@ -53,7 +52,7 @@ import static org.mockito.Mockito.when;
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class BusinessServiceImplTest extends BaseTest {
+public class BusinessServiceImplTest {
 
     @Autowired
     private BusinessServiceImpl businessService;
@@ -78,9 +77,9 @@ public class BusinessServiceImplTest extends BaseTest {
         badFile = getBadMultipartFile();
         userId = repository.findByEmail("bvg@mail.com").get().getId();
 
-        when(mockCloudImageService.deleteFile(any())).thenReturn(true);
-        when(mockCloudImageService.uploadFile(any(), eq(goodFile))).thenReturn(true);
-        when(mockCloudImageService.uploadFile(any(), eq(badFile))).thenReturn(false);
+        when(mockCloudImageService.hasDeletedFile(any())).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFile(any(), eq(goodFile))).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFile(any(), eq(badFile))).thenReturn(false);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 

@@ -41,17 +41,19 @@ public class WebSocketServiceImp implements WebSocketService {
         }
     }
 
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findBusinessTypeByName(String name) {
         WSOutputDTO result = new WSOutputDTO();
-        var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase(Locale.ENGLISH) + "*");
+        var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase() + "*");
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
     }
 
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findServiceTypeByName(String name, String btName) {
         WSOutputDTO result = new WSOutputDTO();
         var businessTypeList = serviceTypeService.findAllByNameContains(
-                "*" + name.toLowerCase(Locale.ENGLISH) + "*", btName
+                "*" + name.toLowerCase() + "*", btName
                 );
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
