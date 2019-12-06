@@ -1,27 +1,47 @@
 package com.hillel.evo.adviser.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
 
 @Entity(name = "user_car")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class UserCar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private SimpleUser simpleUser;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
     private CarBrand brand;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "motor_type_id")
     private MotorType motorType;
-    @ManyToOne
-    private  TypeCar typeCar;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "car_type_id")
+    private TypeCar typeCar;
+
+    public UserCar(SimpleUser simpleUser, CarBrand brand, MotorType motorType, TypeCar typeCar) {
+        this.simpleUser = simpleUser;
+        this.brand = brand;
+        this.motorType = motorType;
+        this.typeCar = typeCar;
+    }
 }

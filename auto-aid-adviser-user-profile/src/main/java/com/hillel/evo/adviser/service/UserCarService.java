@@ -10,6 +10,6 @@ public interface UserCarService {
     List<UserCarDto> getByUserId(Long userId);
     UserCarDto createUserCar(UserCarDto car, Long userId);
     UserCarDto updateUserCar(UserCarDto car, Long userId);
-    void deleteUserCar(UserCarDto car, Long userId);
+    void deleteUserCar(Long carId, Long userId);
 
 }

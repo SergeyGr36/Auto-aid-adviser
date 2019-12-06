@@ -29,32 +29,38 @@ public class UserCarController {
     public UserCarController(UserCarService service) {
         this.service = service;
     }
+
     @Secured(ROLE)
     @GetMapping("/{userId}/{id}")
     public ResponseEntity<UserCarDto> getCarByUserIdAndCarId(@PathVariable Long userId, @PathVariable Long id){
         return ResponseEntity.ok(service.getCarByUserIdAndCarId(userId, id));
     }
+
     @Secured(ROLE)
     @GetMapping("/{id}")
     public ResponseEntity<List<UserCarDto>> getCarsByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.getByUserId(id));
     }
+
     @Secured(ROLE)
     @DeleteMapping
     public ResponseEntity<String> deleteUserCar(@RequestBody UserCarDto car, Authentication authentication){
-        service.deleteUserCar(car, getUserFromAuthentication(authentication));
+        service.deleteUserCar(car.getId(), getUserFromAuthentication(authentication));
     return new ResponseEntity<String>("Deleted successful", HttpStatus.OK);
-}
+    }
+
     @Secured(ROLE)
     @PostMapping
     public ResponseEntity<UserCarDto> createUserCar(@RequestBody final UserCarDto car, Authentication authentication){
         return ResponseEntity.ok(service.createUserCar(car, getUserFromAuthentication(authentication)));
     }
+
     @Secured(ROLE)
     @PutMapping
     public ResponseEntity<UserCarDto> updateUserCar(@RequestBody final UserCarDto car, Authentication authentication){
             return ResponseEntity.ok(service.updateUserCar(car, getUserFromAuthentication(authentication)));
     }
+
     private Long getUserFromAuthentication(Authentication authentication) {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();
