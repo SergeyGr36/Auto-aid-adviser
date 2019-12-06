@@ -11,12 +11,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,21 +29,22 @@ import static org.mockito.Mockito.when;
 class DefaultImageServiceTest extends BaseTest {
     private static final CloudImageService mockCloudImageService = mock(CloudImageService.class);
     private static final ImageRepository mockDbImageRepository = mock(ImageRepository.class);
-
     private static final Long testBusinessUserId = 1L;
     private static final Long testBusinessId = 1L;
     private static final String testKeyFileName = "1/1/testfile.jpg";
     private static final String testFileName = "testfile.jpg";
     private static final Image testImage = new Image(testKeyFileName, testFileName);
-    private static MultipartFile mockFile = new MockMultipartFile
+    private static final MultipartFile mockFile = new MockMultipartFile
             (testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte [] {0});
+    private static final List<MultipartFile> mockListFiles = new ArrayList<>();
+    private static final List<Image> testListImages = new ArrayList<>();
 
     private final DefaultImageService service = new DefaultImageService(mockCloudImageService, mockDbImageRepository);
 
     @Test
     void whenCreateImageShouldCreateIt() {
         //given
-        when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFile(any(String.class), eq(mockFile))).thenReturn(true);
         when(mockDbImageRepository.save(any(Image.class))).thenReturn(testImage);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
@@ -49,7 +55,7 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenCreateImageShouldNotCreateIt() {
         //given
-        when(mockCloudImageService.uploadFile(any(String.class), eq(mockFile))).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFile(any(String.class), eq(mockFile))).thenReturn(false);
         //when
         Optional<Image> result = service.create(testBusinessUserId, testBusinessId, mockFile);
         //then
@@ -57,9 +63,32 @@ class DefaultImageServiceTest extends BaseTest {
     }
 
     @Test
+    void whenCreateListImagesShouldCreateIt() {
+        //given
+        mockListFiles.add(mockFile);
+        testListImages.add(testImage);
+        when(mockCloudImageService.hasUploadedFileList(anyString(), anyList())).thenReturn(true);
+        when(mockDbImageRepository.saveAll(anyList())).thenReturn(testListImages);
+        //when
+        Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
+        //then
+        assertEquals(testListImages, result.get());
+    }
+
+    @Test
+    void whenCreateListImagesShouldNotCreateIt() {
+        //given
+        when(mockCloudImageService.hasUploadedFileList(anyString(), anyList())).thenReturn(false);
+        //when
+        Optional<List<Image>> result = service.create(testBusinessUserId, testBusinessId, mockListFiles);
+        //then
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void whenDeleteImageShouldDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(true);
+        when(mockCloudImageService.hasDeletedFile(testKeyFileName)).thenReturn(true);
         //when
         boolean result = service.delete(testImage);
         //then
@@ -69,9 +98,29 @@ class DefaultImageServiceTest extends BaseTest {
     @Test
     void whenDeleteImageShouldNotDeleteIt() {
         //given
-        when(mockCloudImageService.deleteFile(testKeyFileName)).thenReturn(false);
+        when(mockCloudImageService.hasDeletedFile(testKeyFileName)).thenReturn(false);
         //when
         boolean result = service.delete(testImage);
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void whenDeleteListImagesShouldDeleteIt() {
+        //given
+        when(mockCloudImageService.hasDeletedFileList(anyList())).thenReturn(true);
+        //when
+        boolean result = service.delete(testListImages);
+        //then
+        assertTrue(result);
+    }
+
+    @Test
+    void whenDeleteListImagesShouldNotDeleteIt() {
+        //given
+        when(mockCloudImageService.hasDeletedFileList(anyList())).thenReturn(false);
+        //when
+        boolean result = service.delete(testListImages);
         //then
         assertFalse(result);
     }
