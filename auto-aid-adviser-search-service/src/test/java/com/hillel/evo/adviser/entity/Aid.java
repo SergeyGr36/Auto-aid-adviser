@@ -1,7 +1,13 @@
 package com.hillel.evo.adviser.entity;
 
-import lombok.Data;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Spatial;
+import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Facet;
+import org.hibernate.search.annotations.Latitude;
+import org.hibernate.search.annotations.Longitude;
 
 import javax.persistence.GenerationType;
 import javax.persistence.Entity;
