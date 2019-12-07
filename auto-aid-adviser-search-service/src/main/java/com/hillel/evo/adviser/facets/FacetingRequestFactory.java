@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.search;
+package com.hillel.evo.adviser.facets;
 
 import org.hibernate.search.query.facet.FacetingRequest;
 
