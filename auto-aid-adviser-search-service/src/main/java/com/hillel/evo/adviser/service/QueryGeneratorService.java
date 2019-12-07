@@ -1,10 +1,9 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.facets.FacetingRequestFactory;
 import com.hillel.evo.adviser.search.QueryFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.*;
-import org.hibernate.search.query.facet.FacetSortOrder;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.query.dsl.Unit;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
