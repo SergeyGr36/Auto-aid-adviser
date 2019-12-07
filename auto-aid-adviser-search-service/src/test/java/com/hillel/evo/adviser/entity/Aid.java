@@ -1,12 +1,7 @@
 package com.hillel.evo.adviser.entity;
 
 import lombok.Data;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Spatial;
-import org.hibernate.search.annotations.Store;
-import org.hibernate.search.annotations.Latitude;
-import org.hibernate.search.annotations.Longitude;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.GenerationType;
 import javax.persistence.Entity;
@@ -27,9 +22,13 @@ public class Aid {
     @Field(store = Store.YES)
     private String name;
 
+    @Field(analyze = Analyze.NO)
+    @Facet
     private String type;
 
     @Latitude
+    @Field(analyze = Analyze.NO)
+    @Facet
     private double latitude;
 
     @Longitude
