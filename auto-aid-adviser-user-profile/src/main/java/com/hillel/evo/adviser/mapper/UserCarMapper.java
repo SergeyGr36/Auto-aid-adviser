@@ -3,12 +3,13 @@ package com.hillel.evo.adviser.mapper;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
+import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CarIdentificationMapper.class})
+@Mapper(componentModel = "spring", uses = {CarIdentificationMapper.class, SimpleUserRepository.class})
 public interface UserCarMapper {
 
     @Mapping(target = "simpleUser", source = "user")

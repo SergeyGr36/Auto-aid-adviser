@@ -4,16 +4,20 @@ import com.hillel.evo.adviser.UserProfileStarter;
 import com.hillel.evo.adviser.dto.MotorTypeDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.CarBrand;
-import com.hillel.evo.adviser.entity.MotorType;
+import com.hillel.evo.adviser.entity.SimpleUser;
+import com.hillel.evo.adviser.entity.TypeCar;
 import com.hillel.evo.adviser.entity.UserCar;
-import com.hillel.evo.adviser.mapper.UserCarMapper;
-import com.hillel.evo.adviser.repository.UserCarRepository;
+import com.hillel.evo.adviser.repository.SimpleUserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,32 +29,69 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class UserCarMapperTest {
 
     @Autowired
-    UserCarRepository repository;
-
+    SimpleUserRepository repository;
     @Autowired
-    UserCarMapper mapper;
+    UserCarMapperImpl mapper;
 
+    //to dto
     @Test
     public void whenToDtoSetNullReturnNull() {
         assertNull(mapper.toDto(null));
-
     }
 
     @Test
-    public void whenCarBrandToDtoSetEntityReturnEntity() {
+    public void whenToDtoSetEntityReturnDto() {
         UserCar car = new UserCar();
-        car.setBrand(new CarBrand(2L, "Audi"));
+        car.setBrand(new CarBrand(1L, "Audi"));
         UserCarDto dto = mapper.toDto(car);
-        assertEquals(dto.getBrand().getName(), car.getBrand().getName());
+        assertEquals(car.getBrand().getName(), dto.getBrand().getName());
+    }
+
+    //    to dto list
+    @Test
+    public void WhenSetListThenReturnDto() {
+        UserCar car = new UserCar();
+        car.setTypeCar(new TypeCar(1L, "coupe"));
+        List<UserCar> userCars = new ArrayList<>();
+        userCars.add(car);
+        List<UserCarDto> userCarDtos = mapper.toDtoList(userCars);
+        assertEquals(userCarDtos.get(0).getTypeCar().getName(), userCars.get(0).getTypeCar().getName());
     }
 
     @Test
-    public void whenCarBrandToDtoSetNullReturnNull() {
-        UserCar car = new UserCar();
-        car.setBrand(new CarBrand());
-        UserCarDto dto = mapper.toDto(car);
-        assertNull(dto.getBrand().getId());
-        assertNull(dto.getBrand().getName());
-
+    public void whenSetNullListThenReturnNullListDto() {
+        Assertions.assertNull(mapper.toDtoList((List<UserCar>) null));
     }
+
+    //    to entity
+    @Test
+    public void whenSetEmptyDtoThenReturnNull() {
+        Assertions.assertNull(mapper.toCar(null, null));
+    }
+
+    @Test
+    public void whenSetDtoCarThenReturnEntity() {
+        UserCarDto dto = new UserCarDto();
+        dto.setMotorType(new MotorTypeDto(2L, "Audi"));
+        UserCar car = mapper.toCar(dto, new SimpleUser());
+        assertEquals(dto.getMotorType().getName(), car.getMotorType().getName());
+    }
+
+    @Test
+    public void whenSetDtoUserThenReturnEntity() {
+        SimpleUser user = new SimpleUser();
+        user.setLastName("erwsfs");
+        UserCar car = mapper.toCar(new UserCarDto(), user);
+        assertEquals(user.getLastName(), car.getSimpleUser().getLastName());
+    }
+
+    @Test
+    public void whenSetFullDtoThenReturnEntity() {
+        SimpleUser user = repository.findAll().get(0);
+        UserCarDto dto = new UserCarDto();
+        dto.setMotorType(new MotorTypeDto(2L, "Audi"));
+        UserCar car = mapper.toCar(dto, user);
+        assertEquals(user.getLastName(), car.getSimpleUser().getLastName());
+    }
+
 }
