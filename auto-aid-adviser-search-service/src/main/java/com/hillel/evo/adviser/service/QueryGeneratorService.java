@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.search.QueryFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,7 @@ public class QueryGeneratorService {
     private transient EntityManager entityManager;
 
     public FullTextEntityManager getFullTextEntityManager() {
-        return org.hibernate.search.jpa.Search.
-                getFullTextEntityManager(entityManager);
+        return Search.getFullTextEntityManager(entityManager);
     }
 
     public QueryBuilder getQueryBuilder(Class clazz) {
