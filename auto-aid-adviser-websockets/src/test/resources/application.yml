@@ -5,13 +5,14 @@ spring:
     username: adviser
     password: arbitrary
     driver-class-name: org.h2.Driver
+    sql-script-encoding: UTF-8
   jpa:
     properties:
       hibernate:
         search:
           default:
             directory_provider: filesystem
-            indexBase: ${HIBERNATE_SEARCH_INDEX_BASE:/tmp/adviser/indexes/}
+            indexBase: ${HIBERNATE_SEARCH_INDEX_BASE:/tmp/test/adviser/indexes/}
           reindex: false
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

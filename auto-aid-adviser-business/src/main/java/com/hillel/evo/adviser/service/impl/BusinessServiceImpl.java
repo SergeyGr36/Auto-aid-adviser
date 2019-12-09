@@ -72,7 +72,8 @@ public class BusinessServiceImpl implements BusinessService {
     public BusinessDto createBusiness(BusinessDto dto, Long userId, List<MultipartFile> files) {
         BusinessUser user = userRepository.getOne(userId);
         Business business = businessRepository.save(mapper.toEntity(dto, user));
-        List<Image> images = imageServiceCreate(userId, business.getId(), files);
+        List<Image> images = imageService.create(userId, business.getId(), files)
+                .orElseThrow(() -> new CreateResourceException("Image not saved"));
         business.getImages().addAll(images);
 
         return mapper.toDto(business);
@@ -114,41 +115,16 @@ public class BusinessServiceImpl implements BusinessService {
         return imageMapper.toListDto(businessRepository.findImagesByBusinessId(businessId));
     }
 
-/*
-    @Override
-    @Transactional
-    public ImageDto addImage(@NotNull Long userId, @NotNull Long businessId, @NotNull MultipartFile file) {
-        Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
-        Image image = imageService.create(userId, businessId, file)
-                .orElseThrow(() -> new CreateResourceException("Image not saved"));
-        business.getImages().add(image);
-        businessRepository.save(business);
-        return imageMapper.toDto(image);
-    }
-*/
-
     @Override
     @Transactional
     public List<ImageDto> addImages(@NotNull Long userId, @NotNull Long businessId, @NotEmpty List<MultipartFile> files) {
         Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
-        // этот метот в дальнейшем будет заменен на метод imageService.create (для списка)
-        List<Image> imageList = imageServiceCreate(userId, businessId, files);
+        List<Image> imageList = imageService.create(userId, businessId, files)
+                .orElseThrow(() -> new CreateResourceException("Image not saved"));
         business.getImages().addAll(imageList);
         businessRepository.save(business);
         return imageMapper.toListDto(imageList);
-    }
-
-    // этот метот в дальнейшем будет заменен на метод imageService.create (для списка)
-    private List<Image> imageServiceCreate(Long userId, Long businessId, List<MultipartFile> files) {
-        List<Optional<Image>> optionalListImages = files.stream()
-                .map(f -> imageService.create(userId, businessId, f))
-                .collect(Collectors.toList());
-        List<Image> images = optionalListImages.stream()
-                .map(img -> img.orElseThrow(() -> new CreateResourceException("Image not saved")))
-                .collect(Collectors.toList());
-        return images;
     }
 
     @Override

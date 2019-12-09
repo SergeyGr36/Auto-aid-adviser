@@ -80,6 +80,7 @@ public class BusinessServiceImplTest {
         when(mockCloudImageService.hasDeletedFile(any())).thenReturn(true);
         when(mockCloudImageService.hasUploadedFile(any(), eq(goodFile))).thenReturn(true);
         when(mockCloudImageService.hasUploadedFile(any(), eq(badFile))).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFileList(any(), any(List.class))).thenReturn(true);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
@@ -178,7 +179,7 @@ public class BusinessServiceImplTest {
     }
 
     @Test
-    public void whenAddImageThenReturnNotFoundException() throws Exception {
+    public void whenAddImageThenReturnNotFoundException() {
         //given
         List<MultipartFile> list = new ArrayList<>();
         list.add(goodFile);
@@ -193,7 +194,7 @@ public class BusinessServiceImplTest {
         List<MultipartFile> list = new ArrayList<>();
         list.add(badFile);
         //then
-        assertThrows(CreateResourceException.class, () -> businessService.addImages(userId, sourceDto.getId(), list));
+        assertThrows(Exception.class, () -> businessService.addImages(userId, sourceDto.getId(), null));
     }
 
     @Test
@@ -269,16 +270,6 @@ public class BusinessServiceImplTest {
 
         return dto;
     }
-
-/*
-    private MultipartFile getMultipartFile() throws IOException {
-        String name = "ny.jpg";
-        Path path = Paths.get("C:/Temp/" + name);
-        String contentType = MediaType.IMAGE_JPEG_VALUE;
-        byte[] content = Files.readAllBytes(path);
-        return new MockMultipartFile("file", name, contentType, content);
-    }
-*/
 
     private MultipartFile getGoodMultipartFile() {
         String contentType = MediaType.IMAGE_JPEG_VALUE;
