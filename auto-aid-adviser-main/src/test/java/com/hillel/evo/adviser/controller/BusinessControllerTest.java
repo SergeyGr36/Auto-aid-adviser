@@ -102,6 +102,7 @@ public class BusinessControllerTest extends BaseTest {
         when(mockCloudImageService.hasDeletedFile(endsWith(".jpg"))).thenReturn(true);
         when(mockCloudImageService.hasDeletedFile(endsWith(".bad"))).thenReturn(false);
         when(mockCloudImageService.hasUploadedFile(any(), any())).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFileList(any(), any(List.class))).thenReturn(true);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 

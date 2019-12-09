@@ -56,6 +56,6 @@ aws:
     imageMaxSize: 200000
 
 frontend:
-  host: http://localhost
+  host: http://localhost:8081
   router:
     activation: /user/activation/
