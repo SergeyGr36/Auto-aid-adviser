@@ -4,7 +4,7 @@ import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Aid;
-import com.hillel.evo.adviser.service.SearchHelperService;
+import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class SearchTest extends BaseTest {
     private SpatialSearch<Aid> aidSpatialSearch;
     private CustomSearch<Aid> aidCustomSearch;
 
-    private SearchHelperService searchService;
+    private QueryGeneratorService searchService;
 
     @Autowired
     public void setAidTextSearch(TextSearch<Aid> aidTextSearch) {
@@ -40,7 +40,7 @@ public class SearchTest extends BaseTest {
     }
 
     @Autowired
-    public void setSearchService(SearchHelperService searchService) {
+    public void setSearchService(QueryGeneratorService searchService) {
         this.searchService = searchService;
     }
 
@@ -78,12 +78,23 @@ public class SearchTest extends BaseTest {
 
     @Test
     @Sql({"/data-aids.sql"})
+    public void TestSearchTextWildcardUA() {
+
+        hibernateSearchConfig.reindex(Aid.class);
+        var searchVal = "Хон";
+        var result = aidTextSearch.searchWildcard(Aid.class, "name", searchVal.toLowerCase() + "*");
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    @Sql({"/data-aids.sql"})
     public void TestSearchSpatial() {
 
         hibernateSearchConfig.reindex(Aid.class);
         var result = aidSpatialSearch.search(Aid.class, 100, 11.125, 12.365);
 
-        assertEquals(5, result.size());
+        assertEquals(3, result.size());
     }
 
     @Test
