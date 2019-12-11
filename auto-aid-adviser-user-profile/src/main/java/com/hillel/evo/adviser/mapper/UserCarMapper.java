@@ -14,6 +14,9 @@ public interface UserCarMapper {
 
     @Mapping(target = "simpleUser", source = "user")
     @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "releaseYear", source = "dto.releaseYear")
+    @Mapping(target = "individualCarNaming", source = "dto.individualCarNaming")
+    @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "brand", source = "dto.brand")
     @Mapping(target = "motorType", source = "dto.motorType")
     @Mapping(target = "typeCar", source = "dto.typeCar")

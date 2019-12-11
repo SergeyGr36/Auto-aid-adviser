@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @ExtendWith(SpringExtension.class)
 @Sql(value = {"/user-profile.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-user-profile.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class UserCarMapperTest {
+public class UserCarMapperImplTest {
 
     @Autowired
     SimpleUserRepository repository;

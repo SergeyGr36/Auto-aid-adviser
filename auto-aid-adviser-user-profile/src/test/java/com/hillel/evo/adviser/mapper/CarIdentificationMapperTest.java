@@ -2,9 +2,11 @@ package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.UserProfileStarter;
 import com.hillel.evo.adviser.dto.CarBrandDto;
+import com.hillel.evo.adviser.dto.FuelTypeDto;
 import com.hillel.evo.adviser.dto.MotorTypeDto;
 import com.hillel.evo.adviser.dto.TypeCarDto;
 import com.hillel.evo.adviser.entity.CarBrand;
+import com.hillel.evo.adviser.entity.FuelType;
 import com.hillel.evo.adviser.entity.MotorType;
 import com.hillel.evo.adviser.entity.TypeCar;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,10 @@ public class CarIdentificationMapperTest {
         assertNull(carMapper.toDto((MotorType) null));
     }
     @Test
+    public void whenFuelTypeNullReturnNull(){
+        assertNull(carMapper.toDto((FuelType) null));
+    }
+    @Test
     public void whenSetMotorTypeThenReturnDto(){
         MotorType motorType = new MotorType(1L, "mechanic");
         MotorTypeDto dto = carMapper.toDto(motorType);
@@ -53,6 +59,12 @@ public class CarIdentificationMapperTest {
         CarBrandDto dto = carMapper.toDto(car);
         assertEquals(dto.getName(), car.getName());
     }
+    @Test
+    public void whenSetFuelTypeThenReturnDto() {
+        FuelType fuelType = new FuelType(2L, "gas");
+        FuelTypeDto dto = carMapper.toDto(fuelType);
+        assertEquals(dto.getName(), fuelType.getName());
+    }
 //    to entity
 @Test
 public void whenMotorTypeDtoNullReturnNull(){
@@ -65,6 +77,10 @@ public void whenMotorTypeDtoNullReturnNull(){
     @Test
     public void whenCarBrandDtoNullReturnNull(){
         assertNull(carMapper.toEntity((CarBrandDto) null));
+    }
+    @Test
+    public void whenFuelTypeDtoNullReturnNull(){
+        assertNull(carMapper.toEntity((FuelTypeDto) null));
     }
 @Test
 public void whenSetTypeCarDtoThenReturnEntity(){
@@ -83,5 +99,11 @@ public void whenSetTypeCarDtoThenReturnEntity(){
         MotorTypeDto dto = new MotorTypeDto(1L, "mechanic");
         MotorType motorType = carMapper.toEntity(dto);
         assertEquals(motorType.getName(), dto.getName());
+    }
+    @Test
+    public void whenSetFuelTypeDtoThenReturnEntity(){
+        FuelTypeDto dto = new FuelTypeDto(1L, "gas");
+        FuelType fuelType = carMapper.toEntity(dto);
+        assertEquals(fuelType.getName(), dto.getName());
     }
 }

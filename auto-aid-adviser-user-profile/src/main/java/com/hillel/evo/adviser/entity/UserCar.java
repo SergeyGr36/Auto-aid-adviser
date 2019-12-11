@@ -22,7 +22,9 @@ public class UserCar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Integer releaseYear;
+    private String individualCarNaming;
+    private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     private SimpleUser simpleUser;
 
@@ -38,10 +40,15 @@ public class UserCar {
     @JoinColumn(name = "car_type_id")
     private TypeCar typeCar;
 
-    public UserCar(SimpleUser simpleUser, CarBrand brand, MotorType motorType, TypeCar typeCar) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fuel_type_id")
+    private FuelType fuelType;
+
+    public UserCar(SimpleUser simpleUser, CarBrand brand, MotorType motorType, TypeCar typeCar, FuelType fuelType) {
         this.simpleUser = simpleUser;
         this.brand = brand;
         this.motorType = motorType;
         this.typeCar = typeCar;
+        this.fuelType = fuelType;
     }
 }
