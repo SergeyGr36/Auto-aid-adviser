@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.LocationDto;
@@ -26,10 +27,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +38,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -70,9 +71,6 @@ public class BusinessServiceImplTest {
     MultipartFile goodFile;
     MultipartFile badFile;
 
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
-
     @BeforeEach
     private void init() throws Exception {
         goodFile = getGoodMultipartFile();
@@ -82,6 +80,7 @@ public class BusinessServiceImplTest {
         when(mockCloudImageService.hasDeletedFile(any())).thenReturn(true);
         when(mockCloudImageService.hasUploadedFile(any(), eq(goodFile))).thenReturn(true);
         when(mockCloudImageService.hasUploadedFile(any(), eq(badFile))).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFileList(any(), any(List.class))).thenReturn(true);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
@@ -96,14 +95,19 @@ public class BusinessServiceImplTest {
     }
 
     @Test
-    public void whenCreateBusinessWithFileThenReturnDto() {
+    public void whenCreateBusinessWithListFilesThenReturnDto() {
         //when
-        Optional<MultipartFile> multipartFile = Optional.of(goodFile);
-        BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId, multipartFile);
+        List<MultipartFile> listFiles = new ArrayList<>();
+        listFiles.add(goodFile);
+        listFiles.add(goodFile);
+        listFiles.add(goodFile);
+        listFiles.add(goodFile);
+        BusinessDto saveDto = businessService.createBusiness(createTestDto(), userId, listFiles);
         //then
         assertNotNull(saveDto);
         assertEquals(2, saveDto.getServiceForBusinesses().size());
         assertEquals(6, saveDto.getWorkTimes().size());
+        assertEquals(listFiles.size(), businessService.findImagesByBusinessId(saveDto.getId()).size());
     }
 
     @Test
@@ -166,24 +170,31 @@ public class BusinessServiceImplTest {
     public void whenAddImageThenReturnImageDto() {
         //given
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(goodFile);
         //when
-        ImageDto imageDto = businessService.addImage(userId, sourceDto.getId(), goodFile);
+        List<ImageDto> listDto = businessService.addImages(userId, sourceDto.getId(), list);
         //then
-        assertEquals(imageDto.getOriginalFileName(), goodFile.getOriginalFilename());
+        assertEquals(listDto.get(0).getOriginalFileName(), goodFile.getOriginalFilename());
     }
 
     @Test
-    public void whenAddImageThenReturnNotFoundException() throws Exception {
+    public void whenAddImageThenReturnNotFoundException() {
+        //given
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(goodFile);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> businessService.addImage(userId, 99L, goodFile));
+        assertThrows(ResourceNotFoundException.class, () -> businessService.addImages(userId, 99L, list));
     }
 
     @Test
     public void whenAddImageThenReturnCreateResourceException() {
         //given
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(badFile);
         //then
-        assertThrows(CreateResourceException.class, () -> businessService.addImage(userId, sourceDto.getId(), badFile));
+        assertThrows(Exception.class, () -> businessService.addImages(userId, sourceDto.getId(), null));
     }
 
     @Test
@@ -192,7 +203,7 @@ public class BusinessServiceImplTest {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         ImageDto dto = businessService.findImagesByBusinessId(sourceDto.getId()).get(0);
         //then
-        assertTrue(businessService.deleteImage(userId, sourceDto.getId(), dto));
+        assertTrue(businessService.deleteImage(userId, sourceDto.getId(), dto.getId()));
     }
 
     @Test
@@ -201,7 +212,7 @@ public class BusinessServiceImplTest {
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
         ImageDto dto = businessService.findImagesByBusinessId(sourceDto.getId()).get(0);
         //then
-        assertThrows(ResourceNotFoundException.class, () -> businessService.deleteImage(99L, 99L, dto));
+        assertThrows(ResourceNotFoundException.class, () -> businessService.deleteImage(99L, 99L, dto.getId()));
     }
 
     @Test
@@ -212,6 +223,16 @@ public class BusinessServiceImplTest {
         List<ImageDto> images = businessService.findImagesByBusinessId(sourceDto.getId());
         //then
         assertEquals(1, images.size());
+    }
+
+    @Test
+    public void whenCreateTemplateBusinessThenReturnDto() {
+        //when
+        BusinessFullDto templateBusiness = businessService.createTemplateBusiness();
+        //then
+        assertNotNull(templateBusiness);
+        assertEquals(7, templateBusiness.getWorkTimes().size());
+        assertFalse(templateBusiness.getServiceForBusinesses().isEmpty());
     }
 
     private BusinessDto createTestDto() {
@@ -249,16 +270,6 @@ public class BusinessServiceImplTest {
 
         return dto;
     }
-
-/*
-    private MultipartFile getMultipartFile() throws IOException {
-        String name = "ny.jpg";
-        Path path = Paths.get("C:/Temp/" + name);
-        String contentType = MediaType.IMAGE_JPEG_VALUE;
-        byte[] content = Files.readAllBytes(path);
-        return new MockMultipartFile("file", name, contentType, content);
-    }
-*/
 
     private MultipartFile getGoodMultipartFile() {
         String contentType = MediaType.IMAGE_JPEG_VALUE;

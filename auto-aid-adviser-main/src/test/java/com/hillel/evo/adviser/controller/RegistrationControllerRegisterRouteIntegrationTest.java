@@ -7,17 +7,21 @@ import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.enums.RoleUser;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.service.EmailService;
 import com.hillel.evo.adviser.service.EncoderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,10 +54,16 @@ public class RegistrationControllerRegisterRouteIntegrationTest extends BaseTest
     @Autowired
     ObjectMapper objectMapper;
 
+    @MockBean
+    EmailService emailService;
+
+
     @BeforeEach
     public void setUp() {
         encodeTestUserPassword();
         registrationDto = createTestRegistrationDto();
+
+        when(emailService.sendMessage(any())).thenReturn(true);
     }
 
     @Test

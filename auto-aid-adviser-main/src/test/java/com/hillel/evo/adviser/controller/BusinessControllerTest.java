@@ -28,10 +28,15 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -97,6 +102,7 @@ public class BusinessControllerTest extends BaseTest {
         when(mockCloudImageService.hasDeletedFile(endsWith(".jpg"))).thenReturn(true);
         when(mockCloudImageService.hasDeletedFile(endsWith(".bad"))).thenReturn(false);
         when(mockCloudImageService.hasUploadedFile(any(), any())).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFileList(any(), any(List.class))).thenReturn(true);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
@@ -186,13 +192,15 @@ public class BusinessControllerTest extends BaseTest {
     }
 
     @Test
-    public void createBusinessWithFile() throws Exception {
+    public void createBusinessWithFiles() throws Exception {
         //given
         BusinessDto businessDto = createTestDto();
         //when
-        mockMvc.perform(MockMvcRequestBuilders.multipart(PATH_BUSINESSES)
-                    .file(getMultipartFile())
-                    .file(getPart(objectMapper.writeValueAsString(businessDto)))
+        MockMultipartHttpServletRequestBuilder multipart = MockMvcRequestBuilders.multipart(PATH_BUSINESSES);
+        mockMvc.perform(multipart
+                .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .file(getPart(objectMapper.writeValueAsString(businessDto)))
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
                 )
                 //then
@@ -257,7 +265,7 @@ public class BusinessControllerTest extends BaseTest {
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.originalFileName").value(multipartFile.getOriginalFilename()));
+                .andExpect(jsonPath("$[0].originalFileName").value(multipartFile.getOriginalFilename()));
     }
 
     @Test
@@ -267,10 +275,8 @@ public class BusinessControllerTest extends BaseTest {
         Business business = allBusinessByName.get(0);
         ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId()).get(0);
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(imagesDto)))
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{businessId}/images/{imageId}", business.getId(), imagesDto.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isOk());
     }
@@ -280,12 +286,9 @@ public class BusinessControllerTest extends BaseTest {
         //given
         List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
         Business business = allBusinessByName.get(0);
-        ImageDto imagesDto = businessService.findImagesByBusinessId(business.getId()).get(0);
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", 99L)
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(imagesDto)))
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{businessId}/images/{imageId}", business.getId(), 99L)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isNotFound());
     }
@@ -299,10 +302,8 @@ public class BusinessControllerTest extends BaseTest {
                 .stream().filter(dto -> dto.getOriginalFileName().endsWith(".bad"))
                 .findFirst().get();
         //when
-        mockMvc.perform(delete(PATH_BUSINESSES+"/{id}/images", business.getId())
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(imagesDto)))
+        mockMvc.perform(delete(PATH_BUSINESSES+"/{businessId}/images/{imageId}", business.getId(), imagesDto.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isBadRequest());
     }
@@ -338,7 +339,7 @@ public class BusinessControllerTest extends BaseTest {
         String name = "ny.jpg";
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = {11, 12, 13, 14, 15};
-        return new MockMultipartFile("file", name, contentType, content);
+        return new MockMultipartFile("files", name, contentType, content);
     }
 
     private MockMultipartFile getPart(String json) {
