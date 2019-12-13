@@ -4,15 +4,13 @@ import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Aid;
-import com.hillel.evo.adviser.service.SearchHelperService;
+import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,7 +22,7 @@ public class SearchTest extends BaseTest {
     private SpatialSearch<Aid> aidSpatialSearch;
     private CustomSearch<Aid> aidCustomSearch;
 
-    private SearchHelperService searchService;
+    private QueryGeneratorService searchService;
 
     @Autowired
     public void setAidTextSearch(TextSearch<Aid> aidTextSearch) {
@@ -42,7 +40,7 @@ public class SearchTest extends BaseTest {
     }
 
     @Autowired
-    public void setSearchService(SearchHelperService searchService) {
+    public void setSearchService(QueryGeneratorService searchService) {
         this.searchService = searchService;
     }
 
@@ -96,7 +94,7 @@ public class SearchTest extends BaseTest {
         hibernateSearchConfig.reindex(Aid.class);
         var result = aidSpatialSearch.search(Aid.class, 100, 11.125, 12.365);
 
-        assertEquals(10, result.size());
+        assertEquals(3, result.size());
     }
 
     @Test
