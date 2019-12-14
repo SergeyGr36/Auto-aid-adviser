@@ -4,6 +4,7 @@ package com.hillel.evo.adviser.controller;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.enums.RoleUser;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.search.QueryFactory;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,4 +82,18 @@ public class BusinessController {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();
     }
+    @Secured(ROLE_BUSINESS)
+    @GetMapping("/{value}")
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public QueryFactory findBusinessByServiceType(@Validated @RequestBody final Class clazz, String field, String value) {
+        return businessService.findBusinessByServiceType(clazz, field, value);
+    }
+
+    @Secured(ROLE_BUSINESS)
+    @GetMapping("/{value}")
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public QueryFactory findBusinessByLocation(@Validated @RequestBody Class clazz, double radius, double latitude, double longitude){
+        return businessService.findBusinessByLocation(clazz,radius,latitude,longitude);
+    }
+
 }

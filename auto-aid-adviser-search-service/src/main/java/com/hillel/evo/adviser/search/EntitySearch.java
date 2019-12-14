@@ -13,48 +13,15 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class EntitySearch<T> implements TextSearch<T>,  CustomSearch<T>, BusinessTypeTextSearch<T>, LocationTextSearch<T>, ServiceTypeTextSearch<T> {
+public class EntitySearch<T> implements TextSearch<T>,  CustomSearch<T>, SpatialSearch<T> {
 
     private transient SearchHelperService searchService;
-private ServiceTypeTextSearch<ServiceType>serviceType;
-private BusinessTypeTextSearch<BusinessType>businessType;
-private LocationTextSearch<Location>locationTextSearch;
+
 
 
     @Autowired
     public void setSearchService(SearchHelperService searchService) {
         this.searchService = searchService;
-    }
-@Autowired
-public void setServiceTypeTextSearch(ServiceTypeTextSearch<ServiceType> serviceType){
-    this.serviceType = serviceType;
-}
-    @Autowired
-    public void setBusinessTypeTextSearch(BusinessTypeTextSearch<BusinessType> businessType){
-        this.businessType = businessType;
-    }
-    @Autowired
-    public void setLocationTextSearch(LocationTextSearch<Location> locationTextSearch){
-        this.locationTextSearch = locationTextSearch;
-    }
-
-    @Override
-    public List<BusinessType> businessSearch(Class<T> clazz, String id, String name){
-        var query = searchService.getBusinessTypeQuery(clazz,name, id);
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
-        return jpaQuery.getResultList();
-    }
-    @Override
-    public List<ServiceType> serviceSearch(Class<T> clazz, String id, String name){
-        var query = searchService.getServiceTypeQuery(clazz,name, id);
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
-        return jpaQuery.getResultList();
-    }
-    @Override
-    public List<Location> searchLocation(Class<T> clazz, double radius, double longtitude, double latitude, String address){
-        var query = searchService.getSpatialQuery(clazz,radius,longtitude, latitude,address);
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
-        return jpaQuery.getResultList();
     }
 
 
@@ -73,12 +40,12 @@ public void setServiceTypeTextSearch(ServiceTypeTextSearch<ServiceType> serviceT
         return jpaQuery.getResultList();
     }
 
-   /* @Override
+    @Override
     public List<T> search(Class<T> clazz, double radius, double latitude, double longitude) {
         var query = searchService.getSpatialQuery(clazz, radius, latitude, longitude);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
         return jpaQuery.getResultList();
-    }*/
+    }
 
     @Override
     public List<T> search(Class<T> clazz, QueryFactory... queries) {
