@@ -120,14 +120,6 @@ project(':auto-aid-adviser-security') {
     }
 }
 
-project(':auto-aid-adviser-search-service') {
-    bootJar {
-        enabled = false
-    }
-    jar {
-        enabled = true
-    }
-}
 
 project(':auto-aid-adviser-websockets') {
     bootJar {
@@ -168,6 +160,18 @@ project(':auto-aid-adviser-business') {
         testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
     }
 }
+project(':auto-aid-adviser-search-service') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies{
+        implementation project(':auto-aid-adviser-business')
+    }
+}
+
 
 project(":auto-aid-adviser-image") {
     bootJar {

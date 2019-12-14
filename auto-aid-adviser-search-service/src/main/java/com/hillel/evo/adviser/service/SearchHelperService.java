@@ -20,6 +20,8 @@ public class SearchHelperService {
                 getFullTextEntityManager(entityManager);
     }
 
+
+
     public QueryBuilder getQueryBuilder(Class clazz) {
         return getFullTextEntityManager().getSearchFactory()
                 .buildQueryBuilder().forEntity(clazz).get();
@@ -46,9 +48,10 @@ public class SearchHelperService {
         return result;
     }
 
-    public QueryFactory getSpatialQuery(Class clazz, double radius, double latitude, double longitude) {
+    public QueryFactory getSpatialQuery(Class clazz, double radius, double latitude, double longitude,String address) {
         QueryFactory result = () -> getQueryBuilder(clazz)
                 .spatial()
+                .onField(address)
                 .within( radius, Unit.KM )
                 .ofLatitude( latitude )
                 .andLongitude( longitude )
@@ -56,4 +59,24 @@ public class SearchHelperService {
 
         return result;
     }
+
+    public QueryFactory getBusinessTypeQuery(Class clazz, String name, String id){
+        QueryFactory result = () -> getQueryBuilder(clazz)
+              .keyword()
+                .onField(name)
+                .matching(id)
+                .createQuery();
+         return  result;
+    }
+
+    public QueryFactory getServiceTypeQuery(Class clazz, String name, String id){
+        QueryFactory result = () -> getQueryBuilder(clazz)
+                .keyword()
+                .onField(name)
+                .matching(id)
+                .createQuery();
+        return  result;
+    }
+
+
 }
