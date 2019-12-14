@@ -7,7 +7,9 @@ import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
+import com.hillel.evo.adviser.search.QueryFactory;
 import com.hillel.evo.adviser.service.BusinessService;
+import com.hillel.evo.adviser.service.SearchHelperService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,12 @@ public class BusinessServiceImpl implements BusinessService {
     private transient final BusinessMapper mapper;
     private transient final BusinessRepository businessRepository;
     private transient final BusinessUserRepository userRepository;
-
-    public BusinessServiceImpl(BusinessMapper mapper, BusinessRepository businessRepository, BusinessUserRepository userRepository) {
+private transient final SearchHelperService searchHelperService;
+    public BusinessServiceImpl(BusinessMapper mapper, BusinessRepository businessRepository, BusinessUserRepository userRepository, SearchHelperService searchHelperService) {
         this.mapper = mapper;
         this.businessRepository = businessRepository;
         this.userRepository = userRepository;
+        this.searchHelperService = searchHelperService;
     }
 
     @Override
@@ -53,5 +56,14 @@ public class BusinessServiceImpl implements BusinessService {
         businessRepository.delete(businessRepository
                             .findByIdAndBusinessUserId(id, userId)
                             .orElseThrow(ResourceNotFoundException::new));
+    }
+    @Override
+    public QueryFactory findBusinessByServiceType(final Class clazz, final String field, final String value){
+        return searchHelperService.getTextWildcardQuery(clazz, field, value);
+
+    }
+    @Override
+    public QueryFactory findBusinessByLocation(Class clazz, double radius, double latitude, double longitude){
+        return searchHelperService.getSpatialQuery(clazz,radius,latitude,longitude);
     }
 }
