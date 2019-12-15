@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.entity;
+package com.hillel.evo.adviser.entity.identification;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("fuel_type")
 @NoArgsConstructor
-public class FuelType extends CarIdentification{
+public class FuelType extends CarIdentification {
     public FuelType(Long id, String name) {
         this.setId(id);
         this.setName(name);

@@ -1,5 +1,9 @@
 package com.hillel.evo.adviser.dto;
 
+import com.hillel.evo.adviser.dto.identification.CarBrandDto;
+import com.hillel.evo.adviser.dto.identification.FuelTypeDto;
+import com.hillel.evo.adviser.dto.identification.MotorTypeDto;
+import com.hillel.evo.adviser.dto.identification.TypeCarDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +13,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.Calendar;
 
 @Data
 @AllArgsConstructor

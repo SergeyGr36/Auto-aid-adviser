@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.controller;
 
 import com.hillel.evo.adviser.dto.UserCarDto;
+import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
 import com.hillel.evo.adviser.service.UserCarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,6 @@ public class UserProfileController {
     public ResponseEntity<List<UserCarDto>> getCarsByUser(Authentication authentication){
         return ResponseEntity.ok(service.getByUserId(getUserIdFromAuthentication(authentication)));
     }
-// todo rewrite service method
     @Secured(ROLE)
     @DeleteMapping("/cars/{id}")
     public ResponseEntity<String> deleteUserCar(@PathVariable Long id, Authentication authentication){
@@ -49,20 +49,26 @@ public class UserProfileController {
 
     @Secured(ROLE)
     @PostMapping("/cars")
-    public ResponseEntity<UserCarDto> createUserCar(@Valid @RequestBody final UserCarDto car, Authentication authentication){
+    public ResponseEntity<UserCarDto> createUserCar(@RequestBody final UserCarDto car, Authentication authentication){
         return ResponseEntity.ok(service.createUserCar(car, getUserIdFromAuthentication(authentication)));
     }
 
     @Secured(ROLE)
     @PutMapping("/cars/{id}")
-    public ResponseEntity<UserCarDto> updateUserCar(@PathVariable Long id, @Valid @RequestBody final UserCarDto car, Authentication authentication){
+    public ResponseEntity<UserCarDto> updateUserCar(@PathVariable Long id, @RequestBody final UserCarDto car, Authentication authentication){
             return ResponseEntity.ok(service.updateUserCar(car, getUserIdFromAuthentication(authentication)));
     }
 
+//    @Secured(ROLE)
+//    @GetMapping("/email")
+//    public ResponseEntity<String> getUsersEmail(Authentication authentication){
+//        SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
+//        Long userId = userDetails.getUserId();
+//        return ResponseEntity.ok(service.getUsersEmail(userId));
+//    }
     private Long getUserIdFromAuthentication(Authentication authentication) {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();
     }
-//    todo для картинок вертать url
-
+//    todo для картинок вертать url і удалить метод з емейлом
 }

@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.entity;
+package com.hillel.evo.adviser.entity.identification;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

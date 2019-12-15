@@ -14,21 +14,27 @@ insert into car_identification(type_ident, name) values
 ('motor_type', 'mechanic'),
 ('motor_type', 'automatic'),
 ('type_car', 'coupe'),
-('type_car', 'crossover');
+('type_car', 'crossover'),
+('fuel_type', 'gas'),
+('fuel_type', 'diesel');
 
-insert into user_car(brand_id, motor_type_id, simple_user_user_details_id, car_type_id) values
+insert into user_car(release_year, brand_id, motor_type_id, simple_user_user_details_id, car_type_id, fuel_type_id) values
 (
+ '1990',
  (select id from car_identification where name like 'Audi' and type_ident like 'car_brand'),
  (select id from car_identification where name like 'mechanic' and type_ident like 'motor_type'),
  (select user_details_id from simple_usr where first_name in('Vasya')),
- (select id from car_identification where name like 'coupe' and type_ident like 'type_car')
+ (select id from car_identification where name like 'coupe' and type_ident like 'type_car'),
+ (select id from car_identification where name like 'gas' and type_ident like 'fuel_type')
  ),
 
 (
+ '1985',
  (select id from car_identification where name like 'BMW' and type_ident like 'car_brand'),
  (select id from car_identification where name like 'automatic' and type_ident like 'motor_type'),
  (select user_details_id from simple_usr where first_name in('Katya')),
- (select id from car_identification where name like 'crossover' and type_ident like 'type_car')
+ (select id from car_identification where name like 'crossover' and type_ident like 'type_car'),
+ (select id from car_identification where name like 'diesel' and type_ident like 'fuel_type')
  );
 
 

@@ -1,11 +1,11 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.UserProfileStarter;
-import com.hillel.evo.adviser.dto.MotorTypeDto;
+import com.hillel.evo.adviser.dto.identification.MotorTypeDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
-import com.hillel.evo.adviser.entity.CarBrand;
+import com.hillel.evo.adviser.entity.identification.CarBrand;
 import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillel.evo.adviser.entity.TypeCar;
+import com.hillel.evo.adviser.entity.identification.TypeCar;
 import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import org.junit.jupiter.api.Assertions;

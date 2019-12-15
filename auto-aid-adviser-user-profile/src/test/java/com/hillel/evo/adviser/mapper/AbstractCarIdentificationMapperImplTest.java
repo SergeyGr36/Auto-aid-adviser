@@ -1,11 +1,11 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.UserProfileStarter;
-import com.hillel.evo.adviser.dto.CarIdentificationDto;
-import com.hillel.evo.adviser.entity.CarBrand;
-import com.hillel.evo.adviser.entity.CarIdentification;
-import com.hillel.evo.adviser.entity.MotorType;
-import com.hillel.evo.adviser.entity.TypeCar;
+import com.hillel.evo.adviser.dto.identification.CarIdentificationDto;
+import com.hillel.evo.adviser.entity.identification.CarBrand;
+import com.hillel.evo.adviser.entity.identification.CarIdentification;
+import com.hillel.evo.adviser.entity.identification.MotorType;
+import com.hillel.evo.adviser.entity.identification.TypeCar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

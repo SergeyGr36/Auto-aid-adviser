@@ -20,6 +20,8 @@ public interface UserCarMapper {
     @Mapping(target = "brand", source = "dto.brand")
     @Mapping(target = "motorType", source = "dto.motorType")
     @Mapping(target = "typeCar", source = "dto.typeCar")
+    @Mapping(target = "fuelType", source = "dto.fuelType")
+    @Mapping(target = "images", ignore = true)
     UserCar toCar(UserCarDto dto, SimpleUser user);
 
     UserCarDto toDto(UserCar car);

@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.entity;
+package com.hillel.evo.adviser.entity.identification;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,13 +8,13 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Data
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@DiscriminatorValue("car_brand")
-public class CarBrand extends CarIdentification {
+@DiscriminatorValue("motor_type")
+@NoArgsConstructor
+public class MotorType extends CarIdentification {
 
-    public CarBrand(Long id, String name) {
+    public MotorType(Long id, String name) {
         this.setId(id);
         this.setName(name);
     }

@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.dto;
+package com.hillel.evo.adviser.dto.identification;
 
 import lombok.Data;
 

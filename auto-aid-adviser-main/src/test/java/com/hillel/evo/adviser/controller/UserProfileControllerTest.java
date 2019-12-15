@@ -3,65 +3,43 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
-import com.hillel.evo.adviser.dto.CarBrandDto;
-import com.hillel.evo.adviser.dto.FuelTypeDto;
-import com.hillel.evo.adviser.dto.MotorTypeDto;
-import com.hillel.evo.adviser.dto.TypeCarDto;
+import com.hillel.evo.adviser.dto.identification.CarBrandDto;
+import com.hillel.evo.adviser.dto.identification.FuelTypeDto;
+import com.hillel.evo.adviser.dto.identification.MotorTypeDto;
+import com.hillel.evo.adviser.dto.identification.TypeCarDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
-import com.hillel.evo.adviser.entity.AdviserUserDetails;
-import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.repository.UserCarRepository;
-import com.hillel.evo.adviser.service.JwtService;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
 import com.hillel.evo.adviser.service.UserCarService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultHandler;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.HandlerResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MimeTypeUtils;
 
 import java.io.IOException;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -110,6 +88,7 @@ public class UserProfileControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(convertObjectToJsonBytes(givenCar));
         mockMvc.perform(builder)
+                .andDo((ResultHandler) service.createUserCar(givenCar, simpleUserId))
                 .andExpect(status().isOk())
                 .andReturn();
 //        ArgumentCaptor<UserCarDto> dtoCarCaptor = ArgumentCaptor.forClass(UserCarDto.class);
