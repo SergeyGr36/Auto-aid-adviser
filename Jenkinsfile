@@ -61,6 +61,6 @@ pipeline {
 }
 
 def getBranchName(branchParam) {
- def branchName = branchParam &: 'origin/master'
+ def branchName = branchParam ?: 'origin/master'
  return branchName.tokenize('/')[1].trim()
 }
