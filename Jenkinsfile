@@ -8,12 +8,8 @@ pipeline {
     }
     stage('Pull project from bitbucket'){
       steps{
-      
-      
-        println "1 Branch name:  ${env.BRANCH}"
-        println '2 Branch name:  ${env.BRANCH}'
-        
-        git branch: 'master',
+        println "${env.BRANCH ?: 'origin/marter'}"
+        git branch: "${env.BRANCH ?: 'origin/marter'}",
         //credentialsId: 'none',
         url: 'https://bitbucket.org/MichailZhurylo/auto-aid-adviser-back-end.git'
         }
