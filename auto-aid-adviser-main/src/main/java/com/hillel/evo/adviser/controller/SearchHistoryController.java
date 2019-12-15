@@ -32,18 +32,6 @@ public class SearchHistoryController {
         return new ResponseEntity<>(searchHistoryService.getAllHistory(userId), HttpStatus.OK);
     }
 
-    @Secured("ROLE_USER")
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<HistoryPointDto> saveHistoryPoint(
-            @Valid @RequestBody HistoryPointDto historyPoint, Authentication authentication) {
-        Long userId = getUserFromAuthentication(authentication);
-        if (userId == historyPoint.getUserId()) {
-            return new ResponseEntity<>(checkHistoryInDatabaseService.checkHistory(historyPoint), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-    }
-
     private Long getUserFromAuthentication(Authentication authentication) {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();

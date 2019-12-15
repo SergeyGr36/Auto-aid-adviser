@@ -2,15 +2,20 @@ package com.hillel.evo.adviser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
-import com.hillel.evo.adviser.dto.HistoryLocationDto;
+import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.dto.HistoryPointDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.HistoryPoint;
+import com.hillel.evo.adviser.mapper.HistoryBusinessMapper;
 import com.hillel.evo.adviser.mapper.SearchHistoryMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.repository.SearchHistoryRepo;
+import com.hillel.evo.adviser.service.CheckHistoryInDatabaseService;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
+import com.hillel.evo.adviser.service.SearchHistoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +25,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,51 +35,64 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/clean-user.sql", "/create-user2.sql"},
+@Sql(value = {"/create-user2.sql", "/create-business.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(statements = {"TRUNCATE TABLE history_point"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
+@Sql(value = {"/clean-image.sql", "/clean-history.sql", "/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class SearchHistoryControllerTest {
     private static final String PATH_HISTORY = "/api/user/history";
-    private static final String BUSINESS_EMAIL = "svg@mail.com";
-
-
-    private AdviserUserDetails user;
-    private String jwt;
-    private HistoryPointDto historyPointDto;
-    private HistoryPoint historyPoint;
-
+    private static final String BUSINESS_EMAIL = "bvg@mail.com";
+    private static final String USER_EMAIL="svg@mail.com";
     @Autowired
     private AdviserUserDetailRepository userRepository;
-
     @Autowired
     EncoderService encoderService;
-
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private SearchHistoryRepo historyRepo;
-
     @Autowired
-    ObjectMapper objectMapper;
-
+    private ObjectMapper objectMapper;
     @Autowired
-    SearchHistoryMapper searchHistoryMapper;
-
+    private SearchHistoryMapper searchHistoryMapper;
     @Autowired
-    JwtService jwtService;
+    private JwtService jwtService;
+    @Autowired
+    private SearchHistoryService searchHistoryService;
+    @Autowired
+    private CheckHistoryInDatabaseService checkHistoryInDatabaseService;
+    @Autowired
+    private AdviserUserDetailRepository repository;
+    @Autowired
+    private BusinessRepository businessRepository;
+    @Autowired
+    private HistoryBusinessMapper historyBusinessMapper;
+    @Autowired
+    private SearchHistoryMapper historyMapper;
+
+    public static HistoryPointDto historyPointDto;
+    private static HistoryPoint historyPoint;
+    public static BusinessShortDto businessShortDto;
+    public static List<BusinessShortDto> businessShortDtoList;
+    public static List<Business> businessList;
+    private AdviserUserDetails user;
+    private AdviserUserDetails businessUser;
+    private String jwt;
 
     @BeforeEach
     public void init() {
         encodeTestUserPassword();
-        user = userRepository.findByEmail(BUSINESS_EMAIL).get();
+        user = userRepository.findByEmail(USER_EMAIL).get();
+        businessUser = userRepository.findByEmail(BUSINESS_EMAIL).get();
         jwt = jwtService.generateAccessToken(user.getId());
 
-        historyPoint = historyRepo.save(searchHistoryMapper.toEntity(new HistoryPointDto(user.getId(), LocalDateTime.now(),
-                new HistoryLocationDto(100.1, 101.5), 2L)));
-        historyPointDto = searchHistoryMapper.toDto(historyPoint);
+        businessList = businessRepository.findAllByBusinessUserId(businessUser.getId());
+        businessShortDtoList = historyBusinessMapper.toBusinessShortDtoList(businessList);
+        businessShortDto = businessShortDtoList.get(0);
+
+        historyPointDto = searchHistoryService.saveHistoryPoint(
+                new HistoryPointDto(user.getId(), businessShortDtoList, LocalDateTime.now()));
+
     }
 
     private void encodeTestUserPassword() {
@@ -92,32 +109,5 @@ public class SearchHistoryControllerTest {
 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].userId").value(historyPointDto.getUserId()));
-    }
-
-    @Test
-    public void saveHistoryPoint() throws Exception {
-        mockMvc.perform(post(PATH_HISTORY)
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(historyPointDto)))
-
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(historyPointDto.getId()))
-                .andExpect(jsonPath("$.userId").value(historyPointDto.getUserId()))
-                .andExpect(jsonPath("$.location").value(historyPointDto.getLocation()))
-                .andExpect(jsonPath("$.serviceId").value(historyPointDto.getServiceId()));
-
-    }
-
-    @Test
-    public void whenClientIdNotEqualsSendIdReturnBadRequest() throws Exception {
-        HistoryPointDto historyPointDtoWithAnotherId = new HistoryPointDto(10L, LocalDateTime.now(),
-                new HistoryLocationDto(100.1, 101.5), 2L);
-
-        mockMvc.perform(post(PATH_HISTORY)
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(historyPointDtoWithAnotherId)))
-                .andExpect(status().isForbidden());
     }
 }

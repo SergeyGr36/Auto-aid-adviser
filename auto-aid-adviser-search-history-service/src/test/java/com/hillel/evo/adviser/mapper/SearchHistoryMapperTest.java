@@ -2,18 +2,20 @@ package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SearchHistoryApplication;
-import com.hillel.evo.adviser.dto.HistoryLocationDto;
+import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.dto.HistoryPointDto;
-import com.hillel.evo.adviser.entity.HistoryLocation;
 import com.hillel.evo.adviser.entity.HistoryPoint;
+import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.repository.BusinessRepository;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +25,34 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SearchHistoryApplication.class})
+@RequiredArgsConstructor
+@Sql(value = {"/create-user.sql", "/create-business.sql", "/create-image.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class SearchHistoryMapperTest extends BaseTest {
 
     @Autowired
-    SearchHistoryMapperImpl historyPointMapper;
+    private SearchHistoryMapperImpl historyPointMapper;
+    @Autowired
+    private AdviserUserDetailRepository repository;
+    @Autowired
+    private BusinessRepository businessRepository;
+    @Autowired
+    private HistoryBusinessMapper historyBusinessMapper;
 
-    public static HistoryPointDto historyPointDto = new HistoryPointDto(2L, 1L, LocalDateTime.now(), new HistoryLocationDto(100.5, 99.12), 2L);
-    public static HistoryPoint historyPoint = new HistoryPoint(2L, 1L, historyPointDto.getSearchDate(), new HistoryLocation(100.5, 99.12), 2L);
+    public static List<BusinessShortDto> businessDtoList;
+    public static HistoryPointDto historyPointDto;
+    public static HistoryPoint historyPoint;
+    public static Long userId;
 
+    @BeforeEach
+    public void init() {
+        userId = repository.findByEmail("bvg@mail.com").get().getId();
+        businessDtoList = historyBusinessMapper.toBusinessShortDtoList(businessRepository.findAllByBusinessUserId(userId));
+        historyPointDto = new HistoryPointDto(2L, 1L, businessDtoList, LocalDateTime.now());
+        historyPoint = historyPointMapper.toEntity(historyPointDto);
+    }
 
     @Test
     public void whenUseToDtoThanReturnDto() {
@@ -62,9 +84,8 @@ public class SearchHistoryMapperTest extends BaseTest {
 
         assertNull(emptyHistoryPointDto.getId());
         assertNull(emptyHistoryPointDto.getUserId());
-        assertNull(emptyHistoryPointDto.getLocation());
+        assertNull(emptyHistoryPointDto.getBusinessDto());
         assertNull(emptyHistoryPointDto.getSearchDate());
-        assertNull(emptyHistoryPointDto.getServiceId());
     }
 
     @Test
@@ -74,9 +95,9 @@ public class SearchHistoryMapperTest extends BaseTest {
 
         assertNull(emptyHistoryPoint.getId());
         assertNull(emptyHistoryPoint.getUserId());
-        assertNull(emptyHistoryPoint.getLocation());
+        assertNull(emptyHistoryPoint.getBusiness());
         assertNull(emptyHistoryPoint.getSearchDate());
-        assertNull(emptyHistoryPoint.getServiceId());
+
     }
 
     @Test
@@ -98,7 +119,7 @@ public class SearchHistoryMapperTest extends BaseTest {
 
     @Test
     public void whenHistoryPointListNullThanReturnNull() {
-        List<HistoryPoint> list=null;
+        List<HistoryPoint> list = null;
         assertNull(historyPointMapper.toDtoList(list));
     }
 }
