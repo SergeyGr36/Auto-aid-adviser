@@ -10,8 +10,8 @@ pipeline {
       steps{
       
       
-        sh "1 Branch name:  {env.BRANCH}"
-        sh '2 Branch name:  {env.BRANCH}'
+        println "1 Branch name:  {env.BRANCH}"
+        println '2 Branch name:  {env.BRANCH}'
         
         git branch: 'master',
         //credentialsId: 'none',
