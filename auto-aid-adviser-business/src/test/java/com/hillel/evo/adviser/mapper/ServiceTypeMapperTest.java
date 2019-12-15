@@ -22,7 +22,7 @@ import java.util.List;
 public class ServiceTypeMapperTest {
 
     @Autowired
-    ServiceTypeMapperImpl mapper;
+    ServiceTypeMapper mapper;
 
     @Test
     public void whenToDto_SetNull_ReturnNull() {
