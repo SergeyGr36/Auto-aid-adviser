@@ -8,8 +8,8 @@ pipeline {
     }
     stage('Pull project from bitbucket'){
       steps{
-        println getBranchName({env.BRANCH)
-        git branch: getBranchName({env.BRANCH),
+        println getBranchName(env.BRANCH)
+        git branch: getBranchName(env.BRANCH),
         //credentialsId: 'none',
         url: 'https://bitbucket.org/MichailZhurylo/auto-aid-adviser-back-end.git'
         }
