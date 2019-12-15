@@ -16,6 +16,7 @@ import java.util.List;
                 BusinessTypeMapper.class,
                 ServiceTypeMapper.class,
                 WorkTimeMapper.class})
+@SuppressWarnings("PMD")
 public interface BusinessMapper {
 
     BusinessDto toDto(Business business);

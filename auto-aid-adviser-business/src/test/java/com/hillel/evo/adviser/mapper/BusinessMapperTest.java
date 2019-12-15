@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class BusinessMapperTest {
 
     @Autowired
-    BusinessMapperImpl businessMapper;
+    BusinessMapper businessMapper;
 
     @Autowired
     BusinessUserRepository businessUserRepository;
