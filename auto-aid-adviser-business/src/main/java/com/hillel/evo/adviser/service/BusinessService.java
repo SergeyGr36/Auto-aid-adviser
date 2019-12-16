@@ -7,7 +7,6 @@ import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BusinessService {
     BusinessDto createBusiness(BusinessDto dto, Long userId);

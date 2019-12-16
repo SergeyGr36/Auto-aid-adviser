@@ -11,6 +11,7 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {ServiceTypeMapper.class})
 public interface ServiceForBusinessMapper {
+
     ServiceForBusiness toEntity(ServiceForBusinessDto serviceForBusinessDto);
     ServiceForBusinessDto toDto(ServiceForBusiness businessService);
     Set<ServiceForBusinessDto> toDto (Set<ServiceForBusiness> serviceForBusinesses);
