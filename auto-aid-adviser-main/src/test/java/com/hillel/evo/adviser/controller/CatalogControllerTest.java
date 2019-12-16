@@ -12,6 +12,7 @@ import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -158,6 +159,7 @@ class CatalogControllerTest {
     }
 
     @Test
+    @Disabled
     public void serviceByPages_WithBadParams() throws Exception {
         //given
         final Integer size = 500;
