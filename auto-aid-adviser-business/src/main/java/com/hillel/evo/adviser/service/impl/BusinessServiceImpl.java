@@ -1,11 +1,16 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
+import com.hillel.evo.adviser.entity.Contact;
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.entity.Location;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
+import com.hillel.evo.adviser.entity.WorkTime;
 import com.hillel.evo.adviser.exception.CreateResourceException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
@@ -21,8 +26,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -50,16 +62,18 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public BusinessDto createBusiness(final BusinessDto dto, Long userId) {
-        return createBusiness(dto, userId, Optional.empty());
+        return createBusiness(dto, userId, new ArrayList<>());
     }
 
     @Override
     @Transactional
-    public BusinessDto createBusiness(final BusinessDto dto, Long userId, Optional<MultipartFile> file) {
+    public BusinessDto createBusiness(BusinessDto dto, Long userId, List<MultipartFile> files) {
         BusinessUser user = userRepository.getOne(userId);
         Business business = businessRepository.save(mapper.toEntity(dto, user));
-        Optional<Image> image = file.flatMap((f) -> imageService.create(userId, business.getId(), f));
-        image.ifPresent(business.getImages()::add);
+        List<Image> images = imageService.create(userId, business.getId(), files)
+                .orElseThrow(() -> new CreateResourceException("Image not saved"));
+        business.getImages().addAll(images);
+
         return mapper.toDto(business);
     }
 
@@ -101,20 +115,43 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     @Transactional
-    public ImageDto addImage(Long userId, Long businessId, MultipartFile file) {
+    public List<ImageDto> addImages(@NotNull Long userId, @NotNull Long businessId, @NotEmpty List<MultipartFile> files) {
         Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
-        Image image = imageService.create(userId, businessId, file)
+        List<Image> imageList = imageService.create(userId, businessId, files)
                 .orElseThrow(() -> new CreateResourceException("Image not saved"));
-        business.getImages().add(image);
+        business.getImages().addAll(imageList);
         businessRepository.save(business);
-        return imageMapper.toDto(image);
+        return imageMapper.toListDto(imageList);
     }
 
     @Override
-    public boolean deleteImage(Long userId, Long businessId, ImageDto dto) {
-        Image image = businessRepository.findImageByBusinessUserIdAndBusinessIdAndImageId(userId, businessId, dto.getId())
+    public boolean deleteImage(@NotNull Long userId, @NotNull Long businessId, @NotNull Long imageId) {
+        Image image = businessRepository.findImageByBusinessUserIdAndBusinessIdAndImageId(userId, businessId, imageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
         return imageService.delete(image);
+    }
+
+    @Override
+    public BusinessFullDto createTemplateBusiness() {
+        Business business = new Business();
+        business.setLocation(new Location());
+        business.setContact(new Contact());
+        business.setWorkTimes(getTemplateWorkTime());
+        business.setServiceForBusinesses(getAllServices());
+        return mapper.toFullDto(business);
+    }
+
+    private Set<ServiceForBusiness> getAllServices() {
+        Set<ServiceForBusiness> set = serviceForBusinessRepository.getFetchAll();
+        return set;
+    }
+
+    private Set<WorkTime> getTemplateWorkTime() {
+        Set<WorkTime> set = new HashSet();
+        Arrays.asList(DayOfWeek.values()).forEach(
+                dayOfWeek -> set.add(new WorkTime(dayOfWeek, LocalTime.MIN, LocalTime.MAX))
+        );
+        return set;
     }
 }

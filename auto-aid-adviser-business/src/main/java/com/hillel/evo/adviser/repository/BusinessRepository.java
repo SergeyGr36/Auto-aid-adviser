@@ -2,9 +2,7 @@ package com.hillel.evo.adviser.repository;
 
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.Image;
-import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

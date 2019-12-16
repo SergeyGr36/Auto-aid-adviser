@@ -3,7 +3,6 @@ package com.hillel.evo.adviser.repository;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ServiceForBusinessRepository extends JpaRepository<ServiceForBusiness, Long> {
@@ -27,4 +27,7 @@ public interface ServiceForBusinessRepository extends JpaRepository<ServiceForBu
 
     @Query("select b.serviceForBusinesses from Business b where b.id = :businessId and b.businessUser.id = :userId")
     List<ServiceForBusiness> findServicesByBusinessIdAndBusinessUserId(Long businessId, Long userId);
+
+    @Query("select sb from ServiceForBusiness sb join fetch sb.serviceType st join fetch st.businessType")
+    Set<ServiceForBusiness> getFetchAll();
 }

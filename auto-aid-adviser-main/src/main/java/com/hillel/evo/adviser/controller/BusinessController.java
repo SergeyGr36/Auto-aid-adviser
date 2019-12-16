@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.service.BusinessService;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,10 +77,10 @@ public class BusinessController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
                  produces = {MediaType.APPLICATION_JSON_VALUE})
     public BusinessDto createBusiness(@RequestPart(name = "json") @Validated final BusinessDto businessDTO,
-                                      @RequestPart(name = "file", required = false) Optional<MultipartFile> file,
+                                      @RequestPart(name = "files") List<MultipartFile> files,
                                       Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        return businessService.createBusiness(businessDTO, userId, file);
+        return businessService.createBusiness(businessDTO, userId, files);
     }
 
     @Secured(ROLE_BUSINESS)
@@ -108,24 +110,30 @@ public class BusinessController {
     @Secured(ROLE_BUSINESS)
     @PostMapping("/{id}/images")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ImageDto addImageToBusiness(@PathVariable("id") Long businessId,
-                                       @RequestPart("file") MultipartFile file,
+    public List<ImageDto> addImageToBusiness(@PathVariable("id") Long businessId,
+                                       @RequestPart("files") List<MultipartFile> files,
                                        Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        return businessService.addImage(userId, businessId, file);
+        return businessService.addImages(userId, businessId, files);
     }
 
     @Secured(ROLE_BUSINESS)
-    @DeleteMapping("/{id}/images")
-    public ResponseEntity<String> deleteImageFromBusiness(@PathVariable("id") Long businessId,
-                                                          @RequestBody @Validated ImageDto dto,
+    @DeleteMapping("/{businessId}/images/{imageId}")
+    public ResponseEntity<String> deleteImageFromBusiness(@PathVariable("businessId") Long businessId,
+                                                          @PathVariable("imageId") Long imageId,
                                                           Authentication authentication) {
         Long userId = getUserFromAuthentication(authentication);
-        if(businessService.deleteImage(userId, businessId, dto)) {
+        if(businessService.deleteImage(userId, businessId, imageId)) {
             return new ResponseEntity<>("The deleted image is successful", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to delete image", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Secured(ROLE_BUSINESS)
+    @GetMapping("/templates")
+    public BusinessFullDto getTemplateBusiness() {
+        return businessService.createTemplateBusiness();
     }
 
     private Long getUserFromAuthentication(Authentication authentication) {
