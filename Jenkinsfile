@@ -8,7 +8,8 @@ pipeline {
     }
     stage('Pull project from bitbucket'){
       steps{
-        git branch: 'master',
+        println getBranchName(env.BRANCH)
+        git branch: getBranchName(env.BRANCH),
         //credentialsId: 'none',
         url: 'https://bitbucket.org/MichailZhurylo/auto-aid-adviser-back-end.git'
         }
@@ -57,4 +58,9 @@ pipeline {
                        channel: 'auto-aid-adviser-backend')
         }
     }
+}
+
+def getBranchName(branchParam) {
+ def branchName = branchParam ?: 'origin/master'
+ return branchName.tokenize('/')[1].trim()
 }
