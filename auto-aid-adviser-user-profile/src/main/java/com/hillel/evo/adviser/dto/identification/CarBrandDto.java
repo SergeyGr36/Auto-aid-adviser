@@ -13,4 +13,6 @@ public class CarBrandDto {
     private Long id;
     @NotNull
     private String name;
+
+    private TypeCarDto typeCar;
 }

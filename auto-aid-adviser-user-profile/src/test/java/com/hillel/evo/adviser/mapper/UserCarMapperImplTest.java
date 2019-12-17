@@ -1,10 +1,13 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.UserProfileStarter;
-import com.hillel.evo.adviser.dto.identification.MotorTypeDto;
+import com.hillel.evo.adviser.dto.identification.CarBrandDto;
+import com.hillel.evo.adviser.dto.identification.CarModelDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
+import com.hillel.evo.adviser.dto.identification.TypeCarDto;
 import com.hillel.evo.adviser.entity.identification.CarBrand;
 import com.hillel.evo.adviser.entity.SimpleUser;
+import com.hillel.evo.adviser.entity.identification.CarModel;
 import com.hillel.evo.adviser.entity.identification.TypeCar;
 import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
@@ -17,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,21 +45,23 @@ public class UserCarMapperImplTest {
 
     @Test
     public void whenToDtoSetEntityReturnDto() {
-        UserCar car = new UserCar();
-        car.setBrand(new CarBrand(1L, "Audi"));
+        UserCar car = getTestUserCar();
         UserCarDto dto = mapper.toDto(car);
-        assertEquals(car.getBrand().getName(), dto.getBrand().getName());
+        assertEquals(car.getCarModel().getName(), dto.getCarModel().getName());
     }
 
     //    to dto list
     @Test
     public void WhenSetListThenReturnDto() {
-        UserCar car = new UserCar();
-        car.setTypeCar(new TypeCar(1L, "coupe"));
+        //given
+        UserCar car = getTestUserCar();
         List<UserCar> userCars = new ArrayList<>();
         userCars.add(car);
+        //when
         List<UserCarDto> userCarDtos = mapper.toDtoList(userCars);
-        assertEquals(userCarDtos.get(0).getTypeCar().getName(), userCars.get(0).getTypeCar().getName());
+        //then
+        assertEquals(userCars.size(), userCarDtos.size());
+        assertEquals(userCars.get(0).getCarModel().getName(), userCarDtos.get(0).getCarModel().getName());
     }
 
     @Test
@@ -71,10 +77,9 @@ public class UserCarMapperImplTest {
 
     @Test
     public void whenSetDtoCarThenReturnEntity() {
-        UserCarDto dto = new UserCarDto();
-        dto.setMotorType(new MotorTypeDto(2L, "Audi"));
+        UserCarDto dto = getTestUserCarDto();
         UserCar car = mapper.toCar(dto, new SimpleUser());
-        assertEquals(dto.getMotorType().getName(), car.getMotorType().getName());
+        assertEquals(dto.getCarModel().getName(), car.getCarModel().getName());
     }
 
     @Test
@@ -88,10 +93,30 @@ public class UserCarMapperImplTest {
     @Test
     public void whenSetFullDtoThenReturnEntity() {
         SimpleUser user = repository.findAll().get(0);
-        UserCarDto dto = new UserCarDto();
-        dto.setMotorType(new MotorTypeDto(2L, "Audi"));
+        UserCarDto dto = getTestUserCarDto();
         UserCar car = mapper.toCar(dto, user);
         assertEquals(user.getLastName(), car.getSimpleUser().getLastName());
     }
 
+    private UserCar getTestUserCar() {
+        TypeCar typeCar = new TypeCar(1L, "TestType");
+        CarBrand carBrand = new CarBrand(2L, "TestBrand", typeCar);
+        CarModel carModel = new CarModel(3L, "TestModel", carBrand);
+        SimpleUser simpleUser = new SimpleUser();
+
+        UserCar car = new UserCar(99L, 2016, "AS123456", "some", simpleUser, carModel, new HashSet<>());
+
+        return car;
+    }
+
+    private UserCarDto getTestUserCarDto(){
+        TypeCarDto typeCar = new TypeCarDto(1L, "Легковой");
+        CarBrandDto carBrand = new CarBrandDto(2L, "Mersedes", typeCar);
+        CarModelDto carModel = new CarModelDto(3L, "C-class", carBrand);
+
+        UserCarDto car = new UserCarDto();
+        car.setCarModel(carModel);
+        car.setReleaseYear(2016);
+        return car;
+    }
 }

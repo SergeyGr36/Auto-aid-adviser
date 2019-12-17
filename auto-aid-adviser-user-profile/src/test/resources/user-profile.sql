@@ -8,33 +8,25 @@ insert into simple_usr(first_name, last_name, user_details_id) values
 ('Vasya', 'Gogy', (select id from adviser_usr where email like 'svg@mail.com')),
 ('Katya', 'Cat', (select id from adviser_usr where email like 'skc@mail.com'));
 
-insert into car_identification(type_ident, name) values
-('car_brand', 'Audi'),
-('car_brand', 'BMW'),
-('motor_type', 'mechanic'),
-('motor_type', 'automatic'),
-('type_car', 'coupe'),
-('type_car', 'crossover'),
-('fuel_type', 'gas'),
-('fuel_type', 'diesel');
+insert into car_identification(type_ident, name, parent_id) values
+('type_car', 'coupe', null),
+('type_car', 'crossover', null),
+('car_brand', 'Audi', (select id from car_identification where name like 'coupe')),
+('car_brand', 'BMW', (select id from car_identification where name like 'coupe')),
+('car_model', 'X5', (select id from car_identification where name like 'BMW')),
+('car_model', 'M5', (select id from car_identification where name like 'BMW'));
 
-insert into user_car(release_year, brand_id, motor_type_id, simple_user_user_details_id, car_type_id, fuel_type_id) values
+insert into user_car(release_year, car_model_id, simple_user_user_details_id) values
 (
- '1990',
- (select id from car_identification where name like 'Audi' and type_ident like 'car_brand'),
- (select id from car_identification where name like 'mechanic' and type_ident like 'motor_type'),
- (select user_details_id from simple_usr where first_name in('Vasya')),
- (select id from car_identification where name like 'coupe' and type_ident like 'type_car'),
- (select id from car_identification where name like 'gas' and type_ident like 'fuel_type')
+ '2016',
+ (select id from car_identification where name like 'M5'),
+ (select user_details_id from simple_usr where first_name in('Vasya'))
  ),
 
 (
- '1985',
- (select id from car_identification where name like 'BMW' and type_ident like 'car_brand'),
- (select id from car_identification where name like 'automatic' and type_ident like 'motor_type'),
- (select user_details_id from simple_usr where first_name in('Katya')),
- (select id from car_identification where name like 'crossover' and type_ident like 'type_car'),
- (select id from car_identification where name like 'diesel' and type_ident like 'fuel_type')
- );
+    '2016',
+    (select id from car_identification where name like 'X5'),
+    (select user_details_id from simple_usr where first_name in('Vasya'))
+);
 
 

@@ -57,3 +57,8 @@ aws:
     expiresIn: 60000
     region: eu-east-1
     imageMaxSize: 200000
+
+frontend:
+  host: https://auto-aid-adviser.co.uk
+  router:
+    activation: /user/activation/

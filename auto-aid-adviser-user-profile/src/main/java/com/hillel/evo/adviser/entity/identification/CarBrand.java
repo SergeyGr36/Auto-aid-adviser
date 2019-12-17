@@ -12,10 +12,11 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @DiscriminatorValue("car_brand")
-public class CarBrand extends CarIdentification {
+public class CarBrand extends CarIdentification<TypeCar> {
 
-    public CarBrand(Long id, String name) {
+    public CarBrand(Long id, String name, TypeCar typeCar) {
         this.setId(id);
         this.setName(name);
+        this.setParent(typeCar);
     }
 }

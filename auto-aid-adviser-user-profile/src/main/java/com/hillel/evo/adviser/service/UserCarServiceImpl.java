@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
+import com.hillel.evo.adviser.entity.identification.CarModel;
 import com.hillel.evo.adviser.mapper.ImageMapper;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;

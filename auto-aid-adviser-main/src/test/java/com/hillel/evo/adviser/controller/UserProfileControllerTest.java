@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.identification.CarBrandDto;
 import com.hillel.evo.adviser.dto.identification.FuelTypeDto;
-import com.hillel.evo.adviser.dto.identification.MotorTypeDto;
+import com.hillel.evo.adviser.dto.identification.CarModelDto;
 import com.hillel.evo.adviser.dto.identification.TypeCarDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
@@ -101,13 +101,15 @@ public class UserProfileControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper.writeValueAsBytes(object);
     }
+
     private UserCarDto creatCar(){
-        givenCar = new UserCarDto();
-        givenCar.setFuelType(new FuelTypeDto());
-        givenCar.setMotorType(new MotorTypeDto());
-        givenCar.setTypeCar(new TypeCarDto());
-        givenCar.setReleaseYear(1956);
-        givenCar.setBrand(new CarBrandDto(1L, "Audi"));
-        return givenCar;
+        TypeCarDto typeCar = new TypeCarDto(1L, "Легковой");
+        CarBrandDto carBrand = new CarBrandDto(2L, "Mersedes", typeCar);
+        CarModelDto carModel = new CarModelDto(3L, "C-class", carBrand);
+
+        UserCarDto car = new UserCarDto();
+        car.setCarModel(carModel);
+        car.setReleaseYear(2016);
+        return car;
     }
 }

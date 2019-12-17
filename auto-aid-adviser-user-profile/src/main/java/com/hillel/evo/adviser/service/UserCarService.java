@@ -2,8 +2,11 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
-import com.hillel.evo.adviser.entity.UserCar;
+import com.hillel.evo.adviser.dto.identification.CarModelDto;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
+import com.hillel.evo.adviser.entity.identification.CarModel;
 
 import java.util.List;
 
@@ -17,4 +20,7 @@ public interface UserCarService {
     ImageDto addImage(Long userId, Long userCarId, MultipartFile file);
     boolean deleteImage(Long userId, Long userCarId, ImageDto dto);
 //    String getUsersEmail(Long id);
+
+    @Query("select cm from CarModel cm")
+    CarModelDto findCarModelByName(@Param("name") String name);
 }

@@ -12,8 +12,10 @@ import static org.mockito.Mockito.when;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.UserCar;
+import com.hillel.evo.adviser.entity.identification.CarModel;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
+import com.hillel.evo.adviser.repository.CarIdentificationRepo;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +51,9 @@ public class UserCarServiceImplTest {
     @Autowired
     private UserCarMapper mapper;
 
+    @Autowired
+    private CarIdentificationRepo carIdentificationRepo;
+
     @MockBean
     CloudImageService mockCloudImageService;
 
@@ -68,7 +73,10 @@ public class UserCarServiceImplTest {
 
     @Test
     public void whenCreateUserCarThenReturnDto(){
+        CarModel carModel = carIdentificationRepo.findByName("M5");
         UserCarDto newDto = new UserCarDto();
+        newDto.setCarModel(carModel);
+
         UserCarDto testDto = service.createUserCar(newDto, userId);
        assertNotNull(testDto.getId());
     }
@@ -117,4 +125,5 @@ public class UserCarServiceImplTest {
         byte[] content = {1, 2, 3, 4, 5};
         return new MockMultipartFile("file", "file.bad", contentType, content);
     }
+
 }
