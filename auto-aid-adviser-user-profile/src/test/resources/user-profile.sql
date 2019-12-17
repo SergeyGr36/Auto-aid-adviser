@@ -13,14 +13,15 @@ insert into car_identification(type_ident, name, parent_id) values
 ('type_car', 'crossover', null),
 ('car_brand', 'Audi', (select id from car_identification where name like 'coupe')),
 ('car_brand', 'BMW', (select id from car_identification where name like 'coupe')),
-('car_model', 'X5', (select id from car_identification where name like 'BMW')),
+('car_brand', 'BMW', (select id from car_identification where name like 'crossover')),
+('car_model', 'X5', (select id from car_identification where name like 'BMW' and like )),
 ('car_model', 'M5', (select id from car_identification where name like 'BMW'));
 
 insert into user_car(release_year, car_model_id, simple_user_user_details_id) values
 (
- '2016',
- (select id from car_identification where name like 'M5'),
- (select user_details_id from simple_usr where first_name in('Vasya'))
+     '2016',
+     (select id from car_identification where name like 'M5'),
+     (select user_details_id from simple_usr where first_name in('Vasya'))
  ),
 
 (

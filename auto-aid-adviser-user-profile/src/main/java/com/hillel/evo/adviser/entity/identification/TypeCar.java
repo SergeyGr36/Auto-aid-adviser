@@ -18,4 +18,8 @@ public class TypeCar extends CarIdentification {
         this.setId(id);
         this.setName(name);
     }
+
+    public TypeCar(String name) {
+        this.setName(name);
+    }
 }

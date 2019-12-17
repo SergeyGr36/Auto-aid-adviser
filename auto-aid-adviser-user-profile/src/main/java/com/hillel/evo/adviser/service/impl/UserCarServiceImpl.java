@@ -1,15 +1,15 @@
-package com.hillel.evo.adviser.service;
+package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
-import com.hillel.evo.adviser.entity.identification.CarModel;
 import com.hillel.evo.adviser.mapper.ImageMapper;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import com.hillel.evo.adviser.repository.UserCarRepository;
+import com.hillel.evo.adviser.service.UserCarService;
 import com.hillel.evo.adviser.service.interfaces.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,9 @@ import java.util.List;
 public class UserCarServiceImpl implements UserCarService {
 
     private transient final UserCarRepository repository;
+
     private transient final UserCarMapper mapper;
+
     private transient final SimpleUserRepository userRepository;
     private transient final ImageMapper imageMapper;
     private transient final ImageService imageService;
@@ -50,12 +52,11 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    @Transactional
     public UserCarDto createUserCar(UserCarDto car, Long userId) {
         SimpleUser simpleUser = userRepository.getOne(userId);
         UserCar userCar = mapper.toCar(car, simpleUser);
-        UserCar save = repository.save(userCar);
-        return mapper.toDto(save);
+        repository.save(userCar);
+        return mapper.toDto(userCar);
     }
 
     @Override

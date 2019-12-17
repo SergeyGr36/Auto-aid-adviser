@@ -15,7 +15,8 @@ import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.entity.identification.CarModel;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.repository.CarIdentificationRepo;
+import com.hillel.evo.adviser.repository.CarIdentificationRepository;
+import com.hillel.evo.adviser.service.impl.UserCarServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +53,7 @@ public class UserCarServiceImplTest {
     private UserCarMapper mapper;
 
     @Autowired
-    private CarIdentificationRepo carIdentificationRepo;
+    private CarIdentificationRepository carIdentificationRepo;
 
     @MockBean
     CloudImageService mockCloudImageService;
@@ -73,9 +74,9 @@ public class UserCarServiceImplTest {
 
     @Test
     public void whenCreateUserCarThenReturnDto(){
-        CarModel carModel = carIdentificationRepo.findByName("M5");
+        CarModel carModel = carIdentificationRepo.findCarModelByName("M5");
         UserCarDto newDto = new UserCarDto();
-        newDto.setCarModel(carModel);
+        //newDto.setCarModel(carModel);
 
         UserCarDto testDto = service.createUserCar(newDto, userId);
        assertNotNull(testDto.getId());

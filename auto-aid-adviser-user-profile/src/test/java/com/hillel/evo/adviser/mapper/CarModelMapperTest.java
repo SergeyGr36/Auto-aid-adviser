@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,20 +27,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CarModelMapperTest {
     @Autowired
     CarModelMapper carMapper;
-//    to dto
+
+    //    to dto
     @Test
-    public void whenCarBrandNullReturnNull(){
-        assertNull(carMapper.toDto((CarModel) null));
+    public void whenCarModelNullReturnNull(){
+        assertNull(carMapper.toDto( null));
     }
 
-/*
     @Test
-    public void whenSetTypeCarThenReturnDto(){
-        TypeCar typeCar = new TypeCar(1L, "coupe");
-        TypeCarDto dto = carMapper.toDto(typeCar);
-        assertEquals(typeCar.getName(), dto.getName());
+    public void whenListDtoNullReturnNull(){
+        assertNull(carMapper.toListDto( null));
     }
-*/
+
     @Test
     public void whenSetCarModelThenReturnDto() {
         CarModel carModel = getCarModel();
@@ -45,33 +46,41 @@ public class CarModelMapperTest {
         assertEquals(carModel.getName(), dto.getName());
     }
 
-//    to entity
-/*
     @Test
-    public void whenTypeCarDtoNullReturnNull(){
-        assertNull(carMapper.toEntity((TypeCarDto) null));
-    }
-*/
-    @Test
-    public void whenCarModelDtoNullReturnNull(){
-        assertNull(carMapper.toEntity((CarModelDto) null));
+    public void whenListCarModelThenReturnDto() {
+        CarModel carModel = getCarModel();
+        List<CarModel> list = Arrays.asList(carModel);
+        List<CarModelDto> result = carMapper.toListDto(list);
+        assertEquals(list.size(), result.size());
+        assertEquals(list.get(0).getName(), result.get(0).getName());
     }
 
-@Test
-public void whenSetCarModelDtoThenReturnEntity(){
-    CarModelDto dto = getCarModelDto();
-    CarModel carModel = carMapper.toEntity(dto);
-    assertEquals(dto.getName(), carModel.getName());
-}
-/*
+    //    to entity
     @Test
-    public void whenSetCarBrandDtoThenReturnEntity(){
-        TypeCarDto typeCarDto = new TypeCarDto(1L, "coupe");
-        CarBrandDto dto = new CarBrandDto(1L, "audi", typeCarDto);
-        CarBrand brand = carMapper.toEntity(dto);
-        assertEquals(brand.getName(), dto.getName());
+    public void whenCarModelDtoNullReturnNull(){
+        assertNull(carMapper.toEntity( null));
     }
-*/
+
+    @Test
+    public void whenListEntityNullReturnNull(){
+        assertNull(carMapper.toListEntity( null));
+    }
+
+    @Test
+    public void whenSetCarModelDtoThenReturnEntity(){
+        CarModelDto dto = getCarModelDto();
+        CarModel carModel = carMapper.toEntity(dto);
+        assertEquals(dto.getName(), carModel.getName());
+    }
+
+    @Test
+    public void whenListCarModelDtoThenReturnListEntity(){
+        CarModelDto carModelDto = getCarModelDto();
+        List<CarModelDto> list = Arrays.asList(carModelDto);
+        List<CarModel> result = carMapper.toListEntity(list);
+        assertEquals(list.size(), result.size());
+        assertEquals(list.get(0).getName(), result.get(0).getName());
+    }
 
     private CarModelDto getCarModelDto() {
         TypeCarDto typeCar = new TypeCarDto(1L, "Легковой");

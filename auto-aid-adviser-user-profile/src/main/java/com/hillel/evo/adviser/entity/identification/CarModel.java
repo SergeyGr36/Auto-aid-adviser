@@ -12,10 +12,15 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("car_model")
 @NoArgsConstructor
-public class CarModel extends CarIdentification<CarBrand> {
+public class CarModel extends CarIdentification {
 
     public CarModel(Long id, String name, CarBrand carBrand) {
         this.setId(id);
+        this.setName(name);
+        this.setParent(carBrand);
+    }
+
+    public CarModel(String name, CarBrand carBrand) {
         this.setName(name);
         this.setParent(carBrand);
     }

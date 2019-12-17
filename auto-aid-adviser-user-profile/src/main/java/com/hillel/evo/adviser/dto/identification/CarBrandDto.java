@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CarBrandDto {
     private Long id;
+
     @NotNull
     private String name;
 
