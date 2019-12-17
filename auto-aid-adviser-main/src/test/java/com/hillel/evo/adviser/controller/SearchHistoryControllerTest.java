@@ -1,18 +1,13 @@
 package com.hillel.evo.adviser.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.dto.HistoryPointDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.entity.HistoryPoint;
 import com.hillel.evo.adviser.mapper.HistoryBusinessMapper;
-import com.hillel.evo.adviser.mapper.SearchHistoryMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
-import com.hillel.evo.adviser.repository.SearchHistoryRepo;
-import com.hillel.evo.adviser.service.CheckHistoryInDatabaseService;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
 import com.hillel.evo.adviser.service.SearchHistoryService;
@@ -21,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +36,7 @@ public class SearchHistoryControllerTest {
     private static final String PATH_HISTORY = "/api/user/history";
     private static final String BUSINESS_EMAIL = "bvg@mail.com";
     private static final String USER_EMAIL="svg@mail.com";
+
     @Autowired
     private AdviserUserDetailRepository userRepository;
     @Autowired
@@ -50,28 +44,15 @@ public class SearchHistoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private SearchHistoryRepo historyRepo;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private SearchHistoryMapper searchHistoryMapper;
-    @Autowired
     private JwtService jwtService;
     @Autowired
     private SearchHistoryService searchHistoryService;
     @Autowired
-    private CheckHistoryInDatabaseService checkHistoryInDatabaseService;
-    @Autowired
-    private AdviserUserDetailRepository repository;
-    @Autowired
     private BusinessRepository businessRepository;
     @Autowired
     private HistoryBusinessMapper historyBusinessMapper;
-    @Autowired
-    private SearchHistoryMapper historyMapper;
 
     public static HistoryPointDto historyPointDto;
-    private static HistoryPoint historyPoint;
     public static BusinessShortDto businessShortDto;
     public static List<BusinessShortDto> businessShortDtoList;
     public static List<Business> businessList;
