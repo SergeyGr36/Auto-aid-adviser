@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserCarServiceImpl implements UserCarService {
@@ -40,8 +41,9 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public UserCarDto getCarByUserIdAndCarId(Long userId, Long carId) {
-        UserCar userCar = (repository.findByUserIdAndCarId(userId, carId)).get();
-        UserCarDto userCarDto = mapper.toDto(userCar);
+        Optional<UserCar> userCar = repository.findByUserIdAndCarId(userId, carId);
+        UserCarDto userCarDto = userCar.map(car -> mapper.toDto(car))
+                .orElseThrow(() -> new RuntimeException("Car user not found by user_id: " + userId + " and car_id: " + carId));
         return userCarDto;
     }
 

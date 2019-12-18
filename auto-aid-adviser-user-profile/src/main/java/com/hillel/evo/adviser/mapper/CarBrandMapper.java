@@ -1,11 +1,12 @@
 package com.hillel.evo.adviser.mapper;
 
-import com.hillel.evo.adviser.dto.identification.CarBrandDto;
-import com.hillel.evo.adviser.entity.identification.CarBrand;
-import org.mapstruct.Mapping;
+import com.hillel.evo.adviser.dto.CarBrandDto;
+import com.hillel.evo.adviser.entity.CarBrand;
+import org.mapstruct.Mapper;
 
 import java.util.List;
 
+@Mapper(componentModel = "spring")
 public interface CarBrandMapper {
 
     CarBrandDto toDto(CarBrand entity);

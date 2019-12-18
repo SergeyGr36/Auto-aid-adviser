@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,36 +13,27 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
-@Table(name = "user_car")
 @Data
+@EqualsAndHashCode(of = {"id"})
+@Entity
+@Table(name = "car_model")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-public class UserCar {
+public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer releaseYear;
-
-    private String individualCarNaming;
-
-    private String description;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private SimpleUser simpleUser;
+    @JoinColumn(name = "car_brand_id")
+    private CarBrand carBrand;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_model_id")
-    private CarModel carModel;
+    @JoinColumn(name = "type_car_id")
+    private TypeCar typeCar;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_car_id")
-    Set<Image> images = new HashSet<>();
 }

@@ -1,14 +1,12 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.UserProfileStarter;
-import com.hillel.evo.adviser.dto.identification.CarBrandDto;
-import com.hillel.evo.adviser.dto.identification.FuelTypeDto;
-import com.hillel.evo.adviser.dto.identification.CarModelDto;
-import com.hillel.evo.adviser.dto.identification.TypeCarDto;
-import com.hillel.evo.adviser.entity.identification.CarBrand;
-import com.hillel.evo.adviser.entity.identification.FuelType;
-import com.hillel.evo.adviser.entity.identification.CarModel;
-import com.hillel.evo.adviser.entity.identification.TypeCar;
+import com.hillel.evo.adviser.dto.CarBrandDto;
+import com.hillel.evo.adviser.dto.CarModelDto;
+import com.hillel.evo.adviser.dto.TypeCarDto;
+import com.hillel.evo.adviser.entity.CarBrand;
+import com.hillel.evo.adviser.entity.CarModel;
+import com.hillel.evo.adviser.entity.TypeCar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,16 +82,16 @@ public class CarModelMapperTest {
 
     private CarModelDto getCarModelDto() {
         TypeCarDto typeCar = new TypeCarDto(1L, "Легковой");
-        CarBrandDto carBrand = new CarBrandDto(2L, "Mersedes", typeCar);
-        CarModelDto carModel = new CarModelDto(3L, "C-class", carBrand);
+        CarBrandDto carBrand = new CarBrandDto(1L, "Mersedes");
+        CarModelDto carModel = new CarModelDto(1L, "C-class", carBrand, typeCar);
 
         return carModel;
     }
 
     private CarModel getCarModel() {
         TypeCar typeCar = new TypeCar(1L, "TestType");
-        CarBrand carBrand = new CarBrand(2L, "TestBrand", typeCar);
-        CarModel carModel = new CarModel(3L, "TestModel", carBrand);
+        CarBrand carBrand = new CarBrand(1L, "TestBrand");
+        CarModel carModel = new CarModel(1L, "TestModel", carBrand, typeCar);
 
         return carModel;
     }

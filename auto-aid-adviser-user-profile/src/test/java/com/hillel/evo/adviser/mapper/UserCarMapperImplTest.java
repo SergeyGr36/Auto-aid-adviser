@@ -1,14 +1,14 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.UserProfileStarter;
-import com.hillel.evo.adviser.dto.identification.CarBrandDto;
-import com.hillel.evo.adviser.dto.identification.CarModelDto;
+import com.hillel.evo.adviser.dto.CarBrandDto;
+import com.hillel.evo.adviser.dto.CarModelDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
-import com.hillel.evo.adviser.dto.identification.TypeCarDto;
-import com.hillel.evo.adviser.entity.identification.CarBrand;
+import com.hillel.evo.adviser.dto.TypeCarDto;
+import com.hillel.evo.adviser.entity.CarBrand;
 import com.hillel.evo.adviser.entity.SimpleUser;
-import com.hillel.evo.adviser.entity.identification.CarModel;
-import com.hillel.evo.adviser.entity.identification.TypeCar;
+import com.hillel.evo.adviser.entity.CarModel;
+import com.hillel.evo.adviser.entity.TypeCar;
 import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -100,8 +100,8 @@ public class UserCarMapperImplTest {
 
     private UserCar getTestUserCar() {
         TypeCar typeCar = new TypeCar(1L, "TestType");
-        CarBrand carBrand = new CarBrand(2L, "TestBrand", typeCar);
-        CarModel carModel = new CarModel(3L, "TestModel", carBrand);
+        CarBrand carBrand = new CarBrand(1L, "TestBrand");
+        CarModel carModel = new CarModel(1L, "TestModel", carBrand, typeCar);
         SimpleUser simpleUser = new SimpleUser();
 
         UserCar car = new UserCar(99L, 2016, "AS123456", "some", simpleUser, carModel, new HashSet<>());
@@ -111,8 +111,8 @@ public class UserCarMapperImplTest {
 
     private UserCarDto getTestUserCarDto(){
         TypeCarDto typeCar = new TypeCarDto(1L, "Легковой");
-        CarBrandDto carBrand = new CarBrandDto(2L, "Mersedes", typeCar);
-        CarModelDto carModel = new CarModelDto(3L, "C-class", carBrand);
+        CarBrandDto carBrand = new CarBrandDto(1L, "Mersedes");
+        CarModelDto carModel = new CarModelDto(1L, "C-class", carBrand, typeCar);
 
         UserCarDto car = new UserCarDto();
         car.setCarModel(carModel);

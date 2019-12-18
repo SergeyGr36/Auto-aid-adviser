@@ -3,10 +3,9 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
-import com.hillel.evo.adviser.dto.identification.CarBrandDto;
-import com.hillel.evo.adviser.dto.identification.FuelTypeDto;
-import com.hillel.evo.adviser.dto.identification.CarModelDto;
-import com.hillel.evo.adviser.dto.identification.TypeCarDto;
+import com.hillel.evo.adviser.dto.CarBrandDto;
+import com.hillel.evo.adviser.dto.CarModelDto;
+import com.hillel.evo.adviser.dto.TypeCarDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
 import com.hillel.evo.adviser.service.UserCarService;
@@ -104,8 +103,8 @@ public class UserProfileControllerTest {
 
     private UserCarDto creatCar(){
         TypeCarDto typeCar = new TypeCarDto(1L, "Легковой");
-        CarBrandDto carBrand = new CarBrandDto(2L, "Mersedes", typeCar);
-        CarModelDto carModel = new CarModelDto(3L, "C-class", carBrand);
+        CarBrandDto carBrand = new CarBrandDto(1L, "Mersedes");
+        CarModelDto carModel = new CarModelDto(1L, "C-class", carBrand, typeCar);
 
         UserCarDto car = new UserCarDto();
         car.setCarModel(carModel);

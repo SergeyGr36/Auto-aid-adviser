@@ -1,4 +1,4 @@
-package com.hillel.evo.adviser.dto.identification;
+package com.hillel.evo.adviser.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,8 +9,9 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TypeCarDto {
+public class CarBrandDto {
     private Long id;
+
     @NotNull
     private String name;
 }

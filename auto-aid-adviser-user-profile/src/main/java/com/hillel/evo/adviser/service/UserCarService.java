@@ -2,9 +2,6 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
-import com.hillel.evo.adviser.dto.identification.CarModelDto;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

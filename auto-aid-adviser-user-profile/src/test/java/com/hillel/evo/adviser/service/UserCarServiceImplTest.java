@@ -9,13 +9,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import com.hillel.evo.adviser.dto.CarModelDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.UserCar;
-import com.hillel.evo.adviser.entity.identification.CarModel;
+import com.hillel.evo.adviser.entity.CarModel;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.repository.CarIdentificationRepository;
+import com.hillel.evo.adviser.repository.CarModelRepository;
+import com.hillel.evo.adviser.repository.TypeCarRepository;
+import com.hillel.evo.adviser.repository.UserCarRepository;
 import com.hillel.evo.adviser.service.impl.UserCarServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.Assertions;
@@ -47,19 +50,22 @@ public class UserCarServiceImplTest {
 
     @Autowired
     private UserCarServiceImpl service;
-    @Autowired
-    private AdviserUserDetailRepository userRepository;
-    @Autowired
-    private UserCarMapper mapper;
 
     @Autowired
-    private CarIdentificationRepository carIdentificationRepo;
+    private AdviserUserDetailRepository userRepository;
+
+    @Autowired
+    private UserCarRepository userCarRepository;
+
+    @Autowired
+    private CarModelService carModelService;
 
     @MockBean
     CloudImageService mockCloudImageService;
 
     MultipartFile goodFile;
     MultipartFile badFile;
+
     @BeforeEach
     private void init() throws Exception{
         userId = userRepository.findByEmail("svg@mail.com").get().getId();
@@ -74,38 +80,58 @@ public class UserCarServiceImplTest {
 
     @Test
     public void whenCreateUserCarThenReturnDto(){
-        CarModel carModel = carIdentificationRepo.findCarModelByName("M5");
-        UserCarDto newDto = new UserCarDto();
-        //newDto.setCarModel(carModel);
-
+        //given
+        UserCarDto newDto = getNewUserCarDto();
+        //when
         UserCarDto testDto = service.createUserCar(newDto, userId);
-       assertNotNull(testDto.getId());
+        //then
+        assertNotNull(testDto.getId());
+        assertEquals(newDto.getCarModel(), testDto.getCarModel());
     }
 
     @Test
-    @Transactional
     public void whenUpdateUserCarThenReturnDto(){
+        //given
+        int newYear = 2025;
+        UserCarDto oldDto = service.getByUserId(userId).get(0);
+        oldDto.setReleaseYear(newYear);
+        //when
+        UserCarDto updateDto = service.updateUserCar(oldDto, userId);
+        UserCar car = userCarRepository.findById(updateDto.getId()).get();
+        //then
+        assertEquals(oldDto.getId(), updateDto.getId());
+        assertEquals(newYear, updateDto.getReleaseYear());
+        assertEquals(newYear, car.getReleaseYear());
+    }
+
+    @Test
+    public void whenGetCarByUserIdAndCarIdThenReturnDto() {
+        //given
+        UserCar car = userCarRepository.findAllBySimpleUserId(userId).get(0);
+        //when
+        UserCarDto dto = service.getCarByUserIdAndCarId(userId, car.getId());
+        //then
+        assertEquals(car.getId(), dto.getId());
+        assertEquals(car.getReleaseYear(), dto.getReleaseYear());
+    }
+
+    @Test
+    public void whenGetCarByUserIdThenReturnListDto() {
         List<UserCarDto> list = service.getByUserId(userId);
-        dto = list.get(0);
-        UserCarDto testDto = service.updateUserCar(dto, userId);
-        assertEquals(dto.getId(), testDto.getId());
+        //then
+        assertEquals(2, list.size());
     }
+
     @Test
-    public void whenGetCarByUserIdAndCarIdThenReturnDto(){
-        UserCar car = new UserCar();
-        UserCarDto actual = service.createUserCar(mapper.toDto(car), userId);
-        UserCarDto expected = service.getCarByUserIdAndCarId(userId, actual.getId());
-        assertEquals(actual.getId(), expected.getId());
-    }
-    @Test
-    @Transactional
-    public void whenDeleteUserCarThenThrowException(){
+    public void whenDeleteUserCarThenThrowException() {
         assertThrows(RuntimeException.class, ()-> service.deleteUserCar(100L, userId) );
     }
+
     @Test
     public void whenDeleteUserCarThenSuccess(){
-        UserCarDto dto = service.createUserCar(new UserCarDto(), userId);
-      Assertions.assertDoesNotThrow(()->service.deleteUserCar(dto.getId(), userId));
+        List<UserCar> userCars = userCarRepository.findAllBySimpleUserId(userId);
+        long carId = userCars.get(0).getId();
+        Assertions.assertDoesNotThrow(()->service.deleteUserCar(carId, userId));
 
     }
     @Test
@@ -115,6 +141,18 @@ public class UserCarServiceImplTest {
         ImageDto imageDto = service.addImage(userId, dto.getId(), goodFile);
         assertEquals(imageDto.getOriginalFileName(), goodFile.getOriginalFilename());
     }
+
+    private UserCarDto getNewUserCarDto() {
+        CarModelDto carModelDto = carModelService.findByName("M5");
+        UserCarDto userCarDto = new UserCarDto();
+        userCarDto.setCarModel(carModelDto);
+        userCarDto.setDescription("some description");
+        userCarDto.setIndividualCarNaming("AA123456");
+        userCarDto.setReleaseYear(2016);
+
+        return userCarDto;
+    }
+
     private MultipartFile getGoodMultipartFile() {
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = {11, 12, 13, 14, 15};
