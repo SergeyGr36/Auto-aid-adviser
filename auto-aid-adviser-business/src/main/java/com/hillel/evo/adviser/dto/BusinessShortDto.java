@@ -18,6 +18,4 @@ public class BusinessShortDto {
     private LocationDto location;
 
     private ContactDto contact;
-    private String workingDays;
-    private String workingHours;
 }
