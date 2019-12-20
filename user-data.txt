@@ -1,0 +1,44 @@
+Content-Type: multipart/mixed; boundary="//"
+MIME-Version: 1.0
+
+# EC2 instance startup script
+# Location:
+# In AWS Console GUI:
+# EC2 > Running instances > Instance > Actions > Instance settings > View/Change User Data
+# On the instance:
+# var/lib/cloud/instance/scripts/user-data.txt
+
+--//
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="cloud-config.txt"
+
+#cloud-config
+cloud_final_modules:
+- [scripts-user, always]
+
+--//
+Content-Type: text/x-shellscript; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="userdata.txt"
+
+#!/bin/bash
+usr=ec2-user
+yum update -y
+
+# Remove previous build
+rm /home/${usr}/*.jar
+
+# Copy new build from s3 bucket to user home
+aws s3 cp s3://auto-aid-adviser-bucket/build/auto-aid-adviser-main-boot.jar /home/${usr}/
+
+cd /home/${usr}/
+
+# start spring-boot app in dev mode
+java -jar -Dspring.profiles.active=dev auto-aid-adviser-main-boot.jar
+
+#This magic line (only works with sudo) redirects http from external 80 to internal 8080:
+sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
+--//
