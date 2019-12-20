@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.hillel.evo.adviser.dto.CarModelDto;
 import com.hillel.evo.adviser.dto.ImageDto;
+import com.hillel.evo.adviser.dto.SimpleUserDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.entity.CarModel;
@@ -109,7 +110,7 @@ public class UserCarServiceImplTest {
         //given
         UserCar car = userCarRepository.findAllBySimpleUserId(userId).get(0);
         //when
-        UserCarDto dto = service.getCarByUserIdAndCarId(userId, car.getId());
+        UserCarDto dto = service.getCarByUserIdAndCarId(car.getId());
         //then
         assertEquals(car.getId(), dto.getId());
         assertEquals(car.getReleaseYear(), dto.getReleaseYear());
@@ -134,12 +135,22 @@ public class UserCarServiceImplTest {
         Assertions.assertDoesNotThrow(()->service.deleteUserCar(carId, userId));
 
     }
+
     @Test
-    @Transactional
     public void whenAddImageThenReturnDto(){
         UserCarDto dto = service.getByUserId(userId).get(0);
         ImageDto imageDto = service.addImage(userId, dto.getId(), goodFile);
         assertEquals(imageDto.getOriginalFileName(), goodFile.getOriginalFilename());
+    }
+
+    @Test
+    public void findSimpleUserByCarIdThenReturnDto(){
+        //given
+        UserCar car = userCarRepository.findAllBySimpleUserId(userId).get(0);
+        //when
+        SimpleUserDto user = service.getUserByUserCarId(car.getId());
+        //then
+        assertEquals("Vasya", user.getFirstName());
     }
 
     private UserCarDto getNewUserCarDto() {

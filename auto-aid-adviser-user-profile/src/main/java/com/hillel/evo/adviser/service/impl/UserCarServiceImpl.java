@@ -1,11 +1,15 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.ImageDto;
+import com.hillel.evo.adviser.dto.SimpleUserDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
+import com.hillel.evo.adviser.exception.DeleteException;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.ImageMapper;
+import com.hillel.evo.adviser.mapper.SimpleUserMapper;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import com.hillel.evo.adviser.repository.UserCarRepository;
@@ -29,21 +33,23 @@ public class UserCarServiceImpl implements UserCarService {
     private transient final SimpleUserRepository userRepository;
     private transient final ImageMapper imageMapper;
     private transient final ImageService imageService;
+    private final SimpleUserMapper simpleUserMapper;
 
     @Autowired
-    public UserCarServiceImpl(UserCarRepository repository, UserCarMapper mapper, SimpleUserRepository userRepository, ImageMapper imageMapper, ImageService imageService) {
+    public UserCarServiceImpl(UserCarRepository repository, UserCarMapper mapper, SimpleUserRepository userRepository, ImageMapper imageMapper, ImageService imageService, SimpleUserMapper simpleUserMapper) {
         this.repository = repository;
         this.mapper = mapper;
         this.userRepository = userRepository;
         this.imageMapper = imageMapper;
         this.imageService = imageService;
+        this.simpleUserMapper = simpleUserMapper;
     }
 
     @Override
-    public UserCarDto getCarByUserIdAndCarId(Long userId, Long carId) {
-        Optional<UserCar> userCar = repository.findByUserIdAndCarId(userId, carId);
+    public UserCarDto getCarByUserIdAndCarId(Long carId) {
+        Optional<UserCar> userCar = repository.findByCarId(carId);
         UserCarDto userCarDto = userCar.map(car -> mapper.toDto(car))
-                .orElseThrow(() -> new RuntimeException("Car user not found by user_id: " + userId + " and car_id: " + carId));
+                .orElseThrow(() -> new ResourceNotFoundException("Car user not found by car id: " + carId));
         return userCarDto;
     }
 
@@ -70,22 +76,23 @@ public class UserCarServiceImpl implements UserCarService {
     @Transactional
     public void deleteUserCar(Long carId, Long userId) {
         UserCar userCar = repository.findByUserIdAndCarId(userId, carId)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
         repository.delete(userCar);
     }
 
     @Override
     public List<ImageDto> findImagesByUserCarId(Long userCarId) {
-        return imageMapper.toListDto(repository.findImagesByUserCarId(userCarId));
+        List<Image> images = repository.findImagesByUserCarId(userCarId);
+        return imageMapper.toListDto(images);
     }
 
     @Override
     @Transactional
     public ImageDto addImage(Long userId, Long userCarId, MultipartFile file) {
-        UserCar userCar = repository.findByUserIdAndCarId(userCarId, userId)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+        UserCar userCar = repository.findByUserIdAndCarId(userId, userCarId)
+                .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
         Image image = imageService.create(userId, userCarId, file)
-                .orElseThrow(() -> new RuntimeException("Image not saved"));
+                .orElseThrow(() -> new ResourceNotFoundException("Image not saved"));
         userCar.getImages().add(image);
         repository.save(userCar);
         return imageMapper.toDto(image);
@@ -94,7 +101,16 @@ public class UserCarServiceImpl implements UserCarService {
     @Override
     public boolean deleteImage(Long userId, Long userCarId, ImageDto dto) {
         Image image = repository.findImageByUserIdAndUserCarIdAndImageId(userId, userCarId, dto.getId())
-                .orElseThrow(() -> new RuntimeException("Image not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
         return imageService.delete(image);
+    }
+
+    @Override
+    public SimpleUserDto getUserByUserCarId(Long id) {
+        Optional<SimpleUser> simpleUser = repository.findSimpleUserByUserCardId(id);
+        SimpleUserDto simpleUserDto = simpleUser
+                .map(su -> simpleUserMapper.toDto(su))
+                .orElseThrow(() -> new ResourceNotFoundException("Data user not found by car id: " + id));
+        return simpleUserDto;
     }
 }

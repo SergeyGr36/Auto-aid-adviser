@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.CarModelDto;
 import com.hillel.evo.adviser.entity.CarModel;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.CarModelMapper;
 import com.hillel.evo.adviser.repository.CarModelRepository;
 import com.hillel.evo.adviser.service.CarModelService;
@@ -26,14 +27,14 @@ public class CarModelServiceImpl implements CarModelService {
     public CarModelDto findById(@NotNull Long id) {
         Optional<CarModel> carModel = carModelRepository.findById(id);
         return carModel.map(m -> carModelMapper.toDto(m))
-                .orElseThrow(() -> new RuntimeException("Model not found by id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Model not found by id: " + id));
     }
 
     @Override
     public CarModelDto findByName(@NotNull String name) {
         Optional<CarModel> carModel = carModelRepository.findByName(name);
         return carModel.map(m -> carModelMapper.toDto(m))
-                .orElseThrow(() -> new RuntimeException("Model not found by name: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("Model not found by name: " + name));
     }
 
     @Override

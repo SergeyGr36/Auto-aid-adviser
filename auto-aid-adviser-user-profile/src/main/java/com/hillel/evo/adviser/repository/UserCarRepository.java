@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.repository;
 
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,13 @@ public interface UserCarRepository extends JpaRepository<UserCar, Long> {
             "where uc.simpleUser.id = :userId and uc.id = :carId")
     Optional<UserCar> findByUserIdAndCarId(@Param("userId") Long userId, @Param("carId") Long carId);
 
+    @Query("select uc from UserCar uc " +
+            "join fetch uc.carModel cm " +
+            "join fetch cm.typeCar " +
+            "join fetch cm.carBrand " +
+            "where uc.id = :carId")
+    Optional<UserCar> findByCarId(@Param("carId") Long carId);
+
     @Query("select u.images from UserCar u where u.id = :id")
     List<Image> findImagesByUserCarId(@Param("id") Long id);
 
@@ -36,4 +44,6 @@ public interface UserCarRepository extends JpaRepository<UserCar, Long> {
                                                          @Param("userCarId") Long userCarId,
                                                          @Param("imageId") Long imageId);
 
+    @Query("select uc.simpleUser from UserCar uc where uc.id = :id")
+    Optional<SimpleUser> findSimpleUserByUserCardId(@Param("id") Long id);
 }

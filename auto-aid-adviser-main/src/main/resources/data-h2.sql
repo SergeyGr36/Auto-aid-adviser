@@ -77,3 +77,29 @@ select b.id, s.id from business b, service s;
 
 insert into service(name, service_type_id) values
 ('for-delete-test', (select id from service_type where name like 'disk'));
+
+insert into type_car(name) values ('Легковой'), ('Грузовой'), ('Автобус'), ('Мотоцикл');
+
+insert into car_brand(name) values ('Audi'), ('BMW'), ('Mersedes'), ('ВАЗ'), ('ЗАЗ'), ('Toyota'), ('Mitsubist');
+
+insert into car_model(name, car_brand_id, type_car_id) values
+('X5', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Легковой')),
+('M5', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Легковой')),
+('A4', (select id from car_brand where name like 'Audi'), (select id from type_car where name like 'Легковой')),
+('TT', (select id from car_brand where name like 'Audi'), (select id from type_car where name like 'Легковой')),
+('RAV4', (select id from car_brand where name like 'Toyota'), (select id from type_car where name like 'Легковой')),
+('C-HR', (select id from car_brand where name like 'Toyota'), (select id from type_car where name like 'Легковой'))
+;
+
+insert into user_car(release_year, car_model_id, simple_user_user_details_id) values
+(
+    '2015',
+    (select id from car_model where name like 'TT'),
+    (select user_details_id from simple_usr where first_name in('Vasya'))
+),
+
+(
+    '2016',
+    (select id from car_model where name like 'X5'),
+    (select user_details_id from simple_usr where first_name in('Vasya'))
+);

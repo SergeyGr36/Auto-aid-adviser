@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.CarBrandDto;
 import com.hillel.evo.adviser.entity.CarBrand;
+import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.CarBrandMapper;
 import com.hillel.evo.adviser.repository.CarBrandRepository;
 import com.hillel.evo.adviser.service.CarBrandService;
@@ -26,14 +27,14 @@ public class CarBrandServiceImpl implements CarBrandService {
     public CarBrandDto findById(long id) {
         Optional<CarBrand> carBrand = carBrandRepository.findById(id);
         return carBrand.map(b -> carBrandMapper.toDto(b))
-                .orElseThrow(() -> new RuntimeException("Brand not found by id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found by id: " + id));
     }
 
     @Override
     public CarBrandDto findByName(@NotNull String name) {
         Optional<CarBrand> carBrand = carBrandRepository.findByName(name);
         return carBrand.map(b -> carBrandMapper.toDto(b))
-                .orElseThrow(() -> new RuntimeException("Brand not found by name: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found by name: " + name));
     }
 
     @Override
