@@ -22,9 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = UserProfileStarter.class)
 @ExtendWith(SpringExtension.class)
-public class CarModelMapperTest {
+public class CarModelMapperImplTest {
+
     @Autowired
-    CarModelMapper carMapper;
+    CarModelMapperImpl carMapper;
 
     //    to dto
     @Test

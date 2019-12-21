@@ -15,6 +15,6 @@ public interface UserCarService {
     void deleteUserCar(Long carId, Long userId);
     List<ImageDto> findImagesByUserCarId(Long userCarId);
     ImageDto addImage(Long userId, Long userCarId, MultipartFile file);
-    boolean deleteImage(Long userId, Long userCarId, ImageDto dto);
+    boolean deleteImage(Long userId, Long userCarId, Long imageId);
     SimpleUserDto getUserByUserCarId(Long id);
 }

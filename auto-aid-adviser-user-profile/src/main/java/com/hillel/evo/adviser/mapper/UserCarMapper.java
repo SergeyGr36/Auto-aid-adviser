@@ -3,13 +3,13 @@ package com.hillel.evo.adviser.mapper;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
-import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {CarModelMapper.class})
 public interface UserCarMapper {
 
     @Mapping(target = "simpleUser", source = "user")
@@ -19,7 +19,7 @@ public interface UserCarMapper {
     @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "carModel", source = "dto.carModel")
     @Mapping(target = "images", ignore = true)
-    UserCar toCar(UserCarDto dto, SimpleUser user);
+    UserCar toCar(UserCarDto dto, @NotNull SimpleUser user);
 
     UserCarDto toDto(UserCar car);
 

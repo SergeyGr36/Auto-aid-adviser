@@ -73,7 +73,6 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    @Transactional
     public void deleteUserCar(Long carId, Long userId) {
         UserCar userCar = repository.findByUserIdAndCarId(userId, carId)
                 .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
@@ -99,8 +98,8 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public boolean deleteImage(Long userId, Long userCarId, ImageDto dto) {
-        Image image = repository.findImageByUserIdAndUserCarIdAndImageId(userId, userCarId, dto.getId())
+    public boolean deleteImage(Long userId, Long userCarId, Long imageId) {
+        Image image = repository.findImageByUserIdAndUserCarIdAndImageId(userId, userCarId, imageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
         return imageService.delete(image);
     }

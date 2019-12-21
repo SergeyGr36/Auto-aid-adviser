@@ -34,6 +34,7 @@ public class UserCarMapperImplTest {
 
     @Autowired
     SimpleUserRepository repository;
+
     @Autowired
     UserCarMapperImpl mapper;
 
@@ -80,6 +81,13 @@ public class UserCarMapperImplTest {
         UserCarDto dto = getTestUserCarDto();
         UserCar car = mapper.toCar(dto, new SimpleUser());
         assertEquals(dto.getCarModel().getName(), car.getCarModel().getName());
+    }
+
+    @Test
+    public void whenSetDtoCarWithUserNullThenReturnEntity() {
+        UserCarDto dto = getTestUserCarDto();
+        UserCar car = mapper.toCar(dto, null);
+        assertNull(car.getSimpleUser());
     }
 
     @Test

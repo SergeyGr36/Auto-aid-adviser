@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.UserProfileStarter;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -13,6 +14,8 @@ import com.hillel.evo.adviser.dto.CarModelDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.SimpleUserDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
+import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
 import com.hillel.evo.adviser.entity.CarModel;
 import com.hillel.evo.adviser.mapper.UserCarMapper;
@@ -37,8 +40,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UserProfileStarter.class)
@@ -47,7 +52,6 @@ import java.util.Optional;
 public class UserCarServiceImplTest {
 
     private Long userId;
-    private UserCarDto dto;
 
     @Autowired
     private UserCarServiceImpl service;
@@ -137,13 +141,6 @@ public class UserCarServiceImplTest {
     }
 
     @Test
-    public void whenAddImageThenReturnDto(){
-        UserCarDto dto = service.getByUserId(userId).get(0);
-        ImageDto imageDto = service.addImage(userId, dto.getId(), goodFile);
-        assertEquals(imageDto.getOriginalFileName(), goodFile.getOriginalFilename());
-    }
-
-    @Test
     public void findSimpleUserByCarIdThenReturnDto(){
         //given
         UserCar car = userCarRepository.findAllBySimpleUserId(userId).get(0);
@@ -162,6 +159,43 @@ public class UserCarServiceImplTest {
         userCarDto.setReleaseYear(2016);
 
         return userCarDto;
+    }
+
+    /* =========== IMAGE ============ */
+
+    @Test
+    public void whenAddImageThenReturnDto() {
+        UserCarDto dto = service.getByUserId(userId).get(0);
+        ImageDto imageDto = service.addImage(userId, dto.getId(), goodFile);
+        assertEquals(imageDto.getOriginalFileName(), goodFile.getOriginalFilename());
+    }
+
+    @Test
+    public void whenDelImageThenReturnException() {
+        assertThrows(RuntimeException.class, () ->  service.deleteImage(10L, 11L, 12L));
+    }
+
+    @Test
+    @Transactional
+    public void whenDelImageThenReturnTrue() {
+        //given
+        UserCar car = userCarRepository.findAll().get(0);
+        SimpleUser simpleUser = car.getSimpleUser();
+        Image image = (Image) car.getImages().toArray()[0];
+        //when
+        boolean hasDeleteImage = service.deleteImage(simpleUser.getId(), car.getId(), image.getId());
+        //then
+        assertTrue(hasDeleteImage);
+    }
+
+    @Test
+    public void whenFindAllImagesThenReturnList() {
+        //given
+        UserCar car = userCarRepository.findAll().get(0);
+        //when
+        List<ImageDto> images = service.findImagesByUserCarId(car.getId());
+        //then
+        assertEquals(1, images.size());
     }
 
     private MultipartFile getGoodMultipartFile() {

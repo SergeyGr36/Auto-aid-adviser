@@ -10,23 +10,17 @@ import java.util.Optional;
 
 public interface CarModelRepository extends JpaRepository<CarModel, Long> {
 
-    @Query("select distinct carmodel from CarModel carmodel " +
-            "join fetch carmodel.carBrand carbrand " +
-            "join fetch carmodel.typeCar typecar " +
-            "where carmodel.name = :name")
+    @Query("select distinct cm from CarModel cm join fetch cm.carBrand cb join fetch cm.typeCar tc where cm.name = :name")
     Optional<CarModel> findByName(@Param("name") String name);
 
-    @Query("select distinct carmodel from CarModel carmodel " +
-            "join fetch carmodel.carBrand carbrand " +
-            "join fetch carmodel.typeCar typecar " +
-            "where carmodel.id = :id")
+    @Query("select distinct cm from CarModel cm join fetch cm.carBrand cb join fetch cm.typeCar tc where cm.id = :id")
     Optional<CarModel> findById(@Param("id") Long id);
 
     @Query("select distinct carmodel from CarModel carmodel " +
             "join fetch carmodel.carBrand carbrand " +
             "join fetch carmodel.typeCar typecar " +
             "where typecar.name = :typeName and carbrand.name = :brandName")
-    List<CarModel> findByTypeAndBrand(@Param("typeName") String typeName, @Param("brandName") String brandName);
+    List<CarModel> findByTypeCarIdAndCarBrandIdAndGraphFull(@Param("typeName") String typeName, @Param("brandName") String brandName);
 
     @Query("select distinct carmodel from CarModel carmodel " +
             "join fetch carmodel.carBrand carbrand " +
