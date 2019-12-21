@@ -9,6 +9,7 @@ import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
+import com.hillel.evo.adviser.search.QueryFactory;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,8 @@ public class BusinessServiceImplTest {
     private ServiceForBusinessRepository serviceForBusinessRepository;
 
     Long userId;
+
+
 
     @BeforeEach
     private void init() {
@@ -80,6 +83,12 @@ public class BusinessServiceImplTest {
         assertEquals(findBusinessDto.getId(), dto.getId());
         assertEquals(findBusinessDto.getName(), dto.getName());
         assertEquals(findBusinessDto.getServiceForBusinesses().size(), dto.getServiceForBusinesses().size());
+    }
+
+    @Test
+    public void whenFindByServiceTypeThenReturnQuery(){
+        var result = businessService.findBusinessByServiceType(BusinessServiceImpl.class,"motorcycle","1");
+        assertEquals(1, result);
     }
 
     @Test
