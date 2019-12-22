@@ -17,6 +17,7 @@ spring:
         writetimeout: 5000
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         jdbc:

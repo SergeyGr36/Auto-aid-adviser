@@ -16,9 +16,10 @@ import java.util.List;
                 BusinessTypeMapper.class,
                 ServiceTypeMapper.class,
                 WorkTimeMapper.class})
-public interface BusinessMapper {
 
-    BusinessDto toDto(Business business);
+public abstract class BusinessMapper {
+
+    public abstract BusinessDto toDto(Business business);
 
     @Mapping(target = "businessUser", source = "user")
     @Mapping(target = "id", source = "dto.id")
@@ -28,10 +29,10 @@ public interface BusinessMapper {
     @Mapping(target = "serviceForBusinesses", source = "dto.serviceForBusinesses")
     @Mapping(target = "workTimes", source = "dto.workTimes")
     @Mapping(target = "images", ignore = true)
-    Business toEntity(BusinessDto dto, BusinessUser user);
+    public abstract Business toEntity(BusinessDto dto, BusinessUser user);
 
-    List<BusinessDto> listToDto(List<Business> businesses);
+    public abstract List<BusinessDto> listToDto(List<Business> businesses);
 
-    BusinessFullDto toFullDto(Business business);
+    public abstract BusinessFullDto toFullDto(Business business);
 
 }
