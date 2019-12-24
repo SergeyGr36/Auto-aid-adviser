@@ -20,12 +20,12 @@ public interface CarModelRepository extends JpaRepository<CarModel, Long> {
             "join fetch carmodel.carBrand carbrand " +
             "join fetch carmodel.typeCar typecar " +
             "where typecar.name = :typeName and carbrand.name = :brandName")
-    List<CarModel> findByTypeCarIdAndCarBrandIdAndGraphFull(@Param("typeName") String typeName, @Param("brandName") String brandName);
+    List<CarModel> findByTypeCarNameAndCarBrandName(@Param("typeName") String typeName, @Param("brandName") String brandName);
 
     @Query("select distinct carmodel from CarModel carmodel " +
             "join fetch carmodel.carBrand carbrand " +
             "join fetch carmodel.typeCar typecar " +
             "where typecar.id = :typeId and carbrand.id = :brandId")
-    List<CarModel> findByTypeAndBrand(@Param("typeId") Long typeId, @Param("brandId") Long brandId);
+    List<CarModel> findByTypeIdAndBrandId(@Param("typeId") Long typeId, @Param("brandId") Long brandId);
 
 }

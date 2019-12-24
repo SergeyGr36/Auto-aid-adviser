@@ -15,16 +15,30 @@ import com.hillel.evo.adviser.service.CarModelService;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
 import com.hillel.evo.adviser.service.UserCarService;
+import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/clean-user-profile.sql", "/clean-business.sql", "/clean-user.sql",
-        "/create-user2.sql", "/create-business.sql", "/user-profile.sql"},
+        "/create-user2.sql", "/create-business.sql", "/user-profile.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-user-profile.sql", "/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -75,12 +89,21 @@ public class UserProfileControllerTest {
     @Autowired
     private UserCarService userCarService;
 
+    @MockBean
+    CloudImageService mockCloudImageService;
+
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws MalformedURLException {
 
         encodeTestUserPassword();
         user = userRepository.findByEmail(USER_EMAIL).get();
         jwt = jwtService.generateAccessToken(user.getId());
+
+        when(mockCloudImageService.hasDeletedFile(endsWith(".jpg"))).thenReturn(true);
+        when(mockCloudImageService.hasDeletedFile(endsWith(".bad"))).thenReturn(false);
+        when(mockCloudImageService.hasUploadedFile(any(), any())).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFileList(any(), any(List.class))).thenReturn(true);
+        when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
 
     private void encodeTestUserPassword() {
@@ -131,7 +154,7 @@ public class UserProfileControllerTest {
 
     @Test
     public void getListUserCarThenReturnList() throws Exception {
-        mockMvc.perform(get(PATH + "/car")
+        mockMvc.perform(get(PATH + "/cars")
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isOk())
@@ -181,14 +204,18 @@ public class UserProfileControllerTest {
 
     @Test
     public void whenCreateUserCarThenReturnThisOne() throws Exception {
-        UserCarDto carDto = creatCar();
-        mockMvc.perform(post(PATH + "/car")
+        UserCarDto carDto = createCar();
+        MockMultipartHttpServletRequestBuilder multipart = MockMvcRequestBuilders.multipart(PATH + "/car");
+        mockMvc.perform(multipart
+                .file(getPart(objectMapper.writeValueAsString(carDto)))
+                .file(getMultipartFile())
+                .file(getMultipartFile())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(carDto)))
+        )
                 //then
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.carModel.name").value(carDto.getCarModel().getName()));
+                .andExpect(jsonPath("$.releaseYear").value(carDto.getReleaseYear()))
+                .andExpect(jsonPath("$.images", hasSize(2)));
     }
 
     @Test
@@ -201,10 +228,13 @@ public class UserProfileControllerTest {
                 .content(objectMapper.writeValueAsString(carDto)))
                 //then
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.images", hasSize(carDto.getImages().size())))
                 .andExpect(jsonPath("$.releaseYear").value(carDto.getReleaseYear()));
     }
 
-    private UserCarDto creatCar(){
+    // test objects
+
+    private UserCarDto createCar(){
         CarModel model = carModelRepository.findAll().get(0);
         CarModelDto modelDto = carModelService.findById(model.getId());
 
@@ -212,5 +242,18 @@ public class UserProfileControllerTest {
         car.setCarModel(modelDto);
         car.setReleaseYear(2016);
         return car;
+    }
+
+    private MockMultipartFile getMultipartFile() throws IOException {
+        String name = "ny.jpg";
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = {11, 12, 13, 14, 15};
+        return new MockMultipartFile("files", name, contentType, content);
+    }
+
+    private MockMultipartFile getPart(String json) {
+        String contentType = MediaType.APPLICATION_JSON_VALUE;
+        byte[] content = json.getBytes();
+        return new MockMultipartFile("json", "json", contentType, content);
     }
 }

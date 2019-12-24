@@ -6,7 +6,7 @@ import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
-import com.hillel.evo.adviser.exception.DeleteException;
+import com.hillel.evo.adviser.exception.CreateResourceException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.mapper.ImageMapper;
 import com.hillel.evo.adviser.mapper.SimpleUserMapper;
@@ -55,21 +55,33 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public List<UserCarDto> getByUserId(Long userId) {
-        List<UserCar> list = repository.findAllBySimpleUserId(userId);
-        return mapper.toDtoList(list);
+        List<UserCar> cars = repository.findAllBySimpleUserId(userId);
+        return mapper.toDtoList(cars);
     }
 
     @Override
-    public UserCarDto createUserCar(UserCarDto car, Long userId) {
+    @Transactional
+    public UserCarDto createUserCar(Long userId, UserCarDto car, List<MultipartFile> files) {
         SimpleUser simpleUser = userRepository.getOne(userId);
         UserCar userCar = mapper.toCar(car, simpleUser);
         repository.save(userCar);
+
+        Optional<List<Image>> images = imageService.create(userId, userCar.getId(), files);
+        images.map(list -> userCar.getImages().addAll(list))
+                .orElseThrow(() -> new CreateResourceException("Image not save"));
+
         return mapper.toDto(userCar);
     }
 
     @Override
-    public UserCarDto updateUserCar(UserCarDto car, Long userId) {
-        return createUserCar(car, userId);
+    public UserCarDto updateUserCar(UserCarDto carDto, Long userId) {
+        Optional<UserCar> loadCar = repository.findByCarId(carDto.getId());
+
+        UserCar updateCar = loadCar.map(car -> mapper.updateUserCar(carDto, car))
+                .orElseThrow(() -> new ResourceNotFoundException("Car not found by id: " + carDto.getId()));
+
+        repository.save(updateCar);
+        return mapper.toDto(updateCar);
     }
 
     @Override
@@ -112,4 +124,5 @@ public class UserCarServiceImpl implements UserCarService {
                 .orElseThrow(() -> new ResourceNotFoundException("Data user not found by car id: " + id));
         return simpleUserDto;
     }
+
 }

@@ -39,13 +39,13 @@ public class CarModelServiceImpl implements CarModelService {
 
     @Override
     public List<CarModelDto> findByTypeAndBrand(@NotNull String typeName, @NotNull String brandName) {
-        List<CarModel> models = carModelRepository.findByTypeCarIdAndCarBrandIdAndGraphFull(typeName, brandName);
+        List<CarModel> models = carModelRepository.findByTypeCarNameAndCarBrandName(typeName, brandName);
         return carModelMapper.toListDto(models);
     }
 
     @Override
     public List<CarModelDto> findByTypeAndBrand(long typeId, long brandId) {
-        List<CarModel> models = carModelRepository.findByTypeAndBrand(typeId, brandId);
+        List<CarModel> models = carModelRepository.findByTypeIdAndBrandId(typeId, brandId);
         return carModelMapper.toListDto(models);
     }
 }

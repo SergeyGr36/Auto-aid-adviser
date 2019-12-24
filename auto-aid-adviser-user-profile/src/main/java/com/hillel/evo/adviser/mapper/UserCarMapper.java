@@ -5,11 +5,13 @@ import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.TargetType;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CarModelMapper.class})
+@Mapper(componentModel = "spring", uses = {CarModelMapper.class, ImageMapper.class})
 public interface UserCarMapper {
 
     @Mapping(target = "simpleUser", source = "user")
@@ -24,4 +26,8 @@ public interface UserCarMapper {
     UserCarDto toDto(UserCar car);
 
     List<UserCarDto> toDtoList(List<UserCar> cars);
+
+    @Mapping(target = "simpleUser", ignore = true)
+    @Mapping(target = "images", ignore = true)
+    UserCar updateUserCar(UserCarDto carDto, @MappingTarget UserCar car);
 }

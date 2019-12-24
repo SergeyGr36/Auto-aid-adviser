@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -17,11 +18,7 @@ import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.Image;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.entity.UserCar;
-import com.hillel.evo.adviser.entity.CarModel;
-import com.hillel.evo.adviser.mapper.UserCarMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
-import com.hillel.evo.adviser.repository.CarModelRepository;
-import com.hillel.evo.adviser.repository.TypeCarRepository;
 import com.hillel.evo.adviser.repository.UserCarRepository;
 import com.hillel.evo.adviser.service.impl.UserCarServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
@@ -40,10 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UserProfileStarter.class)
@@ -79,6 +75,7 @@ public class UserCarServiceImplTest {
 
         when(mockCloudImageService.hasDeletedFile(any())).thenReturn(true);
         when(mockCloudImageService.hasUploadedFile(any(), eq(goodFile))).thenReturn(true);
+        when(mockCloudImageService.hasUploadedFileList(any(), anyList())).thenReturn(true);
         when(mockCloudImageService.hasUploadedFile(any(), eq(badFile))).thenReturn(false);
         when(mockCloudImageService.generatePresignedURL(any())).thenReturn(Optional.of(new URL("http", "localhost", "somefile")));
     }
@@ -88,10 +85,11 @@ public class UserCarServiceImplTest {
         //given
         UserCarDto newDto = getNewUserCarDto();
         //when
-        UserCarDto testDto = service.createUserCar(newDto, userId);
+        UserCarDto testDto = service.createUserCar(userId, newDto, Arrays.asList(goodFile));
         //then
         assertNotNull(testDto.getId());
         assertEquals(newDto.getCarModel(), testDto.getCarModel());
+        assertEquals(1, testDto.getImages().size());
     }
 
     @Test

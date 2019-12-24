@@ -7,9 +7,11 @@ import com.hillel.evo.adviser.service.SimpleUserService;
 import com.hillel.evo.adviser.service.UserCarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -46,7 +50,7 @@ public class UserProfileController {
     }
 
     @Secured(ROLE_USER)
-    @GetMapping("/car")
+    @GetMapping("/cars")
     public List<UserCarDto> getCarsByUser(Authentication authentication){
         Long userId = getUserIdFromAuthentication(authentication);
         List<UserCarDto> carDtos = userCarService.getByUserId(userId);
@@ -62,11 +66,15 @@ public class UserProfileController {
     }
 
     @Secured(ROLE_USER)
-    @PostMapping("/car")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public UserCarDto createUserCar(@RequestBody final UserCarDto car, Authentication authentication) {
+    @PostMapping(path = "/car",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public UserCarDto createUserCar(@RequestPart(name = "json") @Validated final UserCarDto car,
+                                              @RequestPart(name = "files") List<MultipartFile> files,
+                                              Authentication authentication) {
         Long userId = getUserIdFromAuthentication(authentication);
-        UserCarDto userCar = userCarService.createUserCar(car, userId);
+        UserCarDto userCar = userCarService.createUserCar(userId, car, files);
         return userCar;
     }
 
@@ -78,7 +86,7 @@ public class UserProfileController {
         return updateCar;
     }
 
-    @Secured(ROLE_USER)
+    @Secured({ROLE_USER, ROLE_BUSINESS})
     @GetMapping
     public SimpleUserDto getSimpleUser(Authentication authentication){
         Long userId = getUserIdFromAuthentication(authentication);
