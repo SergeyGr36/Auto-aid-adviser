@@ -1,8 +1,5 @@
 package com.hillel.evo.adviser.search;
 
-import com.hillel.evo.adviser.entity.BusinessType;
-import com.hillel.evo.adviser.entity.Location;
-import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.service.SearchHelperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

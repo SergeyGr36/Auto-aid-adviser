@@ -2,7 +2,6 @@ package com.hillel.evo.adviser.repository;
 
 import com.hillel.evo.adviser.entity.Business;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,5 +23,4 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
 
     @Query("select b from Business b join fetch b.serviceForBusinesses where b.id = :id")
     Optional<Business> findByBusinessId(@Param("id") Long id);
-
 }

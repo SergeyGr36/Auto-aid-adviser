@@ -1,15 +1,16 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.BusinessApplication;
+import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
+import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
-import com.hillel.evo.adviser.search.QueryFactory;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
@@ -42,8 +40,13 @@ public class BusinessServiceImplTest {
     @Autowired
     private ServiceForBusinessRepository serviceForBusinessRepository;
 
-    Long userId;
+@Autowired
+    HibernateSearchConfig config;
 
+    Long userId;
+    String serviceForBusiness;
+    double longtitude;
+    double latitude;
 
 
     @BeforeEach
@@ -86,9 +89,16 @@ public class BusinessServiceImplTest {
     }
 
     @Test
-    public void whenFindByServiceTypeThenReturnQuery(){
-        var result = businessService.findBusinessByServiceType(BusinessServiceImpl.class,"motorcycle","1");
-        assertEquals(1, result);
+    public void whenfindByBusinessTypeServiceTypeLocationReturnBusinessDto(){
+        config.reindex(ServiceType.class);
+        String ServiceType = "ServiceType";
+        double longtitude = 134;
+        double latitude = 132;
+
+        var result = businessService.findByBusinessTypeServiceTypeLocation(ServiceType,longtitude,latitude);
+        assertEquals(result.size(),1);
+       /* List<BusinessDto> businessDto = businessService.findByBusinessTypeServiceTypeLocation(serviceForBusiness,longtitude,latitude);
+        assertEquals(businessDto.size(),1);*/
     }
 
     @Test

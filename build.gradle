@@ -167,9 +167,7 @@ project(':auto-aid-adviser-search-service') {
     jar {
         enabled = true
     }
-    dependencies{
-        implementation project(':auto-aid-adviser-business')
-    }
+   
 }
 
 

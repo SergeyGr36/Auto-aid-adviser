@@ -73,6 +73,7 @@ public class SearchTest {
         var result = aidTextSearch.searchWildcard(Aid.class, "name", "bm*");
 
         assertEquals(1, result.size());
+
     }
 
     @Test
