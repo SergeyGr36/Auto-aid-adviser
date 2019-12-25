@@ -1,0 +1,13 @@
+package com.hillel.evo.adviser.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ServiceTypeShortDto {
+    private Long id;
+    private String name;
+}

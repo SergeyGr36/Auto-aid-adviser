@@ -2,7 +2,7 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.SecurityAppStarter;
 import com.hillel.evo.adviser.configuration.JwtPropertyConfiguration;
-import com.hillel.evo.adviser.dto.LoginResponseDto;
+import com.hillel.evo.adviser.dto.UserTokenResponseDto;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
@@ -28,7 +28,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthenticationServiceIntegrationTest {
 
     private static final String EMAIL = "test@gmail.com";
-    private static final String PASSWORD = "testtest123";
+    private static final String PASSWORD = "Testtest123";
 
     private LoginRequestDto loginRequestDto;
 
@@ -53,7 +53,7 @@ public class AuthenticationServiceIntegrationTest {
     @Test
     public void whenValidCredentialsProvided_thenUserIsAuthenticated() {
 
-         ResponseEntity<LoginResponseDto> response =
+         ResponseEntity<UserTokenResponseDto> response =
                  authenticationService.authenticateAndResponse(createTestLoginRequestDto());
 
          Assertions.assertEquals(OK, response.getStatusCode());

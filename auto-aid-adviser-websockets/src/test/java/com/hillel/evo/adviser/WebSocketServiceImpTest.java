@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(classes = {WebSocketApp.class})
 @Sql(value = {"/clean-business.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class WebSocketServiceImpTest {
+public class WebSocketServiceImpTest extends BaseTest {
 
     @Autowired
     private WebSocketService webSocketService;
@@ -28,7 +28,7 @@ public class WebSocketServiceImpTest {
     private HibernateSearchConfig config;
 
     @Test
-    public void whenSearchBisnessTypeThenReturnList() {
+    public void whenSearchBusinessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
@@ -41,8 +41,20 @@ public class WebSocketServiceImpTest {
     }
 
     @Test
-    //@Disabled("Need to be fixed")
-    public void whenSearchServiseTypeThenReturnList() {
+    public void whenSearchUABusinessTypeThenReturnList() {
+        config.reindex(BusinessType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("BusinessType");
+        wsInputDTO.setContent("магаз");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+
+    }
+
+    @Test
+    public void whenSearchServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
         var btInputDTO = new WSInputDTO();
@@ -51,6 +63,23 @@ public class WebSocketServiceImpTest {
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("ServiceType");
         wsInputDTO.setContent("ru");
+        wsInputDTO.setInputDTO(btInputDTO);
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(1, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchUAServiceTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var btInputDTO = new WSInputDTO();
+        btInputDTO.setSearchType("BusinessType");
+        btInputDTO.setContent("шиномонтаж");
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("дв");
         wsInputDTO.setInputDTO(btInputDTO);
 
         var result = webSocketService.find(wsInputDTO);

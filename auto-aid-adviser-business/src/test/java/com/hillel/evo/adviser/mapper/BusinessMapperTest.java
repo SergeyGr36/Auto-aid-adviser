@@ -2,12 +2,14 @@ package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
+import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 public class BusinessMapperTest {
 
     @Autowired
-    BusinessMapperImpl businessMapper;
+    BusinessMapper businessMapper;
 
     @Autowired
     BusinessUserRepository businessUserRepository;
@@ -96,6 +99,22 @@ public class BusinessMapperTest {
         BusinessDto dto = businessMapper.toDto(business);
         Assertions.assertNull(dto.getLocation());
         Assertions.assertNull(dto.getContact());
+    }
+
+    @Test
+    public void whenToFullDto_ReturnDto() {
+        //given
+        Business business = new Business();
+        //when
+        BusinessFullDto dto = businessMapper.toFullDto(business);
+        Assertions.assertNotNull(dto);
+    }
+
+    @Test
+    public void whenToFullDto_ReturnNull() {
+        //when
+        BusinessFullDto dto = businessMapper.toFullDto(null);
+        Assertions.assertNull(dto);
     }
 
 }

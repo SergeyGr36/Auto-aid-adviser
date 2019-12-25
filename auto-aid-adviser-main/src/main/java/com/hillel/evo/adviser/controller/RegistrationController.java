@@ -2,7 +2,7 @@ package com.hillel.evo.adviser.controller;
 
 import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.LoginRequestDto;
-import com.hillel.evo.adviser.dto.LoginResponseDto;
+import com.hillel.evo.adviser.dto.UserTokenResponseDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.service.AuthenticationService;
 import com.hillel.evo.adviser.service.RegistrationService;
@@ -56,7 +56,8 @@ public class RegistrationController {
 
     /**
      * Activates a new user.
-     * Returns a response with status ok, jwt token in "Authorization" header, and user dto body.
+     * Returns a response with status ok, jwt token in "Authorization" header,
+     * jwt token and user in dto body.
      * Jwt holds user id.
      *
      * If activation code is malformed, returns status Bad Request 400.
@@ -65,7 +66,7 @@ public class RegistrationController {
      * @return Returns a response with status ok, jwt token in "Authorization" header, and user dto body.
      */
     @PostMapping("/activate/{activationCode}")
-    public ResponseEntity<AdviserUserDetailsDto> activateUser(
+    public ResponseEntity<UserTokenResponseDto> activateUser(
             @PathVariable @Pattern(regexp = "^[a-fA-F0-9-]+$") String activationCode) {
 
         return registrationService.activateUser(activationCode);
@@ -76,14 +77,15 @@ public class RegistrationController {
      * If authentication fails, returns status 401 Unauthorized.
      * If user credentials violate required patterns, returns status Bad Request 400.
      *
-     * Returns a response with jwt token in "Authorization" header, a LoginResponseDto body, and status ok.
+     * Returns a response with status ok, jwt token in "Authorization" header,
+     * jwt token and user in dto body.
      * Jwt holds user id.
      * @param loginRequestDTO the request, containing user credentials.
      * @return An http response with status ok and with jwt token,
      * or an error status Unauthorized 401, or an error status Bad Request 400.
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> authenticateUser(
+    public ResponseEntity<UserTokenResponseDto> authenticateUser(
             @Valid @RequestBody final LoginRequestDto loginRequestDTO) {
 
         return authenticationService.authenticateAndResponse(loginRequestDTO);
