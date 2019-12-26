@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.Positive;
 
 @Data
 @Embeddable
@@ -13,11 +12,11 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor
 public class Location {
 
-    @Positive
+    /*@Positive
     private double longitude;
 
     @Positive
-    private double latitude;
+    private double latitude;*/
 
     private String address;
 
