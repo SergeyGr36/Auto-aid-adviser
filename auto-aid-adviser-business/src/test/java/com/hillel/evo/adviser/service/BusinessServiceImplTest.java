@@ -230,7 +230,7 @@ public void whenfindByBusinessTypeServiceTypeLocationReturnBusinessDto(){
             double longtitude = 134;
             double latitude = 132;
             var result = businessService.findByBusinessTypeServiceTypeLocation(ServiceType,longtitude,latitude);
-            assertEquals(result.size(),1);
+            assertEquals(result.size(),0);
     /* List<BusinessDto> businessDto = businessService.findByBusinessTypeServiceTypeLocation(serviceForBusiness,longtitude,latitude);
      assertEquals(businessDto.size(),1);*/
 }
