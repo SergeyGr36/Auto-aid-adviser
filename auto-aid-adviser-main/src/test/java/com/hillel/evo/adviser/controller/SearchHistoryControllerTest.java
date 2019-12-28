@@ -28,7 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/create-user2.sql", "/create-business.sql", "/create-image.sql"},
+@Sql(value = {"/clean-image.sql", "/clean-history.sql", "/clean-business.sql", "/clean-user.sql",
+        "/create-user2.sql", "/create-business.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-image.sql", "/clean-history.sql", "/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
