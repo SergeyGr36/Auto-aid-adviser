@@ -199,8 +199,8 @@ public class BusinessControllerTest extends BaseTest {
         MockMultipartHttpServletRequestBuilder multipart = MockMvcRequestBuilders.multipart(PATH_BUSINESSES);
         mockMvc.perform(multipart
                 .file(getPart(objectMapper.writeValueAsString(businessDto)))
-                .file(getPart(objectMapper.writeValueAsString(businessDto)))
-                .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .file(getMultipartFile())
+                .file(getMultipartFile())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
                 )
                 //then

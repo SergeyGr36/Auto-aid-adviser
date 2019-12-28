@@ -27,4 +27,6 @@ public class SimpleUser {
     private String firstName;
 
     private String lastName;
+
+    private String phone;
 }
