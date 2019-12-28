@@ -8,5 +8,5 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Contact {
     private String phone;
-//    private String name;
+    private String url;
 }

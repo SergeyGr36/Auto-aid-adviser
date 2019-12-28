@@ -22,4 +22,5 @@ public class BusinessUser {
     @OneToOne (fetch = FetchType.LAZY)
     @MapsId
     private AdviserUserDetails userDetails;
+
 }
