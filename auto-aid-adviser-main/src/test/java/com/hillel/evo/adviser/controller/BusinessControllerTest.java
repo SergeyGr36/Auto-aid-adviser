@@ -3,11 +3,7 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.BaseTest;
-import com.hillel.evo.adviser.dto.BusinessDto;
-import com.hillel.evo.adviser.dto.ContactDto;
-import com.hillel.evo.adviser.dto.ImageDto;
-import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
+import com.hillel.evo.adviser.dto.*;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
@@ -17,6 +13,7 @@ import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
+import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,13 +27,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,10 +37,8 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,6 +83,9 @@ public class BusinessControllerTest extends BaseTest {
 
     @Autowired
     BusinessService businessService;
+
+    @Autowired
+    BusinessServiceImpl businessServiceImpl;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -306,6 +300,17 @@ public class BusinessControllerTest extends BaseTest {
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
                 //then
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void findByBusinessTypeServiceTypeLocation() throws Exception {
+        List<BusinessDto> ListBusiness = businessServiceImpl.findByBusinessTypeServiceTypeLocation("car wash",12,12);
+        mockMvc.perform(get(PATH_BUSINESSES+"/{id}/serviceName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+                .andDo(print())
+                  .andExpect(status().isOk())
+                .andReturn();
     }
 
     private BusinessDto createTestDto() {
