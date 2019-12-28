@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class BusinessTypeServiceImplTest extends BaseTest {
+public class BusinessTypeServiceImplTest {
     @Autowired
     private BusinessTypeServiceImpl businessTypeService;
     @Autowired

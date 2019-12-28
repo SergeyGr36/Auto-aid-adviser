@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/clean-business.sql", "/clean-user.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class ServiceTypeServiceImplTest extends BaseTest {
+public class ServiceTypeServiceImplTest {
     @Autowired
     private ServiceTypeRepository repo;
     @Autowired
