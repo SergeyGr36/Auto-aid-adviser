@@ -26,7 +26,7 @@ import static java.util.Arrays.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = AdviserStarter.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Sql(value = {"/create-business.sql"},
+@Sql(value = {"/clean-all.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class WebSocketControllerTest {
 
