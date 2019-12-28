@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver
+    url: jdbc-secretsmanager:postgresql://aaa-instance.cekerrljrgxg.eu-west-1.rds.amazonaws.com:5432/adviserdbtest
+    username: dev/aid-adviser/postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+  flyway:
+    enabled: true
