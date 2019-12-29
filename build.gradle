@@ -199,6 +199,7 @@ project(':auto-aid-adviser-business') {
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-image')
+        implementation project(':auto-aid-adviser-user-profile')
 
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
