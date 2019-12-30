@@ -53,10 +53,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/create-user2.sql", "/create-business.sql", "/create-image.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user2.sql", "/create-business.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BusinessControllerTest extends BaseTest {
 
     private static final String BUSINESS_EMAIL = "bvg@mail.com";
