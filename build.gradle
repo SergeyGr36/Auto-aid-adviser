@@ -114,6 +114,22 @@ project(":auto-aid-adviser-user") {
     }
 }
 
+project(":auto-aid-adviser-user-profile") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-image')
+
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
 project(':auto-aid-adviser-security') {
     dependencies {
         bootJar {
@@ -245,6 +261,7 @@ project(":auto-aid-adviser-main") {
     dependencies {
         implementation project(':auto-aid-adviser-business')
         implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-user-profile')
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
         implementation project(':auto-aid-adviser-security')
