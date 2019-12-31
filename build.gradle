@@ -145,18 +145,6 @@ project(':auto-aid-adviser-security') {
     }
 }
 
-project(':auto-aid-adviser-dbmigration') {
-    dependencies {
-        bootJar {
-            enabled = false
-        }
-        jar {
-            enabled = true
-        }
-        implementation misc.flyway
-    }
-}
-
 project(':auto-aid-adviser-search-service') {
     bootJar {
         enabled = false
@@ -271,6 +259,7 @@ project(":auto-aid-adviser-main") {
         classifier = 'boot'
     }
     dependencies {
+        implementation misc.flyway
         implementation project(':auto-aid-adviser-business')
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-user-profile')

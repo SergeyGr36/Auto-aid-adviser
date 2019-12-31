@@ -37,6 +37,8 @@ spring:
   servlet:
     multipart:
       enabled: true
+  flyway:
+    enabled: false
 
 server:
   port: 8080

@@ -18,6 +18,8 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
@@ -28,6 +30,8 @@ spring:
             directory_provider: filesystem
             indexBase: /var/adviser/indexes/
           reindex: false
+  flyway:
+    enabled: false
 
 email:
   service: aws
