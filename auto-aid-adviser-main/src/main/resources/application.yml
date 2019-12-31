@@ -41,6 +41,12 @@ server:
   port: 8080
   servlet:
     context-path: /api
+  ssl:
+    key-alias: auto-aid-adviser
+    key-password: aaapass
+    key-store-type: JKS
+    key-store: classpath:auto-aid-adviser.jks
+
 
 email:
   service: default
