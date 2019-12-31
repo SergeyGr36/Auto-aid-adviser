@@ -134,7 +134,7 @@ private transient final BusinessServiceImpl businessServiceImpl;
 
 
     @Secured(ROLE_BUSINESS)
-    @GetMapping("/{id}/serviceName")
+    @GetMapping("/{serviceForBusiness}/{longtitude}/{latitude}")
     public List<BusinessDto> findByBusinessTypeServiceTypeLocation(@PathVariable String serviceForBusiness,@PathVariable double longtitude,@PathVariable double latitude ){
         return businessServiceImpl.findByBusinessTypeServiceTypeLocation( serviceForBusiness,  longtitude,  latitude );
     }

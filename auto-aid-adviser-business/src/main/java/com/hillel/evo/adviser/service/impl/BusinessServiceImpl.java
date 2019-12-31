@@ -142,7 +142,6 @@ public class BusinessServiceImpl implements BusinessService {
         var serviceForBusinessQuery = queryGeneratorService.getTextQuery(Business.class,"name", serviceForBusiness);
         var locationTypeQuery = queryGeneratorService.getSpatialQuery(Business.class, 5, latitude,longtitude);
         var entities = search.search(Business.class, serviceForBusinessQuery, locationTypeQuery);
-        //var entities1 = search.search(Location.class, locationTypeQuery, serviceForBusiness);
         List<BusinessDto> result = new ArrayList<>();
         entities.forEach(e -> result.add(mapper.toDto(e)));
         return result;
