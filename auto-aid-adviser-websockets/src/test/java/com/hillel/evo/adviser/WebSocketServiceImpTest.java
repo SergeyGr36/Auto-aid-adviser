@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -68,6 +70,32 @@ public class WebSocketServiceImpTest extends BaseTest {
         var result = webSocketService.find(wsInputDTO);
 
         assertEquals(1, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchServiceTypeWOBusinessTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("ru");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchUAServiceTypeWOBusinessTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("дв");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
     }
 
     @Test

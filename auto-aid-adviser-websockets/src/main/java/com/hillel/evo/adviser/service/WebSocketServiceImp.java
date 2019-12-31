@@ -6,7 +6,7 @@ import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +34,7 @@ public class WebSocketServiceImp implements WebSocketService {
             case BUSINESS_TYPE:
                 return findBusinessTypeByName(dto.getContent());
             case SERVICE_TYPE:
-                return findServiceTypeByName(dto.getContent(), dto.getInputDTO().getContent());
+                return findServiceTypeByName(dto.getContent(), dto.getWsInputDTO().orElseGet(() -> new WSInputDTO()).getContent());
             default:
                 throw new UnsupportedSearchTypeException("Please specify correct search type, " + dto.getSearchType()
                         + " is not correct. Supported types are: 'BusinessType' and ServiceType");
@@ -52,9 +52,9 @@ public class WebSocketServiceImp implements WebSocketService {
     @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findServiceTypeByName(String name, String btName) {
         WSOutputDTO result = new WSOutputDTO();
-        var businessTypeList = serviceTypeService.findAllByNameContains(
-                "*" + name.toLowerCase() + "*", btName
-                );
+        var businessTypeList = Optional.ofNullable(btName).isEmpty() ?
+                serviceTypeService.findAllByName("*" + name.toLowerCase() + "*") :
+                serviceTypeService.findAllByName("*" + name.toLowerCase() + "*", btName);
         result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
         return result;
     }
