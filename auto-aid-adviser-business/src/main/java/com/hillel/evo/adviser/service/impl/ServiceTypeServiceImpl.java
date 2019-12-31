@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ServiceTypeServiceImpl implements ServiceTypeService {
@@ -53,7 +52,6 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional
     public ServiceTypeDto findByName(String name) {
         var result = textSearch.search(ServiceType.class, QUERY_FIELD, name);
-        //return mapper.toDto(textSearch.search(ServiceType.class, "name", name).get(0));
         return result.size() > 0 ? mapper.toDto(result.get(0)) : null;
     }
 
