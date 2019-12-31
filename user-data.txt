@@ -39,6 +39,6 @@ cd /home/${usr}/
 # start spring-boot app in dev mode
 java -jar -Dspring.profiles.active=dev auto-aid-adviser-main-boot.jar
 
-#This magic line (only works with sudo) redirects http from external 80 to internal 8080:
-sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
+#This magic line (only works with sudo) redirects http from external 443 to internal 8443:
+sudo iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443
 --//
