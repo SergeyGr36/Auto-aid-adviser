@@ -2,7 +2,7 @@
 Backend for Auto Aid Adviser project
 
 ##Building project
-JDK 11 needs to be installed
+JDK 11 need to be installed
 
 From the root dir of a project run
 
