@@ -1,14 +1,10 @@
 package com.hillel.evo.adviser.dto;
 
-import com.hillel.evo.adviser.entity.Business;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
