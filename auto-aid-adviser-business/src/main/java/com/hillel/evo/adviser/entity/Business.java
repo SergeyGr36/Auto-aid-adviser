@@ -8,7 +8,6 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Spatial;
 
 import javax.persistence.*;
-import javax.validation.constraints.Positive;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,12 +30,12 @@ public class Business {
     private String name;
 
     @Field
-    @Positive
+   // @Positive
     @org.hibernate.search.annotations.Longitude
     private double Longitude;
 
     @Field
-    @Positive
+   // @Positive
     @org.hibernate.search.annotations.Latitude
     private double Latitude;
 

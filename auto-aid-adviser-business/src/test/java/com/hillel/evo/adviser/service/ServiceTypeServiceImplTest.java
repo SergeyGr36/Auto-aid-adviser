@@ -9,7 +9,6 @@ import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
 import com.hillel.evo.adviser.repository.ServiceTypeRepository;
 import com.hillel.evo.adviser.service.impl.ServiceTypeServiceImpl;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {BusinessApplication.class})
 @Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
@@ -60,14 +57,14 @@ public class ServiceTypeServiceImplTest extends BaseTest {
     public void whenFindAllByNameThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByName("body");
-        assertEquals(1, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
     public void whenFindAllByNameContainsThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByNameContains("ru*", "shinomantazh");
-        assertEquals(1, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
