@@ -53,7 +53,7 @@ public class ServiceTypeServiceImplTest extends BaseTest {
         assertEquals(type.getId(), dto.getId());
     }
 
-    @Test
+  /*  @Test
     public void whenFindAllByNameThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByName("body");
@@ -65,7 +65,7 @@ public class ServiceTypeServiceImplTest extends BaseTest {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByNameContains("ru*", "shinomantazh");
         assertEquals(0, result.size());
-    }
+    }*/
 
     @Test
     public void whenFindAllByServiceTypeIdThenReturnThisList() {

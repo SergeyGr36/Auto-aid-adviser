@@ -85,7 +85,7 @@ public class SearchTest extends BaseTest {
         var searchVal = "Хон";
         var result = aidTextSearch.searchWildcard(Aid.class, "name", searchVal.toLowerCase() + "*");
 
-        assertEquals(0, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
