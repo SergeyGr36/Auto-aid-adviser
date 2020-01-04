@@ -317,8 +317,8 @@ public class BusinessControllerTest extends BaseTest {
         dto.setName("some name");
 
         LocationDto location = new LocationDto();
-        location.setLatitude(99);
-        location.setLongitude(99);
+        location.setLatitude(60.0);
+        location.setLongitude(60.0);
         location.setAddress("some address");
 
         ContactDto contact = new ContactDto();

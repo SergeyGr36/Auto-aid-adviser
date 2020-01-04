@@ -17,6 +17,9 @@ import com.hillel.evo.adviser.search.CustomSearch;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import com.hillel.evo.adviser.service.interfaces.ImageService;
+import org.apache.lucene.search.Query;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.query.dsl.TermTermination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,14 +141,12 @@ public class BusinessServiceImpl implements BusinessService {
         return mapper.toFullDto(business);
     }
 
-    public List<BusinessDto> findByBusinessTypeServiceTypeLocation(String serviceForBusiness, double longtitude, double latitude ) {
-        var serviceForBusinessQuery = queryGeneratorService.getTextQuery(Business.class,"name", serviceForBusiness);
-        var locationTypeQuery = queryGeneratorService.getSpatialQuery(Business.class, 5, latitude,longtitude);
+    public List<BusinessDto> findByBusinessTypeServiceTypeLocation(String serviceForBusiness, double longitude, double latitude ) {
+        var serviceForBusinessQuery = queryGeneratorService.getTextQuery(Business.class,"serviceForBusinesses.name", serviceForBusiness);
+        var locationTypeQuery = queryGeneratorService.getSpatialQuery(Business.class, "location", 5, latitude, longitude);
         var entities = search.search(Business.class, serviceForBusinessQuery, locationTypeQuery);
-        List<BusinessDto> result = new ArrayList<>();
-        entities.forEach(e -> result.add(mapper.toDto(e)));
-        return result;
-
+        List<Business> business = businessRepository.findByBusiness(entities);
+        return mapper.listToDto(business);
     }
 
     private Set<ServiceForBusiness> getAllServices() {

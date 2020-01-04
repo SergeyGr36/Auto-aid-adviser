@@ -50,4 +50,14 @@ public class QueryGeneratorService {
                 .andLongitude( longitude )
                 .createQuery();
     }
+
+    public QueryFactory getSpatialQuery(final Class clazz, String fieldLocation, final double radius, final double latitude, double longitude) {
+        return () -> getQueryBuilder(clazz)
+                .spatial()
+                .onField(fieldLocation)
+                .within( radius, Unit.KM )
+                .ofLatitude( latitude )
+                .andLongitude( longitude )
+                .createQuery();
+    }
 }

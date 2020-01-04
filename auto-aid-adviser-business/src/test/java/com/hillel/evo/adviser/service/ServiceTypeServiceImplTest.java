@@ -66,14 +66,14 @@ public class ServiceTypeServiceImplTest {
     public void whenFindAllByNameThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByName("ru*");
-        assertEquals(0, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test
     public void whenFindAllByNameContainsThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findAllByName("ru*", "shinomantazh");
-        assertEquals(0, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test

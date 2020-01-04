@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.service;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.*;
+import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
@@ -222,13 +223,13 @@ public class BusinessServiceImplTest {
     }
 
 @Test
-public void whenfindByBusinessTypeServiceTypeLocationReturnBusinessDto(){
-           config.reindex(ServiceType.class);
-            String ServiceType = "ServiceType";
-            double longtitude = 134;
-            double latitude = 132;
-            var result = businessService.findByBusinessTypeServiceTypeLocation(ServiceType,longtitude,latitude);
-            assertEquals(result.size(),0);
+public void whenFindByBusinessTypeServiceTypeLocationReturnBusinessDto(){
+           config.reindex(Business.class);
+            String serviceName = "balancing";
+            double longitude = 50.0;
+            double latitude = 50.0;
+            var result = businessService.findByBusinessTypeServiceTypeLocation(serviceName, longitude, latitude);
+            assertEquals(1, result.size());
 }
 
     private BusinessDto createTestDto() {
@@ -238,8 +239,8 @@ public void whenfindByBusinessTypeServiceTypeLocationReturnBusinessDto(){
         dto.setName("some name");
 
         LocationDto location = new LocationDto();
-        location.setLatitude(99);
-        location.setLongitude(99);
+        location.setLatitude(60.0);
+        location.setLongitude(60.0);
         location.setAddress("some address");
 
         ContactDto contact = new ContactDto();
