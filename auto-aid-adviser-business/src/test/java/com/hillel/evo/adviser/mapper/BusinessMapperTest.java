@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
-@Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class BusinessMapperTest {
 

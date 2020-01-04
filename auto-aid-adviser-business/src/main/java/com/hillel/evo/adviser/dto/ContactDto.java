@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContactDto {
     private String phone;
+    private String url;
 }

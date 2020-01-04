@@ -6,10 +6,14 @@ import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import com.hillel.evo.adviser.service.WebSocketService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,7 +42,7 @@ public class WebSocketServiceImpTest extends BaseTest {
 
     }
 
-    /*@Test
+    @Test
     public void whenSearchUABusinessTypeThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
@@ -49,7 +53,7 @@ public class WebSocketServiceImpTest extends BaseTest {
 
         assertEquals(2, result.getResult().size());
 
-    }*/
+    }
 
     @Test
     public void whenSearchServiceTypeThenReturnList() {
@@ -68,7 +72,33 @@ public class WebSocketServiceImpTest extends BaseTest {
         assertEquals(1, result.getResult().size());
     }
 
-  /*  @Test
+    @Test
+    public void whenSearchServiceTypeWOBusinessTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("ru");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchUAServiceTypeWOBusinessTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("дв");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+    }
+
+    @Test
     public void whenSearchUAServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
@@ -83,7 +113,7 @@ public class WebSocketServiceImpTest extends BaseTest {
         var result = webSocketService.find(wsInputDTO);
 
         assertEquals(1, result.getResult().size());
-    }*/
+    }
 
     @Test
     public void whenSearchUnsupportedTypeThenThrowsException() {

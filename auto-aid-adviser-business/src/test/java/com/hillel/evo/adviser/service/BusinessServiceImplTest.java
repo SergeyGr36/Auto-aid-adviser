@@ -33,10 +33,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
-@Sql(value = {"/create-user.sql", "/create-business.sql", "/create-image.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user.sql", "/create-business.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BusinessServiceImplTest {
 @Autowired
     HibernateSearchConfig config;

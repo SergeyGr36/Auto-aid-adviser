@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    platform: h2
+    platform: h2-test
     username: adviser
     password: arbitrary
     driver-class-name: org.h2.Driver
@@ -37,6 +37,8 @@ spring:
   servlet:
     multipart:
       enabled: true
+  flyway:
+    enabled: false
 
 server:
   port: 8080

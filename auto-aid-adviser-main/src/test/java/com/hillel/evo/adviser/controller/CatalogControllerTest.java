@@ -7,8 +7,14 @@ import com.hillel.evo.adviser.dto.BusinessTypeDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
 import com.hillel.evo.adviser.entity.BusinessType;
+import com.hillel.evo.adviser.entity.CarBrand;
+import com.hillel.evo.adviser.entity.CarModel;
 import com.hillel.evo.adviser.entity.ServiceType;
+import com.hillel.evo.adviser.entity.TypeCar;
 import com.hillel.evo.adviser.repository.BusinessTypeRepository;
+import com.hillel.evo.adviser.repository.CarBrandRepository;
+import com.hillel.evo.adviser.repository.CarModelRepository;
+import com.hillel.evo.adviser.repository.TypeCarRepository;
 import com.hillel.evo.adviser.service.BusinessTypeService;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
@@ -22,6 +28,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,15 +40,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user2.sql", "/create-business.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user2.sql", "/create-business.sql", "/user-profile.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-business.sql", "/clean-user.sql"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class CatalogControllerTest {
 
-    private static final String PATH_BUSINESSES_TYPE = "/catalog/business_types";
-    private static final String PATH_SERVICE_TYPE = "/catalog/service_types";
+    private static final String PATH_BUSINESSES_TYPE = "/catalog/business/type";
+    private static final String PATH_SERVICE_TYPE = "/catalog/service/type";
     private static final String PATH_SERVICE = "/catalog/services";
+    private static final String PATH_SERVICE_TYPE_CAR = "/catalog/car/type";
+    private static final String PATH_SERVICE_CAR_BRAND = "/catalog/car/brand";
+    private static final String PATH_SERVICE_CAR_MODEL = "/catalog/car/model";
 
     @Autowired
     ObjectMapper objectMapper;
@@ -64,6 +72,15 @@ class CatalogControllerTest {
     @Autowired
     private HibernateSearchConfig hibernateSearchConfig;
 
+    @Autowired
+    private TypeCarRepository typeCarRepository;
+
+    @Autowired
+    private CarBrandRepository carBrandRepository;
+
+    @Autowired
+    private CarModelRepository carModelRepository;
+
     @Test
     public void findBusinessTypeById_Test() throws Exception {
         //given
@@ -80,7 +97,7 @@ class CatalogControllerTest {
         //given
         List<BusinessTypeDto> all = businessTypeService.findAll();
         //when
-        mockMvc.perform(get(PATH_BUSINESSES_TYPE))
+        mockMvc.perform(get(PATH_BUSINESSES_TYPE+"s"))
                 //then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -93,7 +110,7 @@ class CatalogControllerTest {
         //given
         BusinessTypeDto businessTypeDto = businessTypeService.findAll().get(0);
         //when
-        mockMvc.perform(get(PATH_BUSINESSES_TYPE+"/{id}/service_types", businessTypeDto.getId()))
+        mockMvc.perform(get(PATH_BUSINESSES_TYPE+"/{id}/service/types", businessTypeDto.getId()))
                 //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].businessType.name").value(businessTypeDto.getName()));
@@ -283,4 +300,148 @@ class CatalogControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /* *********** Type Car ************ */
+
+    @Test
+    public void getAllTypeCar() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_TYPE_CAR+"s"))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").isString());
+    }
+
+    @Test
+    public void getTypeCarById() throws Exception {
+        //given
+        TypeCar typeCar = typeCarRepository.findByName("coupe").get();
+        //when
+        mockMvc.perform(get(PATH_SERVICE_TYPE_CAR+"/{id}", typeCar.getId()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(typeCar.getName()));
+    }
+
+    @Test
+    public void getTypeCarByIdReturnCode404() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_TYPE_CAR+"/{id}", 999L))
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getTypeCarByName() throws Exception {
+        //given
+        TypeCar typeCar = typeCarRepository.findByName("coupe").get();
+        //when
+        mockMvc.perform(get(PATH_SERVICE_TYPE_CAR+"/name/{name}", typeCar.getName()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(typeCar.getName()));
+    }
+
+    @Test
+    public void getTypeCarByNameReturnCode404() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_TYPE_CAR+"/name/{name}", "errName"))
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    /* *********** Car Brand ************ */
+
+    @Test
+    public void getAllCarBrands() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_BRAND+"s"))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").isString());
+    }
+
+    @Test
+    public void getCarBrandById() throws Exception {
+        //given
+        CarBrand carBrand = carBrandRepository.findByName("BMW").get();
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_BRAND+"/{id}", carBrand.getId()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(carBrand.getName()));
+    }
+
+    @Test
+    public void getCarBrandByIdReturnCode404() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_BRAND+"/{id}", 999L))
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getCarBrandByName() throws Exception {
+        //given
+        CarBrand carBrand = carBrandRepository.findByName("BMW").get();
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_BRAND+"/name/{name}", carBrand.getName()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(carBrand.getName()));
+    }
+
+    @Test
+    public void getCarBrandByNameReturnCode404() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_BRAND+"/name/{name}", "errName"))
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    /* *********** Car Model ************ */
+
+    @Test
+    public void getCarModelByIdThenReturnDto() throws Exception {
+        //given
+        CarModel carModel = carModelRepository.findAll().get(0);
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_MODEL+"/{id}", carModel.getId()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(carModel.getName()));
+    }
+
+    @Test
+    public void getListCarModelByTypeIdAndBrandIdVariable() throws Exception {
+        //given
+        TypeCar typeCar = typeCarRepository.findByName("crossover").get();
+        CarBrand carBrand = carBrandRepository.findByName("BMW").get();
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_MODEL+"/type/{typeId}/brand/{brandId}", typeCar.getId(), carBrand.getId()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").isString());
+    }
+
+    @Test
+    public void getListCarModelByTypeNameAndBrandNameParam() throws Exception {
+        //given
+        TypeCar typeCar = typeCarRepository.findByName("crossover").get();
+        CarBrand carBrand = carBrandRepository.findByName("BMW").get();
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_MODEL+"s?typeName={type}&brandName={brand}", typeCar.getName(), carBrand.getName()))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name").isString());
+    }
+
+    @Test
+    public void getListCarModelByTypeAndBrandParamThenReturnBadRequest() throws Exception {
+        //when
+        mockMvc.perform(get(PATH_SERVICE_CAR_MODEL+"s"))
+                //then
+                .andExpect(status().isBadRequest());
+    }
 }
