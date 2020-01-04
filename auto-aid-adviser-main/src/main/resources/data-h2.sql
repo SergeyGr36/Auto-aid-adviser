@@ -13,59 +13,68 @@ insert into business_usr(user_details_id) values
 ((select id from adviser_usr where email like 'testbusiness2@mail.com'));
 
 insert into business_type(name) values
-('CTO'),
-('shinomantazh'),
-('shop'),
+('СТО'),
+('шиномонтах'),
+('магазин'),
 ('test');
 
 insert into service_type(name, business_type_id) values
-('body', (select id from business_type where name like 'CTO')),
-('run', (select id from business_type where name like 'CTO')),
-('engine', (select id from business_type where name like 'CTO')),
-('gum', (select id from business_type where name like 'shinomantazh')),
-('disk', (select id from business_type where name like 'shinomantazh')),
-('test', (select id from business_type where name like 'shinomantazh'));
+('Техническое обслуживание', (select id from business_type where name like 'СТО')),
+('Диагностика автомобиля', (select id from business_type where name like 'СТО')),
+('Ремонт ходовой части', (select id from business_type where name like 'СТО')),
+('Ремонт автоэлектрики', (select id from business_type where name like 'СТО')),
+('шины', (select id from business_type where name like 'шиномонтах')),
+('диски', (select id from business_type where name like 'шиномонтах')),
+('test', (select id from business_type where name like 'шиномонтах'));
 
 insert into service(name, service_type_id) values
-('straightening dents 1', (select id from service_type where name like 'body')),
-('balancing 1', (select id from service_type where name like 'run')),
-('oil change 1', (select id from service_type where name like 'engine')),
-('straightening 1', (select id from service_type where name like 'disk')),
-('straightening dents 2', (select id from service_type where name like 'body')),
-('balancing 2', (select id from service_type where name like 'run')),
-('oil change 2', (select id from service_type where name like 'engine')),
-('straightening 2', (select id from service_type where name like 'disk')),
-('straightening dents 3', (select id from service_type where name like 'body')),
-('balancing 3', (select id from service_type where name like 'run')),
-('oil change 3', (select id from service_type where name like 'engine')),
-('straightening 3', (select id from service_type where name like 'disk')),
-('straightening dents 4', (select id from service_type where name like 'body')),
-('balancing 4', (select id from service_type where name like 'run')),
-('oil change 4', (select id from service_type where name like 'engine')),
-('straightening 4', (select id from service_type where name like 'disk')),
-('straightening dents 5', (select id from service_type where name like 'body')),
-('balancing 5', (select id from service_type where name like 'run')),
-('oil change 5', (select id from service_type where name like 'engine')),
-('straightening 5', (select id from service_type where name like 'disk')),
-('straightening dents 6', (select id from service_type where name like 'body')),
-('balancing 6', (select id from service_type where name like 'run')),
-('oil change 6', (select id from service_type where name like 'engine')),
-('straightening 6', (select id from service_type where name like 'disk')),
-('straightening dents 7', (select id from service_type where name like 'body')),
-('balancing 7', (select id from service_type where name like 'run')),
-('oil change 7', (select id from service_type where name like 'engine')),
-('straightening 7', (select id from service_type where name like 'disk')),
-('straightening dents 8', (select id from service_type where name like 'body')),
-('balancing 8', (select id from service_type where name like 'run')),
-('oil change 8', (select id from service_type where name like 'engine')),
-('straightening 8', (select id from service_type where name like 'disk')),
-('rubber change', (select id from service_type where name like 'gum'));
+('Замена моторного масла', (select id from service_type where name like 'Техническое обслуживание')),
+('Снятие верхней защиты двигателя', (select id from service_type where name like 'Техническое обслуживание')),
+('Замена воздушного фильтра', (select id from service_type where name like 'Техническое обслуживание')),
+('Замена фильтра салона в бардачке', (select id from service_type where name like 'Техническое обслуживание')),
+('Замена фильтра салона через педальный узел', (select id from service_type where name like 'Техническое обслуживание')),
+('Замена топливного фильтра', (select id from service_type where name like 'Техническое обслуживание')),
+('Замена топливного фильтра в бензобаке', (select id from service_type where name like 'Техническое обслуживание')),
+
+('Диагностика ходовой части', (select id from service_type where name like 'Диагностика автомобиля')),
+('Диагностика двигателя (ремни, подтекания)', (select id from service_type where name like 'Диагностика автомобиля')),
+('Диагностика толщины лако-красочного покрытия', (select id from service_type where name like 'Диагностика автомобиля')),
+('Комплексная диагностика (ходовая, двигатель, краска, компьютер)', (select id from service_type where name like 'Диагностика автомобиля')),
+('Диагностика электрооборудования', (select id from service_type where name like 'Диагностика автомобиля')),
+('Диагностика аккумулятора', (select id from service_type where name like 'Диагностика автомобиля')),
+('Диагностика впуска дымогенератором', (select id from service_type where name like 'Диагностика автомобиля')),
+('Диагностика дымогенератором выхлопной системы', (select id from service_type where name like 'Диагностика автомобиля')),
+
+('Замена стойки стабилизатора', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена задней балки', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена пружины', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена маятника', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена рулевого наконечника', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена рулевой тяги', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена шаровой опоры запрессованной', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена шаровой опоры (болты)', (select id from service_type where name like 'Ремонт ходовой части')),
+('Замена полуоси', (select id from service_type where name like 'Ремонт ходовой части')),
+
+('Компьютерная диагностика', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Зарядка аккумуляторной батареи', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Ремонт электропроводки (нормочас)', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Адаптация роботизированной КПП', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Замена аккумулятора', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Обнуление сервисного интервала', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Замена стартера', (select id from service_type where name like 'Ремонт автоэлектрики')),
+('Замена генератора', (select id from service_type where name like 'Ремонт автоэлектрики')),
+
+('рихтовка', (select id from service_type where name like 'диски')),
+('зачистка', (select id from service_type where name like 'диски')),
+('прокатка', (select id from service_type where name like 'диски')),
+('сварка', (select id from service_type where name like 'диски')),
+('сезонная замена', (select id from service_type where name like 'шины'));
 
 insert into business(phone, address, latitude, longitude, name, business_user_user_details_id) values
-('098-123-45-67', 'Kiev', 100, 100, 'user 1 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
-('098-123-45-67', 'Kiev', 101, 110, 'user 1 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
-('066-666-66-66', 'Kiev', 102, 120, 'user 2 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
-('096-999-99-99', 'Kiev', 103, 130, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
+('098-123-45-67', 'Киев', 50.44, 30.53 , 'user 1 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
+('098-123-45-67', 'вулиця Кіровоградська, Петропавлівська Борщагівка, Київська обл.', 50.42, 30.33, 'СТО АвтоХелп', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
+('066-666-66-66', 'Киев', 50.42, 30.80, 'user 2 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
+('096-999-99-99', 'Киев', 50.50, 30.30, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
 
 insert into work_time(day, from_time, to_time, business_id) values
 (0, now(), now(), (select id from business limit 1)),
@@ -78,11 +87,14 @@ select b.id, s.id from business b, service s;
 insert into service(name, service_type_id) values
 ('for-delete-test', (select id from service_type where name like 'disk'));
 
-insert into type_car(name) values ('Легковой'), ('Грузовой'), ('Автобус'), ('Мотоцикл');
+insert into type_car(name) values ('Легковой'), ('Грузовой'), ('Электрокар'), ('Мотоцикл');
 
-insert into car_brand(name) values ('Audi'), ('BMW'), ('Mersedes'), ('ВАЗ'), ('ЗАЗ'), ('Toyota'), ('Mitsubist');
+insert into car_brand(name) values ('Audi'), ('BMW'), ('Mercedes'), ('ВАЗ'), ('ЗАЗ'), ('Toyota'), ('Mitsubishi');
 
 insert into car_model(name, car_brand_id, type_car_id) values
+('YT202-E', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Грузовой')),
+('i3', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Электрокар')),
+('X6M', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Электрокар')),
 ('X5', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Легковой')),
 ('M5', (select id from car_brand where name like 'BMW'), (select id from type_car where name like 'Легковой')),
 ('A4', (select id from car_brand where name like 'Audi'), (select id from type_car where name like 'Легковой')),
