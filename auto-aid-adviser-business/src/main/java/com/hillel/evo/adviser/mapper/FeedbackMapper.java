@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {BusinessMapper.class, SimpleUserMapper.class})
+@Mapper(componentModel = "spring", uses = {HistoryBusinessMapper.class, SimpleUserMapper.class})
 public interface FeedbackMapper {
 
     @Mapping(target = "id", source = "id")

@@ -36,6 +36,10 @@ public class Feedback {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    /*
+    Need to find solution
+     */
+    @SuppressWarnings("JpaAttributeTypeInspection")
     private SimpleUser simpleUser;
 
     @CreatedDate
