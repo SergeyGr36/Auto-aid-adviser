@@ -25,7 +25,7 @@ public class QueryGeneratorService {
                 .buildQueryBuilder().forEntity(clazz).get();
     }
 
-    public QueryFactory getTextQuery(final Class clazz, final String field, final String value) {
+    public QueryFactory getTextQuery(final Class<?> clazz, final String field, final String value) {
         return () -> getQueryBuilder(clazz)
                 .keyword()
                 .onField(field)
@@ -42,12 +42,26 @@ public class QueryGeneratorService {
                 .createQuery();
     }
 
-    public QueryFactory getSpatialQuery(final Class clazz, final double radius, final double latitude, double longitude) {
+    public QueryFactory getSpatialQuery(final Class<?> clazz, final double radius, final double latitude, double longitude) {
         return () -> getQueryBuilder(clazz)
                 .spatial()
-                .within( radius, Unit.KM )
-                .ofLatitude( latitude )
-                .andLongitude( longitude )
+                .within(radius, Unit.KM)
+                .ofLatitude(latitude)
+                .andLongitude(longitude)
+                .createQuery();
+    }
+
+    public QueryFactory getSpatialQuery(final Class<?> clazz,
+                                        String fieldLocation,
+                                        final double radius,
+                                        final double latitude,
+                                        double longitude) {
+        return () -> getQueryBuilder(clazz)
+                .spatial()
+                .onField(fieldLocation)
+                .within(radius, Unit.KM)
+                .ofLatitude(latitude)
+                .andLongitude(longitude)
                 .createQuery();
     }
 }

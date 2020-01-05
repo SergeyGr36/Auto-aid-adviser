@@ -10,14 +10,17 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class EntitySearch<T> implements TextSearch<T>, SpatialSearch<T>, CustomSearch<T> {
+public class EntitySearch<T> implements TextSearch<T>,  CustomSearch<T>, SpatialSearch<T> {
 
     private transient QueryGeneratorService searchService;
+
+
 
     @Autowired
     public void setSearchService(QueryGeneratorService searchService) {
         this.searchService = searchService;
     }
+
 
     @Override
     public List<T> search(Class<T> clazz, String field, String param) {

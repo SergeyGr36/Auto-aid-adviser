@@ -68,6 +68,7 @@ public class FacetGeneratorSevice {
                 .createFacetingRequest();
     }
 
+/*
     private FacetingRequestFactory getDiscreteFacetingRequest(final Class clazz, final String name, final String field, Object below, Object above) {
         return () -> getQueryBuilder(clazz)
                 .facet()
@@ -79,7 +80,7 @@ public class FacetGeneratorSevice {
                 .above(above)
                 .createFacetingRequest();
     }
-
+*/
 
     /**
      * Return Faceting Request Factory.

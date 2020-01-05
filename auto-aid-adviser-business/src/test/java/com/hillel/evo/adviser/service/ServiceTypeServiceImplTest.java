@@ -49,13 +49,11 @@ public class ServiceTypeServiceImplTest {
         assertEquals(type.getName(), dto.getName());
         assertEquals(type.getId(), dto.getId());
     }
-
     @Test
     public void whenFindByNameThenReturnThisServiceType() {
         hibernateSearchConfig.reindex(ServiceType.class);
         var result = service.findByName("body");
-        assertTrue(result.getName().equals("body"));
-    }
+        assertTrue(result.getName().equals("body")); }
 
     @Test
     public void whenFindByNameThenReturnNull() {
