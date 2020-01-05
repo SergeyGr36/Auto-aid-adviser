@@ -302,7 +302,7 @@ public class BusinessControllerTest extends BaseTest {
 
     @Test
     public void findByBusinessTypeServiceTypeLocation() throws Exception {
-        List<BusinessDto> ListBusiness = businessServiceImpl.findByBusinessTypeServiceTypeLocation("car wash",12,12);
+        List<BusinessDto> ListBusiness = businessServiceImpl.findBusinessByTypeAndLocation("car wash",12,12);
         mockMvc.perform(get("/serviceForBusiness/longtitude/latitude")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))

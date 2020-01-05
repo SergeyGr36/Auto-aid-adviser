@@ -4,7 +4,6 @@ import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
-import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

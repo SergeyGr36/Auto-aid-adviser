@@ -5,7 +5,6 @@ import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.*;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
-import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
@@ -37,7 +36,7 @@ import static org.mockito.Mockito.when;
 @Sql(value = {"/clean-all.sql", "/create-user.sql", "/create-business.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class BusinessServiceImplTest {
-@Autowired
+    @Autowired
     HibernateSearchConfig config;
     @Autowired
     private BusinessServiceImpl businessService;
@@ -49,12 +48,12 @@ public class BusinessServiceImplTest {
     private ServiceForBusinessRepository serviceForBusinessRepository;
 
     @MockBean
-    CloudImageService mockCloudImageService;
+    private CloudImageService mockCloudImageService;
 
-    Long userId;
+    private Long userId;
 
-    MultipartFile goodFile;
-    MultipartFile badFile;
+    private MultipartFile goodFile;
+    private MultipartFile badFile;
 
     @BeforeEach
     private void init() throws Exception {
@@ -124,7 +123,6 @@ public class BusinessServiceImplTest {
     public void whenFindByBusinessIdThenReturnException() {
         assertThrows(ResourceNotFoundException.class, () -> businessService.findBusinessById(99L, userId));
     }
-
 
 
     @Test
@@ -222,15 +220,15 @@ public class BusinessServiceImplTest {
         assertFalse(templateBusiness.getServiceForBusinesses().isEmpty());
     }
 
-@Test
-public void whenFindByBusinessTypeServiceTypeLocationReturnBusinessDto(){
-           config.reindex(Business.class);
-            String serviceName = "balancing";
-            double longitude = 50.0;
-            double latitude = 50.0;
-            var result = businessService.findByBusinessTypeServiceTypeLocation(serviceName, longitude, latitude);
-            assertEquals(1, result.size());
-}
+    @Test
+    public void whenFindByBusinessTypeServiceTypeLocationReturnBusinessDto() {
+        config.reindex(Business.class);
+        String serviceName = "balancing";
+        double longitude = 50.0;
+        double latitude = 50.0;
+        var result = businessService.findBusinessByTypeAndLocation(serviceName, longitude, latitude);
+        assertEquals(1, result.size());
+    }
 
     private BusinessDto createTestDto() {
         List<ServiceForBusiness> list = serviceForBusinessRepository.findAll();
