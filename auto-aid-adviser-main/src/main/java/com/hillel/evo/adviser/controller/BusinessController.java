@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -139,6 +140,11 @@ public class BusinessController {
     @Secured(ROLE_BUSINESS)
     @GetMapping("/{serviceForBusiness}/{longtitude}/{latitude}")
     public ResponseEntity<List<BusinessDto>> findByBusinessTypeServiceTypeLocation(@PathVariable String serviceForBusiness, @PathVariable double longtitude, @PathVariable double latitude) {
-        return  ResponseEntity.ok(businessService.findBusinessByTypeAndLocation(serviceForBusiness, longtitude, latitude));
+        var result = businessService.findBusinessByServiceAndLocation(serviceForBusiness, longtitude, latitude);
+        if (result.size() > 0) {
+            return new ResponseEntity(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity(result, HttpStatus.NOT_FOUND);
+        }
     }
 }

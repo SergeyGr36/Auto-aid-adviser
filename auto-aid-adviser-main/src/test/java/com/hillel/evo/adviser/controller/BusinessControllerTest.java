@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.BaseTest;
+import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.ImageDto;
@@ -56,6 +57,9 @@ public class BusinessControllerTest extends BaseTest {
 
     private AdviserUserDetails user;
     private String jwt;
+
+    @Autowired
+    private HibernateSearchConfig hibernateSearchConfig;
 
     @Autowired
     private MockMvc mockMvc;
@@ -300,12 +304,35 @@ public class BusinessControllerTest extends BaseTest {
     }
 
     @Test
-    public void findByBusinessTypeServiceTypeLocation() throws Exception {
-        List<BusinessDto> ListBusiness = businessService.findBusinessByTypeAndLocation("car wash",12L,12L);
-       // BusinessDto businessDto = ListBusiness.get(0);
-        mockMvc.perform(get(PATH_BUSINESSES+"/serviceForBusiness/longtitude/latitude")
+    public void findByServiceAndLocationThenReturnOK() throws Exception {
+        hibernateSearchConfig.reindex();
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/50.0/50.0")
                 .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void findByServiceNotExistAndLocationThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex();
+        mockMvc.perform(get(PATH_BUSINESSES+"/kolobok/50.0/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findByServiceAndLocationNotExistThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex();
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/150.0/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findByServiceAndBadLocationThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex();
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/vinipuh/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isBadRequest());
     }
 
     private BusinessDto createTestDto() {

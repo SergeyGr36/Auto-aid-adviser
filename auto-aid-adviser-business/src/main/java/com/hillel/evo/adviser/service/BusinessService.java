@@ -32,7 +32,7 @@ public interface BusinessService {
 
     BusinessFullDto createTemplateBusiness();
 
-    List<BusinessDto> findBusinessByTypeAndLocation(String serviceForBusiness,
-                                                    double longitude,
-                                                    double latitude);
+    List<BusinessDto> findBusinessByServiceAndLocation(String serviceForBusiness,
+                                                       double longitude,
+                                                       double latitude);
 }

@@ -134,9 +134,9 @@ public class BusinessServiceImpl implements BusinessService {
         return mapper.toFullDto(business);
     }
 
-    public List<BusinessDto> findBusinessByTypeAndLocation(String serviceForBusiness,
-                                                           double longitude,
-                                                           double latitude) {
+    public List<BusinessDto> findBusinessByServiceAndLocation(String serviceForBusiness,
+                                                              double longitude,
+                                                              double latitude) {
         var businessQuery = queryGeneratorService.getTextQuery(Business.class, "serviceForBusinesses.name", serviceForBusiness);
         var locationQuery = queryGeneratorService.getSpatialQuery(Business.class, "location", 5, latitude, longitude);
         var entities = search.search(Business.class, businessQuery, locationQuery);//first call to DB
