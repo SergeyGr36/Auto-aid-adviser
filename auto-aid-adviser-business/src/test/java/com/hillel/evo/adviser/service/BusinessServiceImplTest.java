@@ -2,7 +2,13 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
-import com.hillel.evo.adviser.dto.*;
+import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
+import com.hillel.evo.adviser.dto.ContactDto;
+import com.hillel.evo.adviser.dto.ImageDto;
+import com.hillel.evo.adviser.dto.LocationDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
+import com.hillel.evo.adviser.dto.WorkTimeDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
@@ -11,6 +17,7 @@ import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +31,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -94,10 +106,11 @@ public class BusinessServiceImplTest {
         assertEquals(listFiles.size(), businessService.findImagesByBusinessId(saveDto.getId()).size());
     }
 
-    /*@Test
+    @Disabled
+    @Test
     public void whenCreateBusinessThenReturnThrow() {
         assertThrows(Exception.class, () -> businessService.createBusiness(new BusinessDto(), userId));
-    }*/
+    }
 
     @Test
     public void whenFindByUserIdThenReturnListBusinessDto() {

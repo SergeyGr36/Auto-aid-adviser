@@ -3,7 +3,11 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.BaseTest;
-import com.hillel.evo.adviser.dto.*;
+import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.ContactDto;
+import com.hillel.evo.adviser.dto.ImageDto;
+import com.hillel.evo.adviser.dto.LocationDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
@@ -13,7 +17,6 @@ import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.EncoderService;
 import com.hillel.evo.adviser.service.JwtService;
-import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +41,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,9 +83,6 @@ public class BusinessControllerTest extends BaseTest {
 
     @Autowired
     BusinessService businessService;
-
-    @Autowired
-    BusinessServiceImpl businessServiceImpl;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -302,12 +301,11 @@ public class BusinessControllerTest extends BaseTest {
 
     @Test
     public void findByBusinessTypeServiceTypeLocation() throws Exception {
-        List<BusinessDto> ListBusiness = businessServiceImpl.findBusinessByTypeAndLocation("car wash",12,12);
-        mockMvc.perform(get("/serviceForBusiness/longtitude/latitude")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(""))
-                .andDo(print())
-                .andReturn();
+        List<BusinessDto> ListBusiness = businessService.findBusinessByTypeAndLocation("car wash",12L,12L);
+       // BusinessDto businessDto = ListBusiness.get(0);
+        mockMvc.perform(get(PATH_BUSINESSES+"/serviceForBusiness/longtitude/latitude")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isOk());
     }
 
     private BusinessDto createTestDto() {

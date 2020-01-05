@@ -14,7 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -129,7 +138,7 @@ public class BusinessController {
 
     @Secured(ROLE_BUSINESS)
     @GetMapping("/{serviceForBusiness}/{longtitude}/{latitude}")
-    public List<BusinessDto> findByBusinessTypeServiceTypeLocation(@PathVariable String serviceForBusiness, @PathVariable double longtitude, @PathVariable double latitude) {
-        return businessService.findBusinessByTypeAndLocation(serviceForBusiness, longtitude, latitude);
+    public ResponseEntity<List<BusinessDto>> findByBusinessTypeServiceTypeLocation(@PathVariable String serviceForBusiness, @PathVariable double longtitude, @PathVariable double latitude) {
+        return  ResponseEntity.ok(businessService.findBusinessByTypeAndLocation(serviceForBusiness, longtitude, latitude));
     }
 }
