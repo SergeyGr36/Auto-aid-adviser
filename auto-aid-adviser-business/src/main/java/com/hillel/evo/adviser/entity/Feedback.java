@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -42,7 +44,7 @@ public class Feedback {
     @SuppressWarnings("JpaAttributeTypeInspection")
     private SimpleUser simpleUser;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     @UpdateTimestamp

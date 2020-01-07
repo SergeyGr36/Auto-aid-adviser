@@ -1,6 +1,9 @@
 -- images
 delete from image;
 
+-- feedback
+delete from feedback;
+
 -- business
 delete from work_time;
 delete from business_has_service;

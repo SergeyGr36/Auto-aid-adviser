@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.dto;
 
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,12 @@ public class SimpleUserDto {
     private String lastName;
     @NotNull
     private String phone;
+
+    public SimpleUserDto(Long id, @NotNull String firstName, @NotNull String lastName, @NotNull String phone) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
 }
 
