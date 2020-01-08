@@ -30,7 +30,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
             "join fetch fb3.business b " +
             "join fetch fb3.simpleUser su " +
             "where b.id = :businessId and su.id = :simpleUserId " +
-            "order by fb3.createDate",
+            "order by fb3.createDate desc",
             countQuery = "select count(fb) from Feedback fb " +
                     "where fb.business.id = :businessId and fb.simpleUser.id = :simpleUserId")
     Page<Feedback> findByBusinessIdAndSimpleUserId(@Param("businessId") Long businessId,

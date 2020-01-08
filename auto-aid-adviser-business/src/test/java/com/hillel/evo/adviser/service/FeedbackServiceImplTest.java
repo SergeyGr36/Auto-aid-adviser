@@ -58,7 +58,7 @@ public class FeedbackServiceImplTest {
     @Test
     public void findFeedbackByBusinessIdReturnPage() {
         //when
-        Page<FeedbackDto> feedbackByBusiness = feedbackService.findFeedbackByBusiness(business.getId(), 1, 10);
+        Page<FeedbackDto> feedbackByBusiness = feedbackService.findFeedbackByBusiness(business.getId(),0, 10);
         //then
         assertEquals(4, feedbackByBusiness.getTotalElements());
     }
@@ -79,7 +79,7 @@ public class FeedbackServiceImplTest {
         Feedback feedback = feedbackRepository.findAll().get(0);
         Long userId = feedback.getSimpleUser().getId();
         //when
-        Page<FeedbackDto> feedbackByUser = feedbackService.findFeedbackByUser(userId, 1, 10);
+        Page<FeedbackDto> feedbackByUser = feedbackService.findFeedbackByUser(userId, 0, 10);
         //then
         assertEquals(4, feedbackByUser.getTotalElements());
     }

@@ -71,7 +71,7 @@ insert into service(name, service_type_id) values
 ('сезонная замена', (select id from service_type where name like 'шины'));
 
 insert into business(phone, address, latitude, longitude, name, business_user_user_details_id) values
-('098-123-45-67', 'Киев', 50.44, 30.53 , 'user 1 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
+('098-123-45-67', 'Киев', 50.44, 30.53 , 'СТО Дарница', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
 ('098-123-45-67', 'вулиця Кіровоградська, Петропавлівська Борщагівка, Київська обл.', 50.42, 30.33, 'СТО АвтоХелп', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
 ('066-666-66-66', 'Киев', 50.42, 30.80, 'user 2 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
 ('096-999-99-99', 'Киев', 50.50, 30.30, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
@@ -103,6 +103,8 @@ insert into car_model(name, car_brand_id, type_car_id) values
 ('C-HR', (select id from car_brand where name like 'Toyota'), (select id from type_car where name like 'Легковой'))
 ;
 
+-- user cars
+
 insert into user_car(release_year, car_model_id, simple_user_user_details_id) values
 (
     '2015',
@@ -114,4 +116,36 @@ insert into user_car(release_year, car_model_id, simple_user_user_details_id) va
     '2016',
     (select id from car_model where name like 'X5'),
     (select user_details_id from simple_usr where first_name in('Vasya'))
+);
+
+-- add feedback for business
+
+insert into feedback(text, rating, business_id, user_id, create_date) values
+(
+    'Good service. Thanks!',
+    5,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+),
+(
+    'Хороший сервис!!!',
+    5,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+),
+(
+    'Не понравилось(((. Имел горький опыт кузовного ремонта на данном СТО. Уж не знаю где я так нагрешил.',
+    2,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+),
+(
+    'So so',
+    3,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
 );

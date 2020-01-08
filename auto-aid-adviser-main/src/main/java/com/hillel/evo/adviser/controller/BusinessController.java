@@ -154,7 +154,7 @@ public class BusinessController {
     @GetMapping("/{id}/feedbacks")
     public Page<FeedbackDto> findFeedbackByBusiness(
             @PathVariable(name = "id") Long businessId,
-            @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         return feedbackService.findFeedbackByBusiness(businessId, page, size);
     }
