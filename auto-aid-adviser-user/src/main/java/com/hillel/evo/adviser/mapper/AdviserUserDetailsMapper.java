@@ -8,7 +8,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AdviserUserDetailsMapper {
 
-//    AdviserUserDetails toEntity(AdviserUserDetailsDto adviserUserDetailsDto);
-
     AdviserUserDetailsDto toDto(AdviserUserDetails adviserUserDetails);
 }

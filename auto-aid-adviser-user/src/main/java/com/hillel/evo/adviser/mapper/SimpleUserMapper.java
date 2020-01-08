@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring", uses = AdviserUserDetailsMapper.class)
 public interface SimpleUserMapper {
 
-    SimpleUser toEntity (SimpleUserDto simpleUserDto);
+//    SimpleUser toEntity (SimpleUserDto simpleUserDto);
 
     SimpleUserDto toDto (SimpleUser simpleUser);
 }

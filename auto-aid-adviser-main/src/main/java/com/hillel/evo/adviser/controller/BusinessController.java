@@ -3,11 +3,15 @@ package com.hillel.evo.adviser.controller;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
+import com.hillel.evo.adviser.dto.FeedbackDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
+import com.hillel.evo.adviser.entity.Feedback;
 import com.hillel.evo.adviser.service.BusinessService;
+import com.hillel.evo.adviser.service.FeedbackService;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +25,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/businesses")
@@ -36,11 +39,16 @@ public class BusinessController {
 
     private transient final String ROLE_BUSINESS = "ROLE_BUSINESS";
 
+    private transient final String ROLE_USER = "ROLE_USER";
+
     private transient final BusinessService businessService;
 
+    private transient final FeedbackService feedbackService;
+
     @Autowired
-    public BusinessController(BusinessService businessService) {
+    public BusinessController(BusinessService businessService, FeedbackService feedbackService) {
         this.businessService = businessService;
+        this.feedbackService = feedbackService;
     }
 
     @Secured(ROLE_BUSINESS)
@@ -140,4 +148,41 @@ public class BusinessController {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();
     }
+
+    /*============ Feedback ==============*/
+
+    @GetMapping("/{id}/feedbacks")
+    public Page<FeedbackDto> findFeedbackByBusiness(
+            @PathVariable(name = "id") Long businessId,
+            @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
+        return feedbackService.findFeedbackByBusiness(businessId, page, size);
+    }
+
+    @GetMapping("/feedback/{feedbackId}")
+    public FeedbackDto findFeedbackById(
+            @PathVariable Long feedbackId) {
+        return feedbackService.findFeedback(feedbackId);
+    }
+
+    @Secured(ROLE_USER)
+    @PostMapping("/{businessId}/feedback")
+    @ResponseStatus(HttpStatus.CREATED)
+    public FeedbackDto saveFeedback(@PathVariable("businessId") Long businessId,
+                                    Authentication authentication,
+                                    @RequestBody FeedbackDto dto) {
+        SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
+        return feedbackService.saveFeedback(dto, businessId, userDetails.getUserId());
+    }
+
+    @Secured(ROLE_USER)
+    @PutMapping("/{businessId}/feedback")
+    @ResponseStatus(HttpStatus.CREATED)
+    public FeedbackDto updateFeedback(@PathVariable("businessId") Long businessId,
+                                    Authentication authentication,
+                                    @RequestBody FeedbackDto dto) {
+        SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
+        return feedbackService.updateFeedback(dto, businessId, userDetails.getUserId());
+    }
+
 }
