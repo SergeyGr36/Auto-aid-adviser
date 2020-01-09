@@ -7,7 +7,7 @@ spring:
   mail:
     host: email-smtp.eu-west-1.amazonaws.com
     port: 587
-    username: xxxxxxxxxxxx@gmail.com
+    username: info@auto-aid-adviser.net
     properties.mail.smtp:
       auth: true
       starttls.enable: true
