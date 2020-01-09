@@ -4,19 +4,22 @@ spring:
     url: jdbc-secretsmanager:postgresql://aaa-instance.cekerrljrgxg.eu-west-1.rds.amazonaws.com:5432/adviserdb
     username: dev/aid-adviser/postgres
 
-    mail:
-      host: email-smtp.eu-west-1.amazonaws.com
-      port: 587
-      username: xxxxxxxxxxxx@gmail.com
-      properties.mail.smtp:
-        auth: true
-        starttls.enable: true
-        ssl.trust: email-smtp.eu-west-1.amazonaws.com
-        connectiontimeout: 5000
-        timeout: 3000
-        writetimeout: 5000
+  mail:
+    host: email-smtp.eu-west-1.amazonaws.com
+    port: 587
+    username: xxxxxxxxxxxx@gmail.com
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: email-smtp.eu-west-1.amazonaws.com
+      connectiontimeout: 5000
+      timeout: 3000
+      writetimeout: 5000
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
@@ -27,6 +30,36 @@ spring:
             directory_provider: filesystem
             indexBase: /var/adviser/indexes/
           reindex: false
+  flyway:
+    enabled: false
+
+server:
+  port: 8443
+  servlet:
+    context-path: /api
+  ssl:
+    enabled: true
+    key-alias: auto-aid-adviser
+    key-password: aaapass
+    key-store-type: JKS
+    key-store: classpath:auto-aid-adviser.jks
 
 email:
   service: aws
+
+app:
+  jwt:
+    secretKey: super-secret-test-key
+    expirationMillis: 3600000
+
+aws:
+  s3:
+    bucketName: auto-aid-adviser-bucket
+    expiresIn: 60000
+    region: eu-west-1
+    imageMaxSize: 200000
+
+frontend:
+  host: https://auto-aid-adviser.net
+  router:
+    activation: /user/activation/

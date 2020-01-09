@@ -1,0 +1,61 @@
+package com.hillel.evo.adviser.service;
+
+import com.hillel.evo.adviser.dto.WSInputDTO;
+import com.hillel.evo.adviser.dto.WSOutputDTO;
+import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class WebSocketServiceImp implements WebSocketService {
+
+    private final static String BUSINESS_TYPE = "BusinessType";
+    private final static String SERVICE_TYPE = "ServiceType";
+
+    private transient BusinessTypeService businessTypeService;
+    private transient ServiceTypeService serviceTypeService;
+
+    @Autowired
+    public void setBusinessTypeService(BusinessTypeService businessTypeService) {
+        this.businessTypeService = businessTypeService;
+    }
+
+    @Autowired
+    public void setServiceType(ServiceTypeService serviceTypeService) {
+        this.serviceTypeService = serviceTypeService;
+    }
+
+    public WSOutputDTO find(WSInputDTO dto) {
+
+        switch (dto.getSearchType()) {
+            case BUSINESS_TYPE:
+                return findBusinessTypeByName(dto.getContent());
+            case SERVICE_TYPE:
+                return findServiceTypeByName(dto.getContent(), dto.getWsInputDTO().orElseGet(() -> new WSInputDTO()).getContent());
+            default:
+                throw new UnsupportedSearchTypeException("Please specify correct search type, " + dto.getSearchType()
+                        + " is not correct. Supported types are: 'BusinessType' and ServiceType");
+        }
+    }
+
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
+    private WSOutputDTO findBusinessTypeByName(String name) {
+        WSOutputDTO result = new WSOutputDTO();
+        var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase() + "*");
+        result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
+        return result;
+    }
+
+    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
+    private WSOutputDTO findServiceTypeByName(String name, String btName) {
+        WSOutputDTO result = new WSOutputDTO();
+        var businessTypeList = Optional.ofNullable(btName).isEmpty() ?
+                serviceTypeService.findAllByName("*" + name.toLowerCase() + "*") :
+                serviceTypeService.findAllByName("*" + name.toLowerCase() + "*", btName);
+        result.setResult(businessTypeList.stream().map(b -> b.getName()).collect(Collectors.toList()));
+        return result;
+    }
+}

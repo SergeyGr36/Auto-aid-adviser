@@ -9,9 +9,12 @@ jacoco {
 }
 
 pmd {
-    toolVersion = "6.14.0"
+    toolVersion = "6.20.0"
     consoleOutput = true
     sourceSets = [sourceSets.main]
+//    ruleSetConfig = resources.text.fromFile(rootProject.files("buildSrc/pmd/ruleset.xml"))
+    ruleSetFiles = rootProject.files("buildSrc/pmd/ruleset.xml")
+    ruleSets = []
 }
 
 

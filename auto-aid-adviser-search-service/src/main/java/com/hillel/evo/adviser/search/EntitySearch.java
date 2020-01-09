@@ -1,6 +1,6 @@
 package com.hillel.evo.adviser.search;
 
-import com.hillel.evo.adviser.service.SearchHelperService;
+import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,19 +10,29 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class EntitySearch<T> implements TextSearch<T>, SpatialSearch<T>, CustomSearch<T> {
+public class EntitySearch<T> implements TextSearch<T>,  CustomSearch<T>, SpatialSearch<T> {
 
-    private transient SearchHelperService searchService;
+    private transient QueryGeneratorService searchService;
+
+
 
     @Autowired
-    public void setSearchService(SearchHelperService searchService) {
+    public void setSearchService(QueryGeneratorService searchService) {
         this.searchService = searchService;
     }
+
 
     @Override
     public List<T> search(Class<T> clazz, String field, String param) {
 
         var query = searchService.getTextQuery(clazz, field, param);
+        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
+        return jpaQuery.getResultList();
+    }
+
+    @Override
+    public List<T> searchWildcard(Class<T> clazz, String field, String param) {
+        var query = searchService.getTextWildcardQuery(clazz, field, param);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
         return jpaQuery.getResultList();
     }

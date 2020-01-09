@@ -6,14 +6,18 @@ import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.SimpleUser;
 import com.hillel.evo.adviser.enums.RoleUser;
-import com.hillel.evo.adviser.exception.ResourceAlreadyExistsException;
-import com.hillel.evo.adviser.exception.ResourceNotFoundException;
+import com.hillel.evo.adviser.exception.ActivationCodeFoundNoMatchException;
+import com.hillel.evo.adviser.exception.UserAlreadyExistsRegistrationException;
+import com.hillel.evo.adviser.parameter.MessageParameters;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import com.hillel.evo.adviser.repository.SimpleUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -26,11 +30,22 @@ public class UserServiceImpl implements UserService {
     private final transient BusinessUserRepository businessUserRepository;
     private final transient SimpleUserRepository simpleUserRepository;
     private final transient AdviserUserDetailRepository userDetailRepository;
+    private final transient EmailService emailService;
 
-    public UserServiceImpl(BusinessUserRepository businessUserRepository, SimpleUserRepository simpleUserRepository, AdviserUserDetailRepository userDetailRepository) {
+    @Value("${frontend.host}")
+    private transient String frontHost;
+
+    @Value("${frontend.router.activation}")
+    private transient String routeActivation;
+
+    public UserServiceImpl(BusinessUserRepository businessUserRepository,
+                           SimpleUserRepository simpleUserRepository,
+                           AdviserUserDetailRepository userDetailRepository,
+                           EmailService emailService) {
         this.businessUserRepository = businessUserRepository;
         this.simpleUserRepository = simpleUserRepository;
         this.userDetailRepository = userDetailRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -41,10 +56,11 @@ public class UserServiceImpl implements UserService {
             adviserUserDetails.setActivationCode(null);
             AdviserUserDetails save = userDetailRepository.save(adviserUserDetails);
             return new AdviserUserDetailsDto(save);
-        }).orElseThrow(ResourceNotFoundException::new);
+        }).orElseThrow(() -> new ActivationCodeFoundNoMatchException());
     }
 
     @Override
+    @Transactional
     public AdviserUserDetailsDto registration(UserRegistrationDto dto) {
         AdviserUserDetails userDetails = createNewAdviserUserDetails(dto);
         AdviserUserDetailsDto createUser = createUserDto(userDetails);
@@ -76,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     private AdviserUserDetails createNewAdviserUserDetails(UserRegistrationDto dto) {
         if (userDetailRepository.existsByEmail(dto.getEmail())) {
-            throw new ResourceAlreadyExistsException();
+            throw new UserAlreadyExistsRegistrationException();
         }
 
         AdviserUserDetails userDetails = new AdviserUserDetails();
@@ -89,8 +105,21 @@ public class UserServiceImpl implements UserService {
     }
 
     private void sendMail(AdviserUserDetails details) {
-        LOGGER.info("========================================================");
-        LOGGER.info(details.getEmail() + " - " + details.getActivationCode());
-        LOGGER.info("========================================================");
+        String link = frontHost+routeActivation+details.getActivationCode();
+        MessageParameters msgParam = MessageParameters.builder()
+                .toAddresses(details.getEmail())
+                .nameOfTemplate("confirmation-of-registration")
+                .templateParameter("userName", details.getEmail())
+                .templateParameter("link", link)
+                .subject("Activation code from Auto-Aid-Adviser")
+                .build();
+        boolean statusSend = emailService.sendMessage(msgParam);
+
+        if (statusSend) {
+            LOGGER.info(details.getEmail() + " - " + details.getActivationCode());
+        } else {
+            LOGGER.error("Error sending message to user mail: " + details.getEmail());
+            throw new RuntimeException("Error sending message to user mail");
+        }
     }
 }

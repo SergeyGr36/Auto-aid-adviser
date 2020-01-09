@@ -4,6 +4,8 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Spatial;
 import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Facet;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
 
@@ -16,20 +18,23 @@ import javax.persistence.Table;
 @Entity
 @Indexed
 @Spatial
-@Table(name = "aids")
+@Table
 public class Aid {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Field
+    @Field(store = Store.YES)
     private String name;
 
-    @Field(store = Store.YES)
+    @Field(analyze = Analyze.NO)
+    @Facet
     private String type;
 
     @Latitude
+    @Field(analyze = Analyze.NO)
+    @Facet
     private double latitude;
 
     @Longitude

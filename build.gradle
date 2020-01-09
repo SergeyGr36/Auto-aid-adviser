@@ -20,6 +20,17 @@ configure(allprojects) { project ->
 
     repositories extRepositories
 
+    distributions {
+        distZip.enabled = false
+        distTar.enabled = false
+        bootDistZip.enabled = false
+        bootDistTar.enabled = false
+    }
+
+    sourceSets {
+        main.java.srcDirs += "build/generated/sources/annotationProcessor/java/main"
+    }
+
     test {
         useJUnitPlatform {
             excludeTags 'slow'
@@ -40,34 +51,52 @@ configure(allprojects) { project ->
     bootRun {
         systemProperties = System.properties
     }
-    
+
     dependencies {
         implementation boot.starterWeb
         implementation boot.starterJpa
         implementation boot.starterThyme
-        testImplementation boot.starterTest
-        
+
+
         implementation utils.jaxbApi
         implementation utils.jaxbImpl
         implementation utils.jaxbCore
 
+        implementation "org.mapstruct:mapstruct:1.3.1.Final"
+        annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+
+        testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+
+        testImplementation boot.starterTest
         runtimeOnly db.h2
         runtimeOnly db.postgres
         runtimeOnly db.awsSecretsmanager
         implementation db.postgres
         testImplementation db.h2
-        
-        implementation misc.awsSdk
+
         implementation misc.swagger
         implementation misc.swaggerUI
 
         annotationProcessor utils.lombok
         annotationProcessor boot.annotationProcessor
-        
+
         compileOnly utils.lombok
-        testImplementation utils.lombok
+        testCompileOnly utils.lombok
 
         testImplementation testing.junit5
+
+        implementation boot.starterSecurity
+        implementation spring.messaging
+        implementation spring.webSocket
+
+        implementation hibernate.search
+        implementation hibernate.em
+        implementation hibernate.spatial
+
+    }
+
+    clean.doFirst {
+        delete "${project.projectDir}/out/"
     }
 }
 
@@ -82,6 +111,42 @@ project(":auto-aid-adviser-user") {
     jar {
         enabled = true
     }
+    dependencies {
+        implementation project(':auto-aid-adviser-email')
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
+project(":auto-aid-adviser-user-profile") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-image')
+
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
+project(':auto-aid-adviser-security') {
+    dependencies {
+        bootJar {
+            enabled = false
+        }
+        jar {
+            enabled = true
+        }
+        implementation project(":auto-aid-adviser-user")
+        implementation security.jwt
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
 }
 
 project(':auto-aid-adviser-search-service') {
@@ -92,12 +157,26 @@ project(':auto-aid-adviser-search-service') {
         enabled = true
     }
     dependencies {
-        implementation hibernate.search
-        implementation hibernate.em
-        implementation hibernate.spatial
-
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
+
+project(':auto-aid-adviser-websockets') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-business')
+        implementation project(':auto-aid-adviser-search-service')
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
 project(":auto-aid-adviser-email") {
     bootJar {
         enabled = false
@@ -107,6 +186,72 @@ project(":auto-aid-adviser-email") {
     }
     dependencies {
         implementation boot.starterMail
+        implementation awsSdk.ses
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
+project(':auto-aid-adviser-business') {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
+        implementation project(':auto-aid-adviser-image')
+
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
+project(":auto-aid-adviser-image") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        implementation awsSdk.s3
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
+    }
+}
+
+project(":auto-aid-adviser-base-module") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        implementation files('../lib/hypersistence-optimizer-1.2.3.jar', '../lib/hypersistence-optimizer-1.2.3-javadoc.jar')
+    }
+}
+
+project(":auto-aid-adviser-search-history-service") {
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    dependencies {
+        implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-search-service')
+        implementation project(':auto-aid-adviser-image')
+        implementation project(':auto-aid-adviser-business')
+
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
 
@@ -118,8 +263,26 @@ project(":auto-aid-adviser-main") {
         classifier = 'boot'
     }
     dependencies {
+        implementation misc.flyway
+        implementation project(':auto-aid-adviser-business')
         implementation project(':auto-aid-adviser-user')
+        implementation project(':auto-aid-adviser-user-profile')
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-email')
+        implementation project(':auto-aid-adviser-security')
+        implementation project(':auto-aid-adviser-websockets')
+        implementation project(':auto-aid-adviser-search-history-service')
+        implementation project(':auto-aid-adviser-image')
+        testImplementation project(':auto-aid-adviser-base-module')
+        testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
 }
+
+distributions {
+    distZip.enabled = false
+    distTar.enabled = false
+    bootDistZip.enabled = false
+    bootDistTar.enabled = false
+}
+
+

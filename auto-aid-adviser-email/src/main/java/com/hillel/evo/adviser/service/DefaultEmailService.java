@@ -6,6 +6,7 @@ import com.hillel.evo.adviser.parameter.MessageParameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
 
+@Primary
 @Service
 @ConditionalOnProperty(prefix = "email", name = "service", havingValue = "default", matchIfMissing = true)
 @RequiredArgsConstructor

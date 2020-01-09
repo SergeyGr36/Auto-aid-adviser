@@ -1,8 +1,14 @@
-TRUNCATE TABLE aids;
-INSERT INTO aids (id, name, type, latitude, longitude) VALUES
-(1, 'BMW', 'sto', 11.125, 12.365),
-(2, 'Mersedes', 'sto', 11.125, 12.365),
-(3, 'Kia', 'sto', 11.125, 12.365),
-(4, 'Honda', 'sto', 11.125, 12.365),
-(5, 'WV', 'sto', 11.125, 12.365),
-(6, 'Toyota', 'sto', 48.125, 59.365);
+TRUNCATE TABLE aid;
+INSERT INTO aid (name, type, latitude, longitude) VALUES
+('BMW', 'sto', 5.125, 12.365),
+('Mersedes', 'sto', 4.125, 12.365),
+('Kia', 'sto', 7.125, 12.365),
+('Honda', 'sto', 11.125, 12.365),
+('WV', 'sto', 12.125, 12.365),
+('Toyota', 'sto', 48.125, 59.365),
+('БМВ', 'сто', 16.125, 12.365),
+('Мерседес', 'сто', 15.125, 12.365),
+('КІА', 'сто', 10.125, 12.365),
+('Хонда', 'сто', 11.125, 12.365),
+('ФВ', 'сто', 11.125, 12.365),
+('Тойота', 'сто', 48.125, 59.365);

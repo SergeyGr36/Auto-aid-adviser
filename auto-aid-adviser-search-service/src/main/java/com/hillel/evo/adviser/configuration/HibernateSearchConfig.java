@@ -38,6 +38,7 @@ public class HibernateSearchConfig {
         var fullTextEntityManager = Search.getFullTextSession((Session)entityManager.getDelegate());
         try {
             fullTextEntityManager.createIndexer(clazz).startAndWait();
+//            fullTextEntityManager.getSearchFactory().optimize(clazz);
         } catch (InterruptedException e) {
             throw new HibernateSearchIndexException("An error occurred trying to build the serach index", e);
         }
