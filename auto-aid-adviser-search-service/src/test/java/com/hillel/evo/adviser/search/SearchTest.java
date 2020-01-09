@@ -5,7 +5,6 @@ import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Aid;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -18,43 +17,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestEntityManager
 public class SearchTest extends BaseTest {
 
+    @Autowired
     private TextSearch<Aid> aidTextSearch;
+    @Autowired
     private SpatialSearch<Aid> aidSpatialSearch;
+    @Autowired
     private CustomSearch<Aid> aidCustomSearch;
 
+    @Autowired
     private QueryGeneratorService searchService;
 
     @Autowired
-    public void setAidTextSearch(TextSearch<Aid> aidTextSearch) {
-        this.aidTextSearch = aidTextSearch;
-    }
-
-    @Autowired
-    public void setAidSpatialSearch(SpatialSearch<Aid> aidSpatialSearch) {
-        this.aidSpatialSearch = aidSpatialSearch;
-    }
-
-    @Autowired
-    public void setAidCustomSearch(CustomSearch<Aid> aidCustomSearch) {
-        this.aidCustomSearch = aidCustomSearch;
-    }
-
-    @Autowired
-    public void setSearchService(QueryGeneratorService searchService) {
-        this.searchService = searchService;
-    }
-
     private HibernateSearchConfig hibernateSearchConfig;
-
-    @Autowired
-    public void setConfig(HibernateSearchConfig config) {
-        this.hibernateSearchConfig = config;
-    }
-
-    @BeforeAll
-    static void setUp() {
-
-    }
 
     @Test
     @Sql({"/data-aids.sql"})
