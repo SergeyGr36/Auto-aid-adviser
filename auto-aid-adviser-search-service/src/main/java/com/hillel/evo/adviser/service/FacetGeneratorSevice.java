@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.facets.FacetingRequestFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.FacetRangeAboveBelowContext;
@@ -8,10 +7,12 @@ import org.hibernate.search.query.dsl.FacetRangeAboveContext;
 import org.hibernate.search.query.dsl.FacetRangeLimitContext;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.facet.FacetSortOrder;
+import org.hibernate.search.query.facet.FacetingRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.function.Supplier;
 
 @Service
 public class FacetGeneratorSevice {
@@ -48,7 +49,7 @@ public class FacetGeneratorSevice {
      * in our case we have almost identical method parameter list for Discrete and Range faceting requests, so in case
      *    we are invoking method w/o ranges DiscreteFacetingRequest will be generated, in another case RangeFacetingRequest
      */
-    public FacetingRequestFactory getFacetingRequest(final Class clazz, final String name, final String field, Object... ranges) {
+    public Supplier<FacetingRequest>  getFacetingRequest(final Class clazz, final String name, final String field, Object... ranges) {
 
         if (ranges.length == 0) {
             return getDiscreteFacetingRequest(clazz, name, field);
@@ -57,7 +58,7 @@ public class FacetGeneratorSevice {
         }
     }
 
-    private FacetingRequestFactory getDiscreteFacetingRequest(final Class clazz, final String name, final String field) {
+    private Supplier<FacetingRequest> getDiscreteFacetingRequest(final Class clazz, final String name, final String field) {
         return () -> getQueryBuilder(clazz)
                 .facet()
                 .name(name)
@@ -67,20 +68,6 @@ public class FacetGeneratorSevice {
                 .includeZeroCounts(true)
                 .createFacetingRequest();
     }
-
-/*
-    private FacetingRequestFactory getDiscreteFacetingRequest(final Class clazz, final String name, final String field, Object below, Object above) {
-        return () -> getQueryBuilder(clazz)
-                .facet()
-                .name(name)
-                .onField(field)
-                .range()
-                .below(below)
-                .from(below).to(above)
-                .above(above)
-                .createFacetingRequest();
-    }
-*/
 
     /**
      * Return Faceting Request Factory.
@@ -112,7 +99,7 @@ public class FacetGeneratorSevice {
      *
      *  for handling this we have handleRangeContext() method
      */
-    private FacetingRequestFactory getRangeFacetingRequest(final Class clazz, final String name, final String field, Object... ranges) {
+    private Supplier<FacetingRequest>  getRangeFacetingRequest(final Class clazz, final String name, final String field, Object... ranges) {
         return () -> {
             var rangeContext = getQueryBuilder(clazz)
                     .facet()
