@@ -1,6 +1,6 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.search.QueryFactory;
+import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.function.Supplier;
 
 @Service
 public class QueryGeneratorService {
@@ -25,7 +26,7 @@ public class QueryGeneratorService {
                 .buildQueryBuilder().forEntity(clazz).get();
     }
 
-    public QueryFactory getTextQuery(final Class<?> clazz, final String field, final String value) {
+    public Supplier<Query> getTextQuery(final Class<?> clazz, final String field, final String value) {
         return () -> getQueryBuilder(clazz)
                 .keyword()
                 .onField(field)
@@ -33,7 +34,7 @@ public class QueryGeneratorService {
                 .createQuery();
     }
 
-    public QueryFactory getTextWildcardQuery(final Class clazz, final String field, final String value) {
+    public Supplier<Query> getTextWildcardQuery(final Class clazz, final String field, final String value) {
         return () -> getQueryBuilder(clazz)
                 .keyword()
                 .wildcard()
@@ -42,7 +43,7 @@ public class QueryGeneratorService {
                 .createQuery();
     }
 
-    public QueryFactory getSpatialQuery(final Class<?> clazz, final double radius, final double latitude, double longitude) {
+    public Supplier<Query> getSpatialQuery(final Class<?> clazz, final double radius, final double latitude, double longitude) {
         return () -> getQueryBuilder(clazz)
                 .spatial()
                 .within(radius, Unit.KM)
@@ -51,7 +52,7 @@ public class QueryGeneratorService {
                 .createQuery();
     }
 
-    public QueryFactory getSpatialQuery(final Class<?> clazz,
+    public Supplier<Query> getSpatialQuery(final Class<?> clazz,
                                         String fieldLocation,
                                         final double radius,
                                         final double latitude,

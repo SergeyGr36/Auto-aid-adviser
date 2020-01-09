@@ -1,28 +1,25 @@
-package com.hillel.evo.adviser.search;
+package com.hillel.evo.adviser.search.impl;
 
+import com.hillel.evo.adviser.search.TextSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
-@Transactional
-public class EntitySearch<T> implements TextSearch<T>,  CustomSearch<T>, SpatialSearch<T> {
+public class TextSearchImpl<T> implements TextSearch<T> {
 
     private transient QueryGeneratorService searchService;
-
-
 
     @Autowired
     public void setSearchService(QueryGeneratorService searchService) {
         this.searchService = searchService;
     }
 
-
     @Override
+    @Transactional
     public List<T> search(Class<T> clazz, String field, String param) {
 
         var query = searchService.getTextQuery(clazz, field, param);
@@ -31,25 +28,10 @@ public class EntitySearch<T> implements TextSearch<T>,  CustomSearch<T>, Spatial
     }
 
     @Override
+    @Transactional
     public List<T> searchWildcard(Class<T> clazz, String field, String param) {
         var query = searchService.getTextWildcardQuery(clazz, field, param);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
-        return jpaQuery.getResultList();
-    }
-
-    @Override
-    public List<T> search(Class<T> clazz, double radius, double latitude, double longitude) {
-        var query = searchService.getSpatialQuery(clazz, radius, latitude, longitude);
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
-        return jpaQuery.getResultList();
-    }
-
-    @Override
-    public List<T> search(Class<T> clazz, QueryFactory... queries) {
-        var junction = searchService.getQueryBuilder(clazz).bool();
-        Arrays.asList(queries).forEach(q -> junction.must(q.get()));
-        var query = junction.createQuery();
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query, clazz);
         return jpaQuery.getResultList();
     }
 }
