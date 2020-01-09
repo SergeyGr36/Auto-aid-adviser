@@ -1,18 +1,21 @@
-package com.hillel.evo.adviser.facets;
+package com.hillel.evo.adviser.facets.impl;
 
+import com.hillel.evo.adviser.facets.FacetSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.hibernate.search.query.facet.Facet;
+import org.hibernate.search.query.facet.FacetingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
-@Service
-@Transactional
-public class FacetSearchImp<T> implements FacetSearch<T> {
+@Repository
+public class FacetSearchImpl<T> implements FacetSearch<T> {
 
     private transient QueryGeneratorService searchService;
 
@@ -22,7 +25,8 @@ public class FacetSearchImp<T> implements FacetSearch<T> {
     }
 
     @Override
-    public List<Facet> search(Class<T> clazz, FacetingRequestFactory... facetingRequests) {
+    @Transactional
+    public List<Facet> search(Class<T> clazz, Supplier<FacetingRequest>... facetingRequests) {
         var query = searchService.getQueryBuilder(clazz).all().createQuery();
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query, clazz);
         Arrays.asList(facetingRequests).forEach(f -> jpaQuery.getFacetManager().enableFaceting(f.get()));

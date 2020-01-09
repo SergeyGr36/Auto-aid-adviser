@@ -7,14 +7,14 @@ import com.hillel.evo.adviser.entity.Aid;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = SearchApp.class)
-@AutoConfigureTestEntityManager
+@Sql(value = {"/data-aids.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class SearchTest extends BaseTest {
 
     @Autowired
@@ -31,7 +31,6 @@ public class SearchTest extends BaseTest {
     private HibernateSearchConfig hibernateSearchConfig;
 
     @Test
-    @Sql({"/data-aids.sql"})
     public void TestSearchText() {
 
         hibernateSearchConfig.reindex(Aid.class);
@@ -41,7 +40,6 @@ public class SearchTest extends BaseTest {
     }
 
     @Test
-    @Sql({"/data-aids.sql"})
     public void TestSearchTextWildcard() {
 
         hibernateSearchConfig.reindex(Aid.class);
@@ -52,7 +50,6 @@ public class SearchTest extends BaseTest {
     }
 
     @Test
-    @Sql({"/data-aids.sql"})
     public void TestSearchTextWildcardUA() {
 
         hibernateSearchConfig.reindex(Aid.class);
@@ -63,7 +60,6 @@ public class SearchTest extends BaseTest {
     }
 
     @Test
-    @Sql({"/data-aids.sql"})
     public void TestSearchSpatial() {
 
         hibernateSearchConfig.reindex(Aid.class);
@@ -73,7 +69,6 @@ public class SearchTest extends BaseTest {
     }
 
     @Test
-    @Sql({"/data-aids.sql"})
     public void TestSearchCustom() {
 
         hibernateSearchConfig.reindex(Aid.class);
@@ -85,6 +80,4 @@ public class SearchTest extends BaseTest {
 
         assertEquals(1, result.size());
     }
-
-
 }
