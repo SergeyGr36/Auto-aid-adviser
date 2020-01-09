@@ -22,17 +22,23 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
             "where b.businessUser.id = :id")
     List<Business> findBusinessesFetchServicesByBusinessUser_Id(@Param("id") Long id);
 
-    @Query("select b from Business b " +
-            "join fetch b.serviceForBusinesses " +
-            "left join fetch  b.workTimes " +
-            "where b.id = :id and b.businessUser.id = :userId")
+    @Query("select b1 from Business b1 " +
+            "join fetch b1.serviceForBusinesses " +
+            "left join fetch b1.workTimes " +
+            "where b1.id = :id and b1.businessUser.id = :userId")
     Optional<Business> findByIdAndBusinessUserId(@Param("id") Long id, @Param("userId") Long userId);
 
-    @Query("select b from Business b " +
-            "join fetch b.serviceForBusinesses " +
-            "left join fetch b.workTimes " +
-            "where b.id = :id")
+    @Query("select b2 from Business b2 " +
+            "join fetch b2.serviceForBusinesses " +
+            "left join fetch b2.workTimes " +
+            "where b2.id = :id")
     Optional<Business> findById(@Param("id") Long id);
+
+    @Query("select distinct b3 from Business b3 " +
+            "join fetch b3.serviceForBusinesses " +
+            "left join fetch b3.workTimes " +
+            "where b3 in :businesses")
+    List<Business> findByBusiness(@Param("businesses") Iterable<Business> businesses);
 
     @Query("select b.images from Business b where b.id = :id")
     List<Image> findImagesByBusinessId(@Param("id") Long id);

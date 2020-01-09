@@ -74,12 +74,9 @@ public class BusinessMapperTest {
         BusinessUser user = businessUserRepository.findAll().get(0);
         BusinessDto dto = new BusinessDto();
         ContactDto contact = new ContactDto();
+        LocationDto location = new LocationDto(50.0, 50.0, "some address");
         contact.setPhone("123445");
         dto.setContact(contact);
-        LocationDto location = new LocationDto();
-        location.setLatitude(1.0);
-        location.setLongitude(1.0);
-        location.setAddress("address");
         dto.setLocation(location);
         dto.setServiceForBusinesses(new ArrayList<>());
         dto.getServiceForBusinesses().add(new ServiceForBusinessShortDto());
@@ -115,6 +112,19 @@ public class BusinessMapperTest {
         //when
         BusinessFullDto dto = businessMapper.toFullDto(null);
         Assertions.assertNull(dto);
+    }
+
+    @Test
+    public void whenEmptyLocationTest() {
+        //given
+        BusinessDto dto = new BusinessDto();
+        LocationDto location = new LocationDto();
+        dto.setLocation(location);
+        //when
+        Business business = businessMapper.toEntity(dto, null);
+        //then
+        Assertions.assertNull(business.getLocation().getLatitude());
+        Assertions.assertNull(business.getLocation().getLongitude());
     }
 
 }

@@ -1,6 +1,5 @@
 package com.hillel.evo.adviser.service;
 
-import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.BusinessApplication;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
@@ -9,7 +8,6 @@ import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceTypeMapper;
 import com.hillel.evo.adviser.repository.ServiceTypeRepository;
 import com.hillel.evo.adviser.service.impl.ServiceTypeServiceImpl;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {BusinessApplication.class})
 @Sql(value = {"/clean-all.sql", "/create-user.sql", "/create-business.sql"},
@@ -53,18 +49,30 @@ public class ServiceTypeServiceImplTest {
         assertEquals(type.getName(), dto.getName());
         assertEquals(type.getId(), dto.getId());
     }
+    @Test
+    public void whenFindByNameThenReturnThisServiceType() {
+        hibernateSearchConfig.reindex(ServiceType.class);
+        var result = service.findByName("body");
+        assertTrue(result.getName().equals("body")); }
+
+    @Test
+    public void whenFindByNameThenReturnNull() {
+        hibernateSearchConfig.reindex(ServiceType.class);
+        var result = service.findByName("bodywerwee");
+        assertNull(result);
+    }
 
     @Test
     public void whenFindAllByNameThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
-        var result = service.findAllByName("body");
-        assertEquals(1, result.size());
+        var result = service.findAllByName("ru*");
+        assertEquals(2, result.size());
     }
 
     @Test
     public void whenFindAllByNameContainsThenReturnThisList() {
         hibernateSearchConfig.reindex(ServiceType.class);
-        var result = service.findAllByNameContains("ru*", "shinomantazh");
+        var result = service.findAllByName("ru*", "shinomantazh");
         assertEquals(1, result.size());
     }
 

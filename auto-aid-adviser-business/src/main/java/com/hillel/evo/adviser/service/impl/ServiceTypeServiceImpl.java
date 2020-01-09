@@ -20,6 +20,9 @@ import java.util.List;
 
 @Service
 public class ServiceTypeServiceImpl implements ServiceTypeService {
+
+    private final static String QUERY_FIELD = "name";
+
     private transient final ServiceTypeMapper mapper;
     private transient final ServiceTypeRepository repository;
     private transient final TextSearch<ServiceType> textSearch;
@@ -47,16 +50,25 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     @Transactional
-    public List<ServiceTypeDto> findAllByName(String name) {
-        return mapper.toDto(textSearch.search(ServiceType.class, "name", name));
+    public ServiceTypeDto findByName(String name) {
+        var result = textSearch.search(ServiceType.class, QUERY_FIELD, name);
+        return result.size() > 0 ? mapper.toDto(result.get(0)) : null;
     }
 
     @Override
     @Transactional
-    public List<ServiceTypeDto> findAllByNameContains(String name, String btName) {
+    public List<ServiceTypeDto> findAllByName(String name) {
+        var clazz = ServiceType.class;
+        var sQuery = queryGeneratorService.getTextWildcardQuery(clazz, QUERY_FIELD, name);
+        return mapper.toDto(customSearch.search(clazz, sQuery));
+    }
+
+    @Override
+    @Transactional
+    public List<ServiceTypeDto> findAllByName(String name, String btName) {
         var clazz = ServiceType.class;
         var btQuery = queryGeneratorService.getTextQuery(clazz, "businessType.name", btName);
-        var sQuery = queryGeneratorService.getTextWildcardQuery(clazz, "name", name);
+        var sQuery = queryGeneratorService.getTextWildcardQuery(clazz, QUERY_FIELD, name);
         return mapper.toDto(customSearch.search(clazz, btQuery, sQuery));
     }
 
@@ -82,7 +94,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public Page<ServiceTypeDto> findAllByPages(Integer page, Integer size) {
-        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, Sort.by("name")));
+        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, Sort.by(QUERY_FIELD)));
         return pageEntity.map(mapper::toDto);
     }
 }

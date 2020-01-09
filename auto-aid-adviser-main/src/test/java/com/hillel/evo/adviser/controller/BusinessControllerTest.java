@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.BaseTest;
+import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
 import com.hillel.evo.adviser.dto.FeedbackDto;
@@ -33,13 +34,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -47,10 +44,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,6 +61,9 @@ public class BusinessControllerTest extends BaseTest {
 
     private AdviserUserDetails user;
     private String jwt;
+
+    @Autowired
+    private HibernateSearchConfig hibernateSearchConfig;
 
     @Autowired
     private MockMvc mockMvc;
@@ -377,6 +374,37 @@ public class BusinessControllerTest extends BaseTest {
 
     /* ========================================= */
 
+    @Test
+    public void findByServiceAndLocationThenReturnOK() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/50.0/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void findByServiceNotExistAndLocationThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_BUSINESSES+"/kolobok/50.0/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findByServiceAndLocationNotExistThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/150.0/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findByServiceAndBadLocationThenReturnBadRequest() throws Exception {
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/vinipuh/50.0")
+                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+                .andExpect(status().isBadRequest());
+    }
+
     private BusinessDto createTestDto() {
         List<ServiceForBusiness> list = serviceForBusinessRepository.findAll();
 
@@ -384,8 +412,8 @@ public class BusinessControllerTest extends BaseTest {
         dto.setName("some name");
 
         LocationDto location = new LocationDto();
-        location.setLatitude(99);
-        location.setLongitude(99);
+        location.setLatitude(60.0);
+        location.setLongitude(60.0);
         location.setAddress("some address");
 
         ContactDto contact = new ContactDto();
