@@ -3,6 +3,7 @@ package com.hillel.evo.adviser;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.WSInputDTO;
 import com.hillel.evo.adviser.entity.BusinessType;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import com.hillel.evo.adviser.service.WebSocketService;
@@ -44,6 +45,32 @@ public class WebSocketServiceImpTest extends BaseTest {
 
     @Test
     public void whenSearchUABusinessTypeThenReturnList() {
+        config.reindex(BusinessType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("BusinessType");
+        wsInputDTO.setContent("магаз");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+
+    }
+
+    @Test
+    public void whenSearchServiceThenReturnList() {
+        config.reindex(ServiceForBusiness.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("SerVice");
+        wsInputDTO.setContent("lan");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+
+    }
+
+    @Test
+    public void whenSearchUAServiceThenReturnList() {
         config.reindex(BusinessType.class);
         var wsInputDTO = new WSInputDTO();
         wsInputDTO.setSearchType("BusinessType");
