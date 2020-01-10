@@ -4,6 +4,7 @@ import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Aid;
+import com.hillel.evo.adviser.mapper.AidMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -24,12 +25,15 @@ public class TextSearchTest {
     @Autowired
     private HibernateSearchConfig hibernateSearchConfig;
 
+    @Autowired
+    private AidMapper aidMapper;
+
     @Test
     public void TestSearchText() {
 
         hibernateSearchConfig.reindex(Aid.class);
         var dto = new SearchTextDTO(Aid.class, "name", "BMW");
-        var result = aidTextSearch.search(dto);
+        var result = aidTextSearch.search(aidMapper, dto);
 
         assertEquals(1, result.size());
     }
@@ -39,7 +43,7 @@ public class TextSearchTest {
 
         hibernateSearchConfig.reindex(Aid.class);
         var dto = new SearchTextDTO(Aid.class, "name", "bm*");
-        var result = aidTextSearch.searchWildcard(dto);
+        var result = aidTextSearch.searchWildcard(aidMapper, dto);
 
         assertEquals(1, result.size());
     }
@@ -50,7 +54,7 @@ public class TextSearchTest {
         hibernateSearchConfig.reindex(Aid.class);
         var searchVal = "Хон";
         var dto = new SearchTextDTO(Aid.class, "name", searchVal.toLowerCase() + "*");
-        var result = aidTextSearch.searchWildcard(dto);
+        var result = aidTextSearch.searchWildcard(aidMapper, dto);
 
         assertEquals(1, result.size());
     }

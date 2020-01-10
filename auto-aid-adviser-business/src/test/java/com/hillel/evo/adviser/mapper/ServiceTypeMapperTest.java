@@ -31,18 +31,18 @@ public class ServiceTypeMapperTest {
 
     @Test
     public void whenToDto_SetNullList_ReturnEmptyList() {
-        Assertions.assertNull(mapper.toDto((List<ServiceType>) null));
+        Assertions.assertNull(mapper.toDtoList((List<ServiceType>) null));
     }
 
     @Test
     public void whenToDto_SetEmptyList_ReturnEmptyList() {
-        Assertions.assertTrue(mapper.toDto(new ArrayList<>()).isEmpty());
+        Assertions.assertTrue(mapper.toDtoList(new ArrayList<>()).isEmpty());
     }
 
     @Test
     public void whenToDto_SetList_ReturnListDto() {
         List<ServiceType> list = Arrays.asList(new ServiceType());
-        Assertions.assertEquals(mapper.toDto(list).size(), list.size());
+        Assertions.assertEquals(mapper.toDtoList(list).size(), list.size());
     }
 
     @Test

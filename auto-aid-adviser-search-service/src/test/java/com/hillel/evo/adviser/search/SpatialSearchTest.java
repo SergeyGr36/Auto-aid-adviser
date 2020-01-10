@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.SearchSpatialDTO;
 import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Aid;
+import com.hillel.evo.adviser.mapper.AidMapper;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,15 @@ public class SpatialSearchTest {
     @Autowired
     private HibernateSearchConfig hibernateSearchConfig;
 
+    @Autowired
+    private AidMapper aidMapper;
+
     @Test
     public void TestSearchSpatial() {
 
         hibernateSearchConfig.reindex(Aid.class);
         var dto = new SearchSpatialDTO(Aid.class, 100, 11.125, 12.365);
-        var result = aidSpatialSearch.search(dto);
+        var result = aidSpatialSearch.search(aidMapper, dto);
 
         assertEquals(3, result.size());
     }

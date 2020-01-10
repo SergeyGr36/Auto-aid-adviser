@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.search.impl;
 
 import com.hillel.evo.adviser.dto.SearchCustomDTO;
+import com.hillel.evo.adviser.mapper.BaseMapper;
 import com.hillel.evo.adviser.search.CustomSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class CustomSearchImpl<T> implements CustomSearch<T> {
 
     @Override
     @Transactional
-    public List<T> search(final SearchCustomDTO dto) {
+    public List<T> search(final BaseMapper mapper, final SearchCustomDTO dto) {
         var junction = searchService.getQueryBuilder(dto.getClazz()).bool();
         dto.getQueries().forEach(q -> junction.must(q.get()));
         var query = junction.createQuery();
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query, dto.getClazz());
-        return jpaQuery.getResultList();
+        return mapper.toDtoList(jpaQuery.getResultList());
     }
 }

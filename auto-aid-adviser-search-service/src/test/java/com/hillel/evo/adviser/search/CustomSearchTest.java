@@ -6,6 +6,7 @@ import com.hillel.evo.adviser.dto.SearchCustomDTO;
 import com.hillel.evo.adviser.dto.SearchSpatialDTO;
 import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Aid;
+import com.hillel.evo.adviser.mapper.AidMapper;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class CustomSearchTest {
     @Autowired
     private HibernateSearchConfig hibernateSearchConfig;
 
+    @Autowired
+    private AidMapper aidMapper;
+
     @Test
     public void TestSearchCustom() {
 
@@ -44,7 +48,7 @@ public class CustomSearchTest {
         var dto = new SearchCustomDTO(Aid.class, new ArrayList<>());
         dto.getQueries().add(querySpatial);
         dto.getQueries().add(queryText);
-        var result = aidCustomSearch.search(dto);
+        var result = aidCustomSearch.search(aidMapper, dto);
 
         assertEquals(1, result.size());
     }
