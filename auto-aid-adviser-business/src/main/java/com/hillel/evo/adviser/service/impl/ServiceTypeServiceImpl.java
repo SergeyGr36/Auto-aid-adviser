@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service.impl;
 
+import com.hillel.evo.adviser.dto.SearchCustomDTO;
 import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
 import com.hillel.evo.adviser.entity.ServiceType;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,17 +63,25 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional
     public List<ServiceTypeDto> findAllByName(String name) {
         var clazz = ServiceType.class;
-        var sQuery = queryGeneratorService.getTextWildcardQuery(clazz, QUERY_FIELD, name);
-        return mapper.toDto(customSearch.search(clazz, sQuery));
+        var textDTO = new SearchTextDTO(clazz, QUERY_FIELD, name);
+        var sQuery = queryGeneratorService.getTextWildcardQuery(textDTO);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(sQuery);
+        return mapper.toDto(customSearch.search(dto));
     }
 
     @Override
     @Transactional
     public List<ServiceTypeDto> findAllByName(String name, String btName) {
         var clazz = ServiceType.class;
-        var btQuery = queryGeneratorService.getTextQuery(clazz, "businessType.name", btName);
-        var sQuery = queryGeneratorService.getTextWildcardQuery(clazz, QUERY_FIELD, name);
-        return mapper.toDto(customSearch.search(clazz, btQuery, sQuery));
+        var btDTO = new SearchTextDTO(clazz, "businessType.name", btName);
+        var btQuery = queryGeneratorService.getTextQuery(btDTO);
+        var sDTO = new SearchTextDTO(clazz, QUERY_FIELD, name);
+        var sQuery = queryGeneratorService.getTextWildcardQuery(sDTO);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(btQuery);
+        dto.getQueries().add(sQuery);
+        return mapper.toDto(customSearch.search(dto));
     }
 
     @Override

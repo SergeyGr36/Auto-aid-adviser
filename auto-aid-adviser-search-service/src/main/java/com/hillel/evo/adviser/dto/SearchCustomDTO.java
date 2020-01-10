@@ -2,15 +2,15 @@ package com.hillel.evo.adviser.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.lucene.search.Query;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Getter
 @AllArgsConstructor
-public class FacetDTO extends SearchInputDTO {
+public class SearchCustomDTO {
 
     private Class<?> clazz;
-    private String name;
-    private String field;
-    private List<Object> ranges;
+    List<Supplier<Query>> queries;
 }
