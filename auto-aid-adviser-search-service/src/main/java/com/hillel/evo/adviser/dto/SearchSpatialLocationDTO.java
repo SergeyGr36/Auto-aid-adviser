@@ -5,9 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SearchTextDTO extends SearchInputDTO {
+public class SearchSpatialLocationDTO extends SearchInputDTO {
 
     private Class<?> clazz;
     private String field;
-    private String param;
+    private double radius;
+    private double latitude;
+    private double longitude;
 }

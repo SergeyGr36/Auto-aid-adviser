@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Entity
 @Indexed
 @Spatial
-@Table
+@Table(name = "aid")
 public class Aid {
 
     @Id

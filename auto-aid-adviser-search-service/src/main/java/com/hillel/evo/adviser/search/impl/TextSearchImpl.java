@@ -23,7 +23,7 @@ public class TextSearchImpl<T> implements TextSearch<T> {
     @Transactional
     public List<T> search(final SearchTextDTO dto) {
 
-        var query = searchService.getTextQuery(dto.getClazz(), dto.getField(), dto.getParam());
+        var query = searchService.getTextQuery(dto);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), dto.getClazz());
         return jpaQuery.getResultList();
     }
@@ -31,7 +31,7 @@ public class TextSearchImpl<T> implements TextSearch<T> {
     @Override
     @Transactional
     public List<T> searchWildcard(final SearchTextDTO dto) {
-        var query = searchService.getTextWildcardQuery(dto.getClazz(), dto.getField(), dto.getParam());
+        var query = searchService.getTextWildcardQuery(dto);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), dto.getClazz());
         return jpaQuery.getResultList();
     }

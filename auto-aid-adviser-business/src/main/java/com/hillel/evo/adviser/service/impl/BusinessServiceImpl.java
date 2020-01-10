@@ -1,9 +1,6 @@
 package com.hillel.evo.adviser.service.impl;
 
-import com.hillel.evo.adviser.dto.BusinessDto;
-import com.hillel.evo.adviser.dto.BusinessFullDto;
-import com.hillel.evo.adviser.dto.ImageDto;
-import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
+import com.hillel.evo.adviser.dto.*;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.Contact;
@@ -137,10 +134,16 @@ public class BusinessServiceImpl implements BusinessService {
     public List<BusinessDto> findBusinessByServiceAndLocation(String serviceForBusiness,
                                                               double longitude,
                                                               double latitude) {
-        var businessQuery = queryGeneratorService.getTextQuery(Business.class, "serviceForBusinesses.name", serviceForBusiness);
-        var locationQuery = queryGeneratorService.getSpatialQuery(Business.class, "location", 5, latitude, longitude);
-        var entities = search.search(Business.class, businessQuery, locationQuery);//first call to DB
-        List<Business> business = businessRepository.findByBusiness(entities);//second call to db
+        var clazz = Business.class;
+        var bdto = new SearchTextDTO(clazz, "serviceForBusinesses.name", serviceForBusiness);
+        var businessQuery = queryGeneratorService.getTextQuery(bdto);
+        var ldto = new SearchSpatialLocationDTO(clazz, "location", 5, latitude, longitude);
+        var locationQuery = queryGeneratorService.getSpatialQuery(ldto);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(businessQuery);
+        dto.getQueries().add(locationQuery);
+        var entities = search.search(dto);
+        List<Business> business = businessRepository.findByBusiness(entities);
         return mapper.listToDto(business);
     }
 

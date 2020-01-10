@@ -1,8 +1,10 @@
 package com.hillel.evo.adviser.search;
 
+import com.hillel.evo.adviser.dto.SearchSpatialDTO;
+
 import java.util.List;
 
 public interface SpatialSearch<T> {
 
-    List<T> search(Class<T> clazz, double radius, double latitude, double longitude);
+    List<T> search(final SearchSpatialDTO dto);
 }

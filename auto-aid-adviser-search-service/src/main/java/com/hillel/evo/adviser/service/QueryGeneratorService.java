@@ -1,5 +1,8 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.dto.SearchSpatialDTO;
+import com.hillel.evo.adviser.dto.SearchSpatialLocationDTO;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -21,48 +24,44 @@ public class QueryGeneratorService {
         return Search.getFullTextEntityManager(entityManager);
     }
 
-    public QueryBuilder getQueryBuilder(Class clazz) {
+    public QueryBuilder getQueryBuilder(final Class clazz) {
         return getFullTextEntityManager().getSearchFactory()
                 .buildQueryBuilder().forEntity(clazz).get();
     }
 
-    public Supplier<Query> getTextQuery(final Class<?> clazz, final String field, final String value) {
-        return () -> getQueryBuilder(clazz)
+    public Supplier<Query> getTextQuery(final SearchTextDTO dto) {
+        return () -> getQueryBuilder(dto.getClazz())
                 .keyword()
-                .onField(field)
-                .matching(value)
+                .onField(dto.getField())
+                .matching(dto.getParam())
                 .createQuery();
     }
 
-    public Supplier<Query> getTextWildcardQuery(final Class clazz, final String field, final String value) {
-        return () -> getQueryBuilder(clazz)
+    public Supplier<Query> getTextWildcardQuery(final SearchTextDTO dto) {
+        return () -> getQueryBuilder(dto.getClazz())
                 .keyword()
                 .wildcard()
-                .onField(field)
-                .matching(value)
+                .onField(dto.getField())
+                .matching(dto.getParam())
                 .createQuery();
     }
 
-    public Supplier<Query> getSpatialQuery(final Class<?> clazz, final double radius, final double latitude, double longitude) {
-        return () -> getQueryBuilder(clazz)
+    public Supplier<Query> getSpatialQuery(final SearchSpatialDTO dto) {
+        return () -> getQueryBuilder(dto.getClazz())
                 .spatial()
-                .within(radius, Unit.KM)
-                .ofLatitude(latitude)
-                .andLongitude(longitude)
+                .within(dto.getRadius(), Unit.KM)
+                .ofLatitude(dto.getLatitude())
+                .andLongitude(dto.getLongitude())
                 .createQuery();
     }
 
-    public Supplier<Query> getSpatialQuery(final Class<?> clazz,
-                                        String fieldLocation,
-                                        final double radius,
-                                        final double latitude,
-                                        double longitude) {
-        return () -> getQueryBuilder(clazz)
+    public Supplier<Query> getSpatialQuery(final SearchSpatialLocationDTO dto) {
+        return () -> getQueryBuilder(dto.getClazz())
                 .spatial()
-                .onField(fieldLocation)
-                .within(radius, Unit.KM)
-                .ofLatitude(latitude)
-                .andLongitude(longitude)
+                .onField(dto.getField())
+                .within(dto.getRadius(), Unit.KM)
+                .ofLatitude(dto.getLatitude())
+                .andLongitude(dto.getLongitude())
                 .createQuery();
     }
 }
