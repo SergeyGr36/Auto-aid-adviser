@@ -12,6 +12,7 @@ import com.hillel.evo.adviser.search.CustomSearch;
 import com.hillel.evo.adviser.search.TextSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,23 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     private final static String QUERY_FIELD = "name";
 
     private transient final ServiceTypeMapper mapper;
     private transient final ServiceTypeRepository repository;
-    private transient final TextSearch<ServiceType> textSearch;
-    private transient final CustomSearch<ServiceType> customSearch;
+    private transient final TextSearch<ServiceTypeDto> textSearch;
+    private transient final CustomSearch<ServiceTypeDto> customSearch;
     private transient final QueryGeneratorService queryGeneratorService;
-
-    public ServiceTypeServiceImpl(ServiceTypeMapper mapper, ServiceTypeRepository repository, TextSearch<ServiceType> textSearch, CustomSearch<ServiceType> customSearch, QueryGeneratorService queryGeneratorService) {
-        this.mapper = mapper;
-        this.repository = repository;
-        this.textSearch = textSearch;
-        this.customSearch = customSearch;
-        this.queryGeneratorService = queryGeneratorService;
-    }
 
     @Override
     @Transactional
@@ -48,30 +42,31 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public List<ServiceTypeDto> findAllByBusinessTypeId(Long id) {
-        return mapper.toDto(repository.findAllByBusinessTypeId(id));
+        return mapper.toDtoList(repository.findAllByBusinessTypeId(id));
     }
 
     @Override
-    @Transactional
     public ServiceTypeDto findByName(String name) {
         var dto = new SearchTextDTO(ServiceType.class, QUERY_FIELD, name);
-        var result = textSearch.search(dto);
-        return result.size() > 0 ? mapper.toDto(result.get(0)) : null;
+        var result = textSearch.search(mapper, dto);
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
     }
 
     @Override
-    @Transactional
     public List<ServiceTypeDto> findAllByName(String name) {
         var clazz = ServiceType.class;
         var textDTO = new SearchTextDTO(clazz, QUERY_FIELD, name);
         var sQuery = queryGeneratorService.getTextWildcardQuery(textDTO);
         var dto = new SearchCustomDTO(clazz, new ArrayList<>());
         dto.getQueries().add(sQuery);
-        return mapper.toDto(customSearch.search(dto));
+        return customSearch.search(mapper, dto);
     }
 
     @Override
-    @Transactional
     public List<ServiceTypeDto> findAllByName(String name, String btName) {
         var clazz = ServiceType.class;
         var btDTO = new SearchTextDTO(clazz, "businessType.name", btName);
@@ -81,7 +76,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
         var dto = new SearchCustomDTO(clazz, new ArrayList<>());
         dto.getQueries().add(btQuery);
         dto.getQueries().add(sQuery);
-        return mapper.toDto(customSearch.search(dto));
+        return customSearch.search(mapper, dto);
     }
 
     @Override

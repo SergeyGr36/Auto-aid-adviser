@@ -30,7 +30,7 @@ public class ServiceForBusinessServiceImpl implements ServiceForBusinessService 
     @Override
     @Transactional
     public List<ServiceForBusinessDto> getAllByServiceTypeId(Long id) {
-        return mapper.toDto(repository.findAllByServiceTypeId(id));
+        return mapper.toDtoList(repository.findAllByServiceTypeId(id));
     }
 
     @Override

@@ -47,7 +47,7 @@ public class BusinessServiceImpl implements BusinessService {
     private transient final ImageService imageService;
     private transient final ImageMapper imageMapper;
     private transient final QueryGeneratorService queryGeneratorService;
-    private transient final CustomSearch<Business> search;
+    private transient final CustomSearch<BusinessFullDto> search;
 
     @Override
     public BusinessDto createBusiness(final BusinessDto dto, Long userId) {
@@ -94,7 +94,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId) {
-        return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
+        return serviceMapper.toDtoList(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class BusinessServiceImpl implements BusinessService {
         return mapper.toFullDto(business);
     }
 
-    public List<BusinessDto> findBusinessByServiceAndLocation(String serviceForBusiness,
+    public List<BusinessFullDto> findBusinessByServiceAndLocation(String serviceForBusiness,
                                                               double longitude,
                                                               double latitude) {
         var clazz = Business.class;
@@ -142,9 +142,7 @@ public class BusinessServiceImpl implements BusinessService {
         var dto = new SearchCustomDTO(clazz, new ArrayList<>());
         dto.getQueries().add(businessQuery);
         dto.getQueries().add(locationQuery);
-        var entities = search.search(dto);
-        List<Business> business = businessRepository.findByBusiness(entities);
-        return mapper.listToDto(business);
+        return search.search(mapper, dto);
     }
 
     private Set<ServiceForBusiness> getAllServices() {

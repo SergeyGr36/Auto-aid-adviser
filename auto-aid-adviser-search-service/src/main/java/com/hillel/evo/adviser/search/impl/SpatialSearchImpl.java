@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.search.impl;
 
 import com.hillel.evo.adviser.dto.SearchSpatialDTO;
+import com.hillel.evo.adviser.mapper.BaseMapper;
 import com.hillel.evo.adviser.search.SpatialSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,9 @@ public class SpatialSearchImpl<T> implements SpatialSearch<T> {
 
     @Override
     @Transactional
-    public List<T> search(final SearchSpatialDTO dto) {
+    public List<T> search(final BaseMapper mapper, final SearchSpatialDTO dto) {
         var query = searchService.getSpatialQuery(dto);
         var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), dto.getClazz());
-        return jpaQuery.getResultList();
+        return mapper.toDtoList(jpaQuery.getResultList());
     }
 }
