@@ -4,8 +4,6 @@ import com.hillel.evo.adviser.dto.WSInputDTO;
 import com.hillel.evo.adviser.dto.WSOutputDTO;
 import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@SuppressWarnings("PMD.UseLocaleWithCaseConversions")
 public class WebSocketServiceImp implements WebSocketService {
 
     private final static String BUSINESS_TYPE = "businesstype";
@@ -40,7 +39,6 @@ public class WebSocketServiceImp implements WebSocketService {
         }
     }
 
-    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findBusinessTypeByName(String name) {
         WSOutputDTO result = new WSOutputDTO();
         var businessTypeList = businessTypeService.findAllByNameContains("*" + name.toLowerCase() + "*");
@@ -48,7 +46,6 @@ public class WebSocketServiceImp implements WebSocketService {
         return result;
     }
 
-    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findServiceByName(String name) {
         WSOutputDTO result = new WSOutputDTO();
         var serviceList = serviceForBusinessService.getAllByServiceName("*" + name.toLowerCase() + "*");
@@ -56,7 +53,6 @@ public class WebSocketServiceImp implements WebSocketService {
         return result;
     }
 
-    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     private WSOutputDTO findServiceTypeByName(String name, String btName) {
         WSOutputDTO result = new WSOutputDTO();
         var businessTypeList = Optional.ofNullable(btName).isEmpty() ?
