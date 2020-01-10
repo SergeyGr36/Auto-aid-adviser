@@ -5,6 +5,7 @@ import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
+import com.hillel.evo.adviser.search.TextSearch;
 import com.hillel.evo.adviser.service.ServiceForBusinessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ServiceForBusinessServiceImpl implements ServiceForBusinessService {
     private transient final ServiceForBusinessMapper mapper;
     private transient final ServiceForBusinessRepository repository;
+    private transient final TextSearch<ServiceForBusiness> textSearch;
 
     @Override
     @Transactional
@@ -31,6 +33,11 @@ public class ServiceForBusinessServiceImpl implements ServiceForBusinessService 
     @Transactional
     public List<ServiceForBusinessDto> getAllByServiceTypeId(Long id) {
         return mapper.toDto(repository.findAllByServiceTypeId(id));
+    }
+
+    @Override
+    public List<ServiceForBusinessDto> getAllByServiceName(String name) {
+        return mapper.toDto(textSearch.searchWildcard(ServiceForBusiness.class, "name", name));
     }
 
     @Override
