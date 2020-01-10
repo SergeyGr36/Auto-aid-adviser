@@ -1,6 +1,12 @@
 package com.hillel.evo.adviser.service.impl;
 
-import com.hillel.evo.adviser.dto.*;
+import com.hillel.evo.adviser.dto.BusinessDto;
+import com.hillel.evo.adviser.dto.BusinessFullDto;
+import com.hillel.evo.adviser.dto.ImageDto;
+import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
+import com.hillel.evo.adviser.dto.SearchCustomDTO;
+import com.hillel.evo.adviser.dto.SearchSpatialLocationDTO;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.Contact;
