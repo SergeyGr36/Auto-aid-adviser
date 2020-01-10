@@ -19,3 +19,11 @@ insert into service_type(name, business_type_id) values
 ('disk', (select id from business_type where name like 'shinomantazh')),
 ('test', (select id from business_type where name like 'shinomantazh')),
 ('gum', (select id from business_type where name like 'shinomantazh'));
+
+insert into service(name, service_type_id) values
+('straightening dents', (select id from service_type where name like 'body')),
+('balancing', (select id from service_type where name like 'run')),
+('oil change', (select id from service_type where name like 'engine')),
+('straightening discs', (select id from service_type where name like 'disk')),
+('rubber change', (select id from service_type where name like 'gum')),
+('заміна масла', (select id from service_type where name like 'двигун'));
