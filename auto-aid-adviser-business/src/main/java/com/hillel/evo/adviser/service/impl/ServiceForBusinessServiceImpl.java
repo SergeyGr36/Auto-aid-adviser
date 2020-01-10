@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service.impl;
 
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.DeleteException;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ServiceForBusinessServiceImpl implements ServiceForBusinessService {
     private transient final ServiceForBusinessMapper mapper;
     private transient final ServiceForBusinessRepository repository;
-    private transient final TextSearch<ServiceForBusiness> textSearch;
+    private transient final TextSearch<ServiceForBusinessDto> textSearch;
 
     @Override
     @Transactional
@@ -37,7 +38,8 @@ public class ServiceForBusinessServiceImpl implements ServiceForBusinessService 
 
     @Override
     public List<ServiceForBusinessDto> getAllByServiceName(String name) {
-        return mapper.toDto(textSearch.searchWildcard(ServiceForBusiness.class, "name", name));
+        var dto = new SearchTextDTO(ServiceForBusiness.class, "name", name);
+        return textSearch.searchWildcard(mapper, dto);
     }
 
     @Override
