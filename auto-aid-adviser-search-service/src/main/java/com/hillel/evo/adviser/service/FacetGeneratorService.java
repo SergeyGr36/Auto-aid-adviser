@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service;
 
+import com.hillel.evo.adviser.dto.FacetDTO;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.FacetRangeAboveBelowContext;
@@ -15,7 +16,7 @@ import javax.persistence.PersistenceContext;
 import java.util.function.Supplier;
 
 @Service
-public class FacetGeneratorSevice {
+public class FacetGeneratorService {
 
     @PersistenceContext
     private transient EntityManager entityManager;
@@ -31,10 +32,11 @@ public class FacetGeneratorSevice {
 
     /**
      * Return Faceting Request Factory.
-     * @param clazz entity class
-     * @param name Faceting Request name
-     * @param field entity field which we use for faceting
-     * @param ranges it is using for range faceting requests, what help us to split facets on pieces
+     * @param dto contains:
+     * clazz entity class
+     * name Faceting Request name
+     * field entity field which we use for faceting
+     * ranges it is using for range faceting requests, what help us to split facets on pieces
      *
      * Discrete Facets example:
      *
@@ -49,20 +51,20 @@ public class FacetGeneratorSevice {
      * in our case we have almost identical method parameter list for Discrete and Range faceting requests, so in case
      *    we are invoking method w/o ranges DiscreteFacetingRequest will be generated, in another case RangeFacetingRequest
      */
-    public Supplier<FacetingRequest>  getFacetingRequest(final Class clazz, final String name, final String field, Object... ranges) {
+    public Supplier<FacetingRequest>  getFacetingRequest(final FacetDTO dto) {
 
-        if (ranges.length == 0) {
-            return getDiscreteFacetingRequest(clazz, name, field);
+        if (dto.getRanges().size() == 0) {
+            return getDiscreteFacetingRequest(dto);
         } else {
-            return getRangeFacetingRequest(clazz, name, field, ranges);
+            return getRangeFacetingRequest(dto);
         }
     }
 
-    private Supplier<FacetingRequest> getDiscreteFacetingRequest(final Class clazz, final String name, final String field) {
-        return () -> getQueryBuilder(clazz)
+    private Supplier<FacetingRequest> getDiscreteFacetingRequest(final FacetDTO dto) {
+        return () -> getQueryBuilder(dto.getClazz())
                 .facet()
-                .name(name)
-                .onField(field)
+                .name(dto.getName())
+                .onField(dto.getField())
                 .discrete()
                 .orderedBy(FacetSortOrder.COUNT_DESC)
                 .includeZeroCounts(true)
@@ -71,10 +73,11 @@ public class FacetGeneratorSevice {
 
     /**
      * Return Faceting Request Factory.
-     * @param clazz entity class
-     * @param name Faceting Request name
-     * @param field entity field which we use for faceting
-     * @param ranges it is using for range faceting requests, what help us to split facets on pieces
+     * @param dto contains:
+     * clazz entity class
+     * name Faceting Request name
+     * field entity field which we use for faceting
+     * ranges it is using for range faceting requests, what help us to split facets on pieces
      *
      * Range Facets example:
      * in general range faceting request should be like this:
@@ -99,15 +102,15 @@ public class FacetGeneratorSevice {
      *
      *  for handling this we have handleRangeContext() method
      */
-    private Supplier<FacetingRequest>  getRangeFacetingRequest(final Class clazz, final String name, final String field, Object... ranges) {
+    private Supplier<FacetingRequest>  getRangeFacetingRequest(final FacetDTO dto) {
         return () -> {
-            var rangeContext = getQueryBuilder(clazz)
+            var rangeContext = getQueryBuilder(dto.getClazz())
                     .facet()
-                    .name(name)
-                    .onField(field)
+                    .name(dto.getName())
+                    .onField(dto.getField())
                     .range();
 
-            return handleRangeContext(rangeContext, ranges)
+            return handleRangeContext(rangeContext, dto.getRanges().toArray())
                     .excludeLimit()
                     .createFacetingRequest();
         };

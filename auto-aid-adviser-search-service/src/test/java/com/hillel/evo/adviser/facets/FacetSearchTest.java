@@ -2,13 +2,16 @@ package com.hillel.evo.adviser.facets;
 
 import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
+import com.hillel.evo.adviser.dto.FacetDTO;
 import com.hillel.evo.adviser.entity.Aid;
-import com.hillel.evo.adviser.service.FacetGeneratorSevice;
+import com.hillel.evo.adviser.service.FacetGeneratorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,13 +28,14 @@ public class FacetSearchTest {
     private HibernateSearchConfig hibernateSearchConfig;
 
     @Autowired
-    private FacetGeneratorSevice facetGeneratorSevice;
+    private FacetGeneratorService facetGeneratorService;
 
     @Test
     public void shouldReturnFacetsByDiscreteFacetRequest() {
 
         hibernateSearchConfig.reindex(Aid.class);
-        var fr = facetGeneratorSevice.getFacetingRequest(Aid.class, "typeFacet", "type");
+        var dto = new FacetDTO(Aid.class, "typeFacet", "type", new ArrayList<>());
+        var fr = facetGeneratorService.getFacetingRequest(dto);
         var result = aidFacetSearch.search(Aid.class, fr);
 
         assertEquals(2, result.size());
@@ -41,7 +45,9 @@ public class FacetSearchTest {
     public void shouldReturnFacetsByRangeFacetRequestWith1Param() {
 
         hibernateSearchConfig.reindex(Aid.class);
-        var fr = facetGeneratorSevice.getFacetingRequest(Aid.class, "latFacet", "latitude", 10.0);
+        var dto = new FacetDTO(Aid.class, "latFacet", "latitude", new ArrayList<>());
+        dto.getRanges().add(10.0);
+        var fr = facetGeneratorService.getFacetingRequest(dto);
         var result = aidFacetSearch.search(Aid.class, fr);
 
         assertEquals(2, result.size());
@@ -51,7 +57,10 @@ public class FacetSearchTest {
     public void shouldReturnFacetsByRangeFacetRequestWith2Param() {
 
         hibernateSearchConfig.reindex(Aid.class);
-        var fr = facetGeneratorSevice.getFacetingRequest(Aid.class, "latFacet", "latitude", 10.0, 12.0);
+        var dto = new FacetDTO(Aid.class, "latFacet", "latitude", new ArrayList<>());
+        dto.getRanges().add(10.0);
+        dto.getRanges().add(12.0);
+        var fr = facetGeneratorService.getFacetingRequest(dto);
         var result = aidFacetSearch.search(Aid.class, fr);
 
         assertEquals(3, result.size());
@@ -61,7 +70,11 @@ public class FacetSearchTest {
     public void shouldReturnFacetsByRangeFacetRequestWith3Param() {
 
         hibernateSearchConfig.reindex(Aid.class);
-        var fr = facetGeneratorSevice.getFacetingRequest(Aid.class, "latFacet", "latitude", 10.0, 12.0, 15.0);
+        var dto = new FacetDTO(Aid.class, "latFacet", "latitude", new ArrayList<>());
+        dto.getRanges().add(10.0);
+        dto.getRanges().add(12.0);
+        dto.getRanges().add(15.0);
+        var fr = facetGeneratorService.getFacetingRequest(dto);
         var result = aidFacetSearch.search(Aid.class, fr);
 
         assertEquals(4, result.size());

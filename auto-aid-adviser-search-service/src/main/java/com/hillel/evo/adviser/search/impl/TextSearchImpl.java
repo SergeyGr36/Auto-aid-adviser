@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.search.impl;
 
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.search.TextSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +21,18 @@ public class TextSearchImpl<T> implements TextSearch<T> {
 
     @Override
     @Transactional
-    public List<T> search(Class<T> clazz, String field, String param) {
+    public List<T> search(final SearchTextDTO dto) {
 
-        var query = searchService.getTextQuery(clazz, field, param);
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
+        var query = searchService.getTextQuery(dto.getClazz(), dto.getField(), dto.getParam());
+        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), dto.getClazz());
         return jpaQuery.getResultList();
     }
 
     @Override
     @Transactional
-    public List<T> searchWildcard(Class<T> clazz, String field, String param) {
-        var query = searchService.getTextWildcardQuery(clazz, field, param);
-        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), clazz);
+    public List<T> searchWildcard(final SearchTextDTO dto) {
+        var query = searchService.getTextWildcardQuery(dto.getClazz(), dto.getField(), dto.getParam());
+        var jpaQuery = searchService.getFullTextEntityManager().createFullTextQuery(query.get(), dto.getClazz());
         return jpaQuery.getResultList();
     }
 }
