@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.search;
 import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SearchApp;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Aid;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,8 @@ public class SearchTest extends BaseTest {
     public void TestSearchText() {
 
         hibernateSearchConfig.reindex(Aid.class);
-        var result = aidTextSearch.search(Aid.class, "name", "BMW");
+        var dto = new SearchTextDTO(Aid.class, "name", "BMW");
+        var result = aidTextSearch.search(dto);
 
         assertEquals(1, result.size());
     }
@@ -43,7 +45,8 @@ public class SearchTest extends BaseTest {
     public void TestSearchTextWildcard() {
 
         hibernateSearchConfig.reindex(Aid.class);
-        var result = aidTextSearch.searchWildcard(Aid.class, "name", "bm*");
+        var dto = new SearchTextDTO(Aid.class, "name", "bm*");
+        var result = aidTextSearch.searchWildcard(dto);
 
         assertEquals(1, result.size());
 
@@ -54,7 +57,8 @@ public class SearchTest extends BaseTest {
 
         hibernateSearchConfig.reindex(Aid.class);
         var searchVal = "Хон";
-        var result = aidTextSearch.searchWildcard(Aid.class, "name", searchVal.toLowerCase() + "*");
+        var dto = new SearchTextDTO(Aid.class, "name", searchVal.toLowerCase() + "*");
+        var result = aidTextSearch.searchWildcard(dto);
 
         assertEquals(1, result.size());
     }

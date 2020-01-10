@@ -1,9 +1,11 @@
 package com.hillel.evo.adviser.search;
 
+import com.hillel.evo.adviser.dto.SearchTextDTO;
+
 import java.util.List;
 
 public interface TextSearch<T> {
 
-    List<T> search(Class<T> clazz, String field, String param);
-    List<T> searchWildcard(Class<T> clazz, String field, String param);
+    List<T> search(final SearchTextDTO dto);
+    List<T> searchWildcard(final SearchTextDTO dto);
 }

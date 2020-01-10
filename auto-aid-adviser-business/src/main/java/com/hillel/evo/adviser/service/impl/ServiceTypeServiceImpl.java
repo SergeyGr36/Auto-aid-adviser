@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.service.impl;
 
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
@@ -51,7 +52,8 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Override
     @Transactional
     public ServiceTypeDto findByName(String name) {
-        var result = textSearch.search(ServiceType.class, QUERY_FIELD, name);
+        var dto = new SearchTextDTO(ServiceType.class, QUERY_FIELD, name);
+        var result = textSearch.search(dto);
         return result.size() > 0 ? mapper.toDto(result.get(0)) : null;
     }
 

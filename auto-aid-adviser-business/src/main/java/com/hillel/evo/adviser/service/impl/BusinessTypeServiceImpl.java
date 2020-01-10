@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
@@ -37,12 +38,14 @@ public class BusinessTypeServiceImpl implements BusinessTypeService {
 
     @Override
     public List<BusinessTypeDto> findAllByName(String name) {
-        return mapper.toAllDto(textSearch.search(BusinessType.class, "name", name));
+        var dto = new SearchTextDTO(BusinessType.class, "name", name);
+        return mapper.toAllDto(textSearch.search(dto));
     }
 
     @Override
     public List<BusinessTypeDto> findAllByNameContains(String name) {
-        return mapper.toAllDto(textSearch.searchWildcard(BusinessType.class, "name", name));
+        var dto = new SearchTextDTO(BusinessType.class, "name", name);
+        return mapper.toAllDto(textSearch.searchWildcard(dto));
     }
 
     @Override
