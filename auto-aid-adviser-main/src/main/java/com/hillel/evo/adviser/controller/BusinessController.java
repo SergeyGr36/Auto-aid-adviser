@@ -137,10 +137,9 @@ public class BusinessController {
     }
 
 
-    @Secured(ROLE_BUSINESS)
-    @GetMapping("/{serviceForBusiness}/{longtitude}/{latitude}")
-    public ResponseEntity<List<BusinessDto>> findByBusinessTypeServiceTypeLocation(@PathVariable String serviceForBusiness, @PathVariable double longtitude, @PathVariable double latitude) {
-        var result = businessService.findBusinessByServiceAndLocation(serviceForBusiness, longtitude, latitude);
+    @GetMapping("/{serviceForBusiness}/{longitude}/{latitude}")
+    public ResponseEntity<List<BusinessDto>> findByBusinessTypeServiceTypeLocation(@PathVariable String serviceForBusiness, @PathVariable double longitude, @PathVariable double latitude) {
+        var result = businessService.findBusinessByServiceAndLocation(serviceForBusiness, longitude, latitude);
         if (result.size() > 0) {
             return new ResponseEntity(result, HttpStatus.OK);
         } else {
