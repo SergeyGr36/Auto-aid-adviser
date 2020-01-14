@@ -1,6 +1,9 @@
 -- images
 delete from image;
 
+-- feedback
+delete from feedback;
+
 -- user-profile
 delete from user_car;
 delete from car_model;

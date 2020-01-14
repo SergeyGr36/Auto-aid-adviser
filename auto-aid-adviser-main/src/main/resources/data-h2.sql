@@ -117,3 +117,35 @@ insert into user_car(release_year, car_model_id, simple_user_user_details_id) va
     (select id from car_model where name like 'X5'),
     (select user_details_id from simple_usr where first_name in('Vasya'))
 );
+
+-- add feedback for business
+
+insert into feedback(text, rating, business_id, user_id, create_date) values
+(
+    'Good service. Thanks!',
+    5,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+),
+(
+    'Хороший сервис!!!',
+    5,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+),
+(
+    'Не понравилось(((. Имел горький опыт кузовного ремонта на данном СТО. Уж не знаю где я так нагрешил.',
+    2,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+),
+(
+    'So so',
+    3,
+    (select id from business where name like 'СТО Дарница'),
+    (select user_details_id from simple_usr where first_name like 'Vasya'),
+    now()
+);
