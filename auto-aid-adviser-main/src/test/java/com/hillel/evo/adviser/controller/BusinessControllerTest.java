@@ -377,31 +377,27 @@ public class BusinessControllerTest extends BaseTest {
     @Test
     public void findByServiceAndLocationThenReturnOK() throws Exception {
         hibernateSearchConfig.reindex(Business.class);
-        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/50.0/50.0")
-                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/50.0/50.0"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void findByServiceNotExistAndLocationThenReturnNotFound() throws Exception {
         hibernateSearchConfig.reindex(Business.class);
-        mockMvc.perform(get(PATH_BUSINESSES+"/kolobok/50.0/50.0")
-                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+        mockMvc.perform(get(PATH_BUSINESSES+"/kolobok/50.0/50.0"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void findByServiceAndLocationNotExistThenReturnNotFound() throws Exception {
         hibernateSearchConfig.reindex(Business.class);
-        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/150.0/50.0")
-                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/150.0/50.0"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void findByServiceAndBadLocationThenReturnBadRequest() throws Exception {
-        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/vinipuh/50.0")
-                .header("Authorization",JwtService.TOKEN_PREFIX+jwt))
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/vinipuh/50.0"))
                 .andExpect(status().isBadRequest());
     }
 
