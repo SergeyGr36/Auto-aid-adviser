@@ -4,6 +4,9 @@ import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
+import com.hillel.evo.adviser.dto.SearchCustomDTO;
+import com.hillel.evo.adviser.dto.SearchSpatialLocationDTO;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.Contact;
@@ -50,7 +53,7 @@ public class BusinessServiceImpl implements BusinessService {
     private transient final ImageService imageService;
     private transient final ImageMapper imageMapper;
     private transient final QueryGeneratorService queryGeneratorService;
-    private transient final CustomSearch<Business> search;
+    private transient final CustomSearch<BusinessFullDto> search;
 
     @Override
     public BusinessDto createBusiness(final BusinessDto dto, Long userId) {
@@ -97,7 +100,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId) {
-        return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
+        return serviceMapper.toDtoList(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
     }
 
     @Override
@@ -134,14 +137,18 @@ public class BusinessServiceImpl implements BusinessService {
         return mapper.toFullDto(business);
     }
 
-    public List<BusinessDto> findBusinessByServiceAndLocation(String serviceForBusiness,
+    public List<BusinessFullDto> findBusinessByServiceAndLocation(String serviceForBusiness,
                                                               double longitude,
                                                               double latitude) {
-        var businessQuery = queryGeneratorService.getTextQuery(Business.class, "serviceForBusinesses.name", serviceForBusiness);
-        var locationQuery = queryGeneratorService.getSpatialQuery(Business.class, "location", 5, latitude, longitude);
-        var entities = search.search(Business.class, businessQuery, locationQuery);//first call to DB
-        List<Business> business = businessRepository.findByBusiness(entities);//second call to db
-        return mapper.listToDto(business);
+        var clazz = Business.class;
+        var bdto = new SearchTextDTO(clazz, "serviceForBusinesses.name", serviceForBusiness);
+        var businessQuery = queryGeneratorService.getTextQuery(bdto);
+        var ldto = new SearchSpatialLocationDTO(clazz, "location", 5, latitude, longitude);
+        var locationQuery = queryGeneratorService.getSpatialQuery(ldto);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(businessQuery);
+        dto.getQueries().add(locationQuery);
+        return search.search(mapper, dto);
     }
 
     private Set<ServiceForBusiness> getAllServices() {

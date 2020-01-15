@@ -61,6 +61,6 @@ aws:
     imageMaxSize: 200000
 
 frontend:
-  host: https://auto-aid-adviser.co.uk
+  host: https://auto-aid-adviser.net
   router:
     activation: /user/activation/

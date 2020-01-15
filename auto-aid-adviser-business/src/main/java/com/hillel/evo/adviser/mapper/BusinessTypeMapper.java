@@ -8,9 +8,10 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {BusinessTypeRepository.class})
-public interface BusinessTypeMapper {
+public interface BusinessTypeMapper extends BaseMapper<BusinessTypeDto, BusinessType> {
     BusinessType toType(BusinessTypeDto dto);
     BusinessTypeDto toDto(BusinessType type);
-    List<BusinessTypeDto> toAllDto (List<BusinessType> type);
+    @Override
+    List<BusinessTypeDto> toDtoList(List<BusinessType> type);
     List<BusinessType> toAllType (List<BusinessTypeDto> dto);
 }

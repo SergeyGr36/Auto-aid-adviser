@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {ServiceTypeMapper.class})
-public interface ServiceForBusinessMapper {
+public interface ServiceForBusinessMapper extends BaseMapper<ServiceForBusinessDto, ServiceForBusiness> {
 
     ServiceForBusiness toEntity(ServiceForBusinessDto serviceForBusinessDto);
     ServiceForBusinessDto toDto(ServiceForBusiness businessService);
     Set<ServiceForBusinessDto> toDto (Set<ServiceForBusiness> serviceForBusinesses);
     Set<ServiceForBusiness> toEntity (Set<ServiceForBusinessDto> serviceForBusinessDtos);
-    List<ServiceForBusinessDto> toDto (List<ServiceForBusiness> serviceForBusinesses);
+    @Override
+    List<ServiceForBusinessDto> toDtoList(List<ServiceForBusiness> serviceForBusinesses);
     List<ServiceForBusiness> toEntity (List<ServiceForBusinessDto> serviceForBusinessDtos);
     ServiceForBusinessShortDto toShortDto(ServiceForBusiness serviceForBusinessService);
 

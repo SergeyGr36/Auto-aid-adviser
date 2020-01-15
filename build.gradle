@@ -157,6 +157,7 @@ project(':auto-aid-adviser-search-service') {
         enabled = true
     }
     dependencies {
+        implementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
@@ -203,9 +204,8 @@ project(':auto-aid-adviser-business') {
         implementation project(':auto-aid-adviser-user')
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-image')
+        implementation project(':auto-aid-adviser-base-module')
         implementation project(':auto-aid-adviser-user-profile')
-        //implementation project(':auto-aid-adviser-search-history-service')
-
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
@@ -251,7 +251,7 @@ project(":auto-aid-adviser-search-history-service") {
         implementation project(':auto-aid-adviser-search-service')
         implementation project(':auto-aid-adviser-image')
         implementation project(':auto-aid-adviser-business')
-
+        implementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }
@@ -275,6 +275,7 @@ project(":auto-aid-adviser-main") {
         implementation project(':auto-aid-adviser-websockets')
         implementation project(':auto-aid-adviser-search-history-service')
         implementation project(':auto-aid-adviser-image')
+        implementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module')
         testImplementation project(':auto-aid-adviser-base-module').sourceSets.test.output
     }

@@ -15,7 +15,7 @@ import java.util.List;
                 ServiceTypeMapper.class,
                 WorkTimeMapper.class})
 
-public interface BusinessMapper {
+public interface BusinessMapper extends BaseMapper<BusinessFullDto, Business> {
 
     BusinessDto toDto(Business business);
 
@@ -32,5 +32,8 @@ public interface BusinessMapper {
     List<BusinessDto> listToDto(List<Business> businesses);
 
     BusinessFullDto toFullDto(Business business);
+
+    @Override
+    List<BusinessFullDto> toDtoList(List<Business> businesses);
 
 }
