@@ -74,7 +74,9 @@ insert into business(phone, address, latitude, longitude, name, business_user_us
 ('098-123-45-67', 'Киев', 50.44, 30.53 , 'СТО Дарница', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
 ('098-123-45-67', 'вулиця Кіровоградська, Петропавлівська Борщагівка, Київська обл.', 50.42, 30.33, 'СТО АвтоХелп', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness1@mail.com')),
 ('066-666-66-66', 'Киев', 50.42, 30.80, 'user 2 STO 1', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
-('096-999-99-99', 'Киев', 50.50, 30.30, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
+('096-999-99-99', 'Киев', 50.50, 30.30, 'user 2 STO 2', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
+('066-777-77-77', 'вулиця Мечникова, 14/1, Київ', 50.4368, 30.53267, 'Hillel', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com')),
+('096-888-88-88', 'Киев', 50.43815, 30.53275, 'Кловская', (select id from adviser_usr a inner join business_usr b on (a.id = b.user_details_id) where a.email like 'testbusiness2@mail.com'));
 
 insert into work_time(day, from_time, to_time, business_id) values
 (0, now(), now(), (select id from business limit 1)),
