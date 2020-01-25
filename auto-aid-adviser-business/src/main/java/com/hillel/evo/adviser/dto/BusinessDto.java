@@ -26,6 +26,5 @@ public class BusinessDto {
     @NotEmpty
     private List<ServiceForBusinessShortDto> serviceForBusinesses;
 
-//    @NotNull
-//    private Long userId;
+    private Set<ImageDto> images;
 }
