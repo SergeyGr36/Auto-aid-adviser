@@ -3,8 +3,6 @@ package com.hillel.evo.adviser.service;
 import com.hillel.evo.adviser.dto.AdviserUserDetailsDto;
 import com.hillel.evo.adviser.dto.UserRegistrationDto;
 import com.hillel.evo.adviser.dto.UserTokenResponseDto;
-import org.springframework.boot.web.server.Http2;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

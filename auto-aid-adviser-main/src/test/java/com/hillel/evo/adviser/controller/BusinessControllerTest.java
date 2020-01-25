@@ -3,8 +3,10 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.BaseTest;
+import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.ContactDto;
+import com.hillel.evo.adviser.dto.FeedbackDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
@@ -13,9 +15,11 @@ import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
+import com.hillel.evo.adviser.repository.FeedbackRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.BusinessService;
 import com.hillel.evo.adviser.service.EncoderService;
+import com.hillel.evo.adviser.service.FeedbackService;
 import com.hillel.evo.adviser.service.JwtService;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,13 +34,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,27 +44,26 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/create-user2.sql", "/create-business.sql", "/create-image.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user2.sql", "/create-business.sql", "/create-image.sql", "/create-feedback.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BusinessControllerTest extends BaseTest {
 
     private static final String BUSINESS_EMAIL = "bvg@mail.com";
+    private static final String SIMPLEUSER_EMAIL = "svg@mail.com";
     private static final String BUSINESS_EMAIL_ALIEN = "bkc@mail.com";
     private static final String PATH_BUSINESSES =  "/businesses";
 
     private AdviserUserDetails user;
     private String jwt;
+
+    @Autowired
+    private HibernateSearchConfig hibernateSearchConfig;
 
     @Autowired
     private MockMvc mockMvc;
@@ -93,6 +92,9 @@ public class BusinessControllerTest extends BaseTest {
     @Autowired
     BusinessService businessService;
 
+    @Autowired
+    FeedbackService feedbackService;
+
     @BeforeEach
     public void setUp() throws Exception {
         encodeTestUserPassword();
@@ -116,7 +118,7 @@ public class BusinessControllerTest extends BaseTest {
     @Test
     public void deleteBusiness_ReturnOk() throws Exception {
         //given
-        Business business = businessRepository.findAllByBusinessUserId(user.getId()).get(0);
+        Business business = businessRepository.findAllByName("user 1 STO 2").get(0);
         //when
         mockMvc.perform(delete(PATH_BUSINESSES+"/{id}", business.getId())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
@@ -199,8 +201,8 @@ public class BusinessControllerTest extends BaseTest {
         MockMultipartHttpServletRequestBuilder multipart = MockMvcRequestBuilders.multipart(PATH_BUSINESSES);
         mockMvc.perform(multipart
                 .file(getPart(objectMapper.writeValueAsString(businessDto)))
-                .file(getPart(objectMapper.writeValueAsString(businessDto)))
-                .file(getPart(objectMapper.writeValueAsString(businessDto)))
+                .file(getMultipartFile())
+                .file(getMultipartFile())
                 .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
                 )
                 //then
@@ -308,6 +310,97 @@ public class BusinessControllerTest extends BaseTest {
                 .andExpect(status().isBadRequest());
     }
 
+    /* ================ feedback =============== */
+
+    @Test
+    public void getPageFeedBackByBusiness() throws Exception {
+        //given
+        List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
+        Business business = allBusinessByName.get(0);
+        //when
+        mockMvc.perform(get(PATH_BUSINESSES+"/{businessId}/feedbacks", business.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.totalElements").value(4));
+    }
+
+    @Test
+    public void saveFeedBackReturnDto() throws Exception {
+        //given
+        AdviserUserDetails simpleUser = userRepository.findByEmail(SIMPLEUSER_EMAIL).get();
+        String suJwt = jwtService.generateAccessToken(simpleUser.getId());
+        List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
+        Business business = allBusinessByName.get(0);
+        FeedbackDto feedbackDto = new FeedbackDto();
+        feedbackDto.setText("test");
+        feedbackDto.setRating(5);
+        //when
+        mockMvc.perform(post(PATH_BUSINESSES+"/{businessId}/feedback", business.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + suJwt)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(feedbackDto)))
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.text").value(feedbackDto.getText()))
+                .andExpect(jsonPath("$.rating").value(feedbackDto.getRating()));
+    }
+
+    @Test
+    public void updateFeedBackReturnDto() throws Exception {
+        //given
+        AdviserUserDetails simpleUser = userRepository.findByEmail(SIMPLEUSER_EMAIL).get();
+        String suJwt = jwtService.generateAccessToken(simpleUser.getId());
+        List<Business> allBusinessByName = businessRepository.findAllByName("user 1 STO 1");
+        Business business = allBusinessByName.get(0);
+
+        FeedbackDto feedbackDto = feedbackService.findFeedbackByBusiness(business.getId(), 1, 1)
+                .get().findFirst().get();
+
+        feedbackDto.setText("test");
+        feedbackDto.setRating(5);
+        //when
+        mockMvc.perform(put(PATH_BUSINESSES+"/{businessId}/feedback", business.getId())
+                .header("Authorization", JwtService.TOKEN_PREFIX + suJwt)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(feedbackDto)))
+                //then
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(feedbackDto.getId()))
+                .andExpect(jsonPath("$.text").value(feedbackDto.getText()))
+                .andExpect(jsonPath("$.rating").value(feedbackDto.getRating()));
+    }
+
+    /* ========================================= */
+
+    @Test
+    public void findByServiceAndLocationThenReturnOK() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/50.0/50.0"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void findByServiceNotExistAndLocationThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_BUSINESSES+"/kolobok/50.0/50.0"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findByServiceAndLocationNotExistThenReturnNotFound() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/150.0/50.0"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void findByServiceAndBadLocationThenReturnBadRequest() throws Exception {
+        mockMvc.perform(get(PATH_BUSINESSES+"/balancing/vinipuh/50.0"))
+                .andExpect(status().isBadRequest());
+    }
+
     private BusinessDto createTestDto() {
         List<ServiceForBusiness> list = serviceForBusinessRepository.findAll();
 
@@ -315,8 +408,8 @@ public class BusinessControllerTest extends BaseTest {
         dto.setName("some name");
 
         LocationDto location = new LocationDto();
-        location.setLatitude(99);
-        location.setLongitude(99);
+        location.setLatitude(60.0);
+        location.setLongitude(60.0);
         location.setAddress("some address");
 
         ContactDto contact = new ContactDto();

@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.BusinessApplication;
+import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ContactDto;
@@ -8,14 +9,15 @@ import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.LocationDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
 import com.hillel.evo.adviser.dto.WorkTimeDto;
+import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
-import com.hillel.evo.adviser.exception.CreateResourceException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,24 +38,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
-@Sql(value = {"/create-user.sql", "/create-business.sql", "/create-image.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user.sql", "/create-business.sql", "/create-image.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"/clean-image.sql", "/clean-business.sql", "/clean-user.sql"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BusinessServiceImplTest {
-
+    @Autowired
+    HibernateSearchConfig config;
     @Autowired
     private BusinessServiceImpl businessService;
 
@@ -64,12 +60,12 @@ public class BusinessServiceImplTest {
     private ServiceForBusinessRepository serviceForBusinessRepository;
 
     @MockBean
-    CloudImageService mockCloudImageService;
+    private CloudImageService mockCloudImageService;
 
-    Long userId;
+    private Long userId;
 
-    MultipartFile goodFile;
-    MultipartFile badFile;
+    private MultipartFile goodFile;
+    private MultipartFile badFile;
 
     @BeforeEach
     private void init() throws Exception {
@@ -110,6 +106,7 @@ public class BusinessServiceImplTest {
         assertEquals(listFiles.size(), businessService.findImagesByBusinessId(saveDto.getId()).size());
     }
 
+    @Disabled
     @Test
     public void whenCreateBusinessThenReturnThrow() {
         assertThrows(Exception.class, () -> businessService.createBusiness(new BusinessDto(), userId));
@@ -139,6 +136,7 @@ public class BusinessServiceImplTest {
     public void whenFindByBusinessIdThenReturnException() {
         assertThrows(ResourceNotFoundException.class, () -> businessService.findBusinessById(99L, userId));
     }
+
 
     @Test
     public void whenUpdateBusinessThenReturnBusinessDto() {
@@ -235,6 +233,16 @@ public class BusinessServiceImplTest {
         assertFalse(templateBusiness.getServiceForBusinesses().isEmpty());
     }
 
+    @Test
+    public void whenFindByBusinessTypeServiceTypeLocationReturnBusinessDto() {
+        config.reindex(Business.class);
+        String serviceName = "balancing";
+        double longitude = 50.0;
+        double latitude = 50.0;
+        var result = businessService.findBusinessByServiceAndLocation(serviceName, longitude, latitude);
+        assertEquals(1, result.size());
+    }
+
     private BusinessDto createTestDto() {
         List<ServiceForBusiness> list = serviceForBusinessRepository.findAll();
 
@@ -242,8 +250,8 @@ public class BusinessServiceImplTest {
         dto.setName("some name");
 
         LocationDto location = new LocationDto();
-        location.setLatitude(99);
-        location.setLongitude(99);
+        location.setLatitude(60.0);
+        location.setLongitude(60.0);
         location.setAddress("some address");
 
         ContactDto contact = new ContactDto();
@@ -282,4 +290,6 @@ public class BusinessServiceImplTest {
         byte[] content = {1, 2, 3, 4, 5};
         return new MockMultipartFile("file", "file.bad", contentType, content);
     }
+
+
 }

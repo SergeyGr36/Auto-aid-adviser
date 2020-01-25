@@ -4,6 +4,9 @@ import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
 import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.ServiceForBusinessDto;
+import com.hillel.evo.adviser.dto.SearchCustomDTO;
+import com.hillel.evo.adviser.dto.SearchSpatialLocationDTO;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import com.hillel.evo.adviser.entity.Contact;
@@ -19,9 +22,11 @@ import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
+import com.hillel.evo.adviser.search.CustomSearch;
 import com.hillel.evo.adviser.service.BusinessService;
+import com.hillel.evo.adviser.service.QueryGeneratorService;
 import com.hillel.evo.adviser.service.interfaces.ImageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class BusinessServiceImpl implements BusinessService {
 
     private transient final BusinessMapper mapper;
@@ -46,19 +52,8 @@ public class BusinessServiceImpl implements BusinessService {
     private transient final ServiceForBusinessRepository serviceForBusinessRepository;
     private transient final ImageService imageService;
     private transient final ImageMapper imageMapper;
-
-    //private static final Logger LOGGER = LoggerFactory.getLogger(BusinessServiceImpl.class);
-
-    @Autowired
-    public BusinessServiceImpl(BusinessMapper mapper, ServiceForBusinessMapper serviceMapper, BusinessRepository businessRepository, BusinessUserRepository userRepository, ServiceForBusinessRepository serviceForBusinessRepository, ImageService imageService, ImageMapper imageMapper) {
-        this.mapper = mapper;
-        this.serviceMapper = serviceMapper;
-        this.businessRepository = businessRepository;
-        this.userRepository = userRepository;
-        this.serviceForBusinessRepository = serviceForBusinessRepository;
-        this.imageService = imageService;
-        this.imageMapper = imageMapper;
-    }
+    private transient final QueryGeneratorService queryGeneratorService;
+    private transient final CustomSearch<BusinessFullDto> search;
 
     @Override
     public BusinessDto createBusiness(final BusinessDto dto, Long userId) {
@@ -85,7 +80,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public BusinessDto findBusinessById(Long id, Long userId) {
         return mapper.toDto(businessRepository.findByIdAndBusinessUserId(id, userId)
-                     .orElseThrow(ResourceNotFoundException::new));
+                .orElseThrow(ResourceNotFoundException::new));
     }
 
     @Override
@@ -105,7 +100,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public List<ServiceForBusinessDto> findServicesByBusinessId(Long businessId, Long userId) {
-        return serviceMapper.toDto(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
+        return serviceMapper.toDtoList(serviceForBusinessRepository.findServicesByBusinessIdAndBusinessUserId(businessId, userId));
     }
 
     @Override
@@ -142,13 +137,26 @@ public class BusinessServiceImpl implements BusinessService {
         return mapper.toFullDto(business);
     }
 
+    public List<BusinessFullDto> findBusinessByServiceAndLocation(String serviceForBusiness,
+                                                              double longitude,
+                                                              double latitude) {
+        var clazz = Business.class;
+        var bdto = new SearchTextDTO(clazz, "serviceForBusinesses.name", serviceForBusiness);
+        var businessQuery = queryGeneratorService.getTextQuery(bdto);
+        var ldto = new SearchSpatialLocationDTO(clazz, "location", 5, latitude, longitude);
+        var locationQuery = queryGeneratorService.getSpatialQuery(ldto);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(businessQuery);
+        dto.getQueries().add(locationQuery);
+        return search.search(mapper, dto);
+    }
+
     private Set<ServiceForBusiness> getAllServices() {
-        Set<ServiceForBusiness> set = serviceForBusinessRepository.getFetchAll();
-        return set;
+        return serviceForBusinessRepository.getFetchAll();
     }
 
     private Set<WorkTime> getTemplateWorkTime() {
-        Set<WorkTime> set = new HashSet();
+        Set<WorkTime> set = new HashSet<>();
         Arrays.asList(DayOfWeek.values()).forEach(
                 dayOfWeek -> set.add(new WorkTime(dayOfWeek, LocalTime.MIN, LocalTime.MAX))
         );

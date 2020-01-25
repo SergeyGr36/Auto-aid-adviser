@@ -8,6 +8,7 @@ import java.util.List;
 public interface ServiceForBusinessService {
     ServiceForBusinessDto getServiceBusinessById(Long id);
     List<ServiceForBusinessDto> getAllByServiceTypeId(Long id);
+    List<ServiceForBusinessDto> getAllByServiceName(String name);
     ServiceForBusinessDto createServiceBusiness(ServiceForBusinessDto dto);
     ServiceForBusinessDto updateServiceBusiness(ServiceForBusinessDto dto);
     void deleteServiceBusiness(Long id);

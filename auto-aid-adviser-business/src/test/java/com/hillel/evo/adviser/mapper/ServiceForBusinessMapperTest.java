@@ -20,7 +20,7 @@ import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
-@Sql(value = {"/clean-business.sql", "/clean-user.sql", "/create-user.sql", "/create-business.sql"},
+@Sql(value = {"/clean-all.sql", "/create-user.sql", "/create-business.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class ServiceForBusinessMapperTest {
 
@@ -34,7 +34,7 @@ public class ServiceForBusinessMapperTest {
 
     @Test
     public void whenToDto_SetNullList_ReturnEmptyList() {
-        Assertions.assertNull(mapper.toDto((List<ServiceForBusiness>) null));
+        Assertions.assertNull(mapper.toDtoList((List<ServiceForBusiness>) null));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class ServiceForBusinessMapperTest {
 
     @Test
     public void whenToDto_SetEmptyList_ReturnEmptyList() {
-        Assertions.assertTrue(mapper.toDto(new ArrayList<>()).isEmpty());
+        Assertions.assertTrue(mapper.toDtoList(new ArrayList<>()).isEmpty());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ServiceForBusinessMapperTest {
     @Test
     public void whenToDto_SetList_ReturnListDto() {
         List<ServiceForBusiness> list = Arrays.asList(new ServiceForBusiness());
-        Assertions.assertEquals(mapper.toDto(list).size(), list.size());
+        Assertions.assertEquals(mapper.toDtoList(list).size(), list.size());
     }
 
     @Test

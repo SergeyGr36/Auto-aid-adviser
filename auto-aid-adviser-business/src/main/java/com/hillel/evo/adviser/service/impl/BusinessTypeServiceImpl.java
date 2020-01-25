@@ -1,6 +1,7 @@
 package com.hillel.evo.adviser.service.impl;
 
 import com.hillel.evo.adviser.dto.BusinessTypeDto;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.entity.BusinessType;
 import com.hillel.evo.adviser.exception.DeleteException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
@@ -8,22 +9,18 @@ import com.hillel.evo.adviser.mapper.BusinessTypeMapper;
 import com.hillel.evo.adviser.repository.BusinessTypeRepository;
 import com.hillel.evo.adviser.search.TextSearch;
 import com.hillel.evo.adviser.service.BusinessTypeService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BusinessTypeServiceImpl implements BusinessTypeService {
 
     private transient final BusinessTypeMapper mapper;
     private transient final BusinessTypeRepository repository;
-    private transient final TextSearch<BusinessType> textSearch;
-
-    public BusinessTypeServiceImpl(BusinessTypeMapper mapper, BusinessTypeRepository repository, TextSearch<BusinessType> textSearch) {
-        this.mapper = mapper;
-        this.repository = repository;
-        this.textSearch = textSearch;
-    }
+    private transient final TextSearch<BusinessTypeDto> textSearch;
 
     @Override
     public BusinessTypeDto createBusinessType(BusinessTypeDto dto) {
@@ -32,17 +29,19 @@ public class BusinessTypeServiceImpl implements BusinessTypeService {
 
     @Override
     public List<BusinessTypeDto> findAll() {
-        return mapper.toAllDto(repository.findAll());
+        return mapper.toDtoList(repository.findAll());
     }
 
     @Override
     public List<BusinessTypeDto> findAllByName(String name) {
-        return mapper.toAllDto(textSearch.search(BusinessType.class, "name", name));
+        var dto = new SearchTextDTO(BusinessType.class, "name", name);
+        return textSearch.search(mapper, dto);
     }
 
     @Override
     public List<BusinessTypeDto> findAllByNameContains(String name) {
-        return mapper.toAllDto(textSearch.searchWildcard(BusinessType.class, "name", name));
+        var dto = new SearchTextDTO(BusinessType.class, "name", name);
+        return textSearch.searchWildcard(mapper, dto);
     }
 
     @Override

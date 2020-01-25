@@ -1,5 +1,7 @@
 package com.hillel.evo.adviser.service.impl;
 
+import com.hillel.evo.adviser.dto.SearchCustomDTO;
+import com.hillel.evo.adviser.dto.SearchTextDTO;
 import com.hillel.evo.adviser.dto.ServiceTypeDto;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.DeleteException;
@@ -10,29 +12,27 @@ import com.hillel.evo.adviser.search.CustomSearch;
 import com.hillel.evo.adviser.search.TextSearch;
 import com.hillel.evo.adviser.service.QueryGeneratorService;
 import com.hillel.evo.adviser.service.ServiceTypeService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ServiceTypeServiceImpl implements ServiceTypeService {
+
+    private final static String QUERY_FIELD = "name";
+
     private transient final ServiceTypeMapper mapper;
     private transient final ServiceTypeRepository repository;
-    private transient final TextSearch<ServiceType> textSearch;
-    private transient final CustomSearch<ServiceType> customSearch;
+    private transient final TextSearch<ServiceTypeDto> textSearch;
+    private transient final CustomSearch<ServiceTypeDto> customSearch;
     private transient final QueryGeneratorService queryGeneratorService;
-
-    public ServiceTypeServiceImpl(ServiceTypeMapper mapper, ServiceTypeRepository repository, TextSearch<ServiceType> textSearch, CustomSearch<ServiceType> customSearch, QueryGeneratorService queryGeneratorService) {
-        this.mapper = mapper;
-        this.repository = repository;
-        this.textSearch = textSearch;
-        this.customSearch = customSearch;
-        this.queryGeneratorService = queryGeneratorService;
-    }
 
     @Override
     @Transactional
@@ -42,22 +42,41 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public List<ServiceTypeDto> findAllByBusinessTypeId(Long id) {
-        return mapper.toDto(repository.findAllByBusinessTypeId(id));
+        return mapper.toDtoList(repository.findAllByBusinessTypeId(id));
     }
 
     @Override
-    @Transactional
+    public ServiceTypeDto findByName(String name) {
+        var dto = new SearchTextDTO(ServiceType.class, QUERY_FIELD, name);
+        var result = textSearch.search(mapper, dto);
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
+
+    @Override
     public List<ServiceTypeDto> findAllByName(String name) {
-        return mapper.toDto(textSearch.search(ServiceType.class, "name", name));
+        var clazz = ServiceType.class;
+        var textDTO = new SearchTextDTO(clazz, QUERY_FIELD, name);
+        var sQuery = queryGeneratorService.getTextWildcardQuery(textDTO);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(sQuery);
+        return customSearch.search(mapper, dto);
     }
 
     @Override
-    @Transactional
-    public List<ServiceTypeDto> findAllByNameContains(String name, String btName) {
+    public List<ServiceTypeDto> findAllByName(String name, String btName) {
         var clazz = ServiceType.class;
-        var btQuery = queryGeneratorService.getTextQuery(clazz, "businessType.name", btName);
-        var sQuery = queryGeneratorService.getTextWildcardQuery(clazz, "name", name);
-        return mapper.toDto(customSearch.search(clazz, btQuery, sQuery));
+        var btDTO = new SearchTextDTO(clazz, "businessType.name", btName);
+        var btQuery = queryGeneratorService.getTextQuery(btDTO);
+        var sDTO = new SearchTextDTO(clazz, QUERY_FIELD, name);
+        var sQuery = queryGeneratorService.getTextWildcardQuery(sDTO);
+        var dto = new SearchCustomDTO(clazz, new ArrayList<>());
+        dto.getQueries().add(btQuery);
+        dto.getQueries().add(sQuery);
+        return customSearch.search(mapper, dto);
     }
 
     @Override
@@ -82,7 +101,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     public Page<ServiceTypeDto> findAllByPages(Integer page, Integer size) {
-        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, Sort.by("name")));
+        Page<ServiceType> pageEntity = repository.findAllByPages(PageRequest.of(page, size, Sort.by(QUERY_FIELD)));
         return pageEntity.map(mapper::toDto);
     }
 }

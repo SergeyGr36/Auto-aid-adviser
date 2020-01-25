@@ -3,6 +3,8 @@ package com.hillel.evo.adviser.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,11 +20,13 @@ import javax.persistence.Table;
 @Table(name = "service")
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
+@Indexed
 public class ServiceForBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Field
     @Column(nullable = false, unique = true)
     private String name;
 

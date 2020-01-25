@@ -3,14 +3,13 @@ package com.hillel.evo.adviser;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.dto.WSInputDTO;
 import com.hillel.evo.adviser.entity.BusinessType;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.entity.ServiceType;
 import com.hillel.evo.adviser.exception.UnsupportedSearchTypeException;
 import com.hillel.evo.adviser.service.WebSocketService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,6 +53,32 @@ public class WebSocketServiceImpTest extends BaseTest {
     }
 
     @Test
+    public void whenSearchServiceThenReturnList() {
+        config.reindex(ServiceForBusiness.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("SerVice");
+        wsInputDTO.setContent("lan");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+
+    }
+
+    @Test
+    public void whenSearchUAServiceThenReturnList() {
+        config.reindex(BusinessType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("BusinessType");
+        wsInputDTO.setContent("магаз");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+
+    }
+
+    @Test
     public void whenSearchServiceTypeThenReturnList() {
 
         config.reindex(ServiceType.class);
@@ -68,6 +93,32 @@ public class WebSocketServiceImpTest extends BaseTest {
         var result = webSocketService.find(wsInputDTO);
 
         assertEquals(1, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchServiceTypeWOBusinessTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("ru");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
+    }
+
+    @Test
+    public void whenSearchUAServiceTypeWOBusinessTypeThenReturnList() {
+
+        config.reindex(ServiceType.class);
+        var wsInputDTO = new WSInputDTO();
+        wsInputDTO.setSearchType("ServiceType");
+        wsInputDTO.setContent("дв");
+
+        var result = webSocketService.find(wsInputDTO);
+
+        assertEquals(2, result.getResult().size());
     }
 
     @Test
