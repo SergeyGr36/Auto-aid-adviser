@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 @ExtendWith(SpringExtension.class)
@@ -46,6 +47,16 @@ public class WorkTimeMapperTest {
         assertEquals(dto.getDay(), workTime.getDay().getValue());
         assertEquals(dto.getFromTime(), workTime.getFromTime());
         assertEquals(dto.getToTime(), workTime.getToTime());
+    }
+
+    @Test
+    public void whenDtoEqNullReturnNull() {
+        assertNull(mapper.toEntity(null));
+    }
+
+    @Test
+    public void whenEntityEqNullReturnNull() {
+        assertNull(mapper.toDto(null));
     }
 
     @Test

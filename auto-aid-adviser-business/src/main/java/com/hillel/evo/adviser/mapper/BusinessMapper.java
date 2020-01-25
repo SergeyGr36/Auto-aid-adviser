@@ -13,7 +13,8 @@ import java.util.List;
         uses = {ServiceForBusinessMapper.class,
                 BusinessTypeMapper.class,
                 ServiceTypeMapper.class,
-                WorkTimeMapper.class})
+                WorkTimeMapper.class,
+                ImageMapper.class})
 
 public interface BusinessMapper extends BaseMapper<BusinessFullDto, Business> {
 
