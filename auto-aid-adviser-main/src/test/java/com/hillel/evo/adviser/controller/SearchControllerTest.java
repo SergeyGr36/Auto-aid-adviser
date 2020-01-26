@@ -26,19 +26,19 @@ public class SearchControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void findByServiceAndLocationDefaultRadiusThenReturnOK() throws Exception {
-        hibernateSearchConfig.reindex(Business.class);
-        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void findByServiceAndLocationThenReturnOK() throws Exception {
-        hibernateSearchConfig.reindex(Business.class);
-        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0&radius=10.0"))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    public void findByServiceAndLocationDefaultRadiusThenReturnOK() throws Exception {
+//        hibernateSearchConfig.reindex(Business.class);
+//        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0"))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    public void findByServiceAndLocationThenReturnOK() throws Exception {
+//        hibernateSearchConfig.reindex(Business.class);
+//        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0&radius=10.0"))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     public void findByServiceNotExistAndLocationThenReturnNotFound() throws Exception {
