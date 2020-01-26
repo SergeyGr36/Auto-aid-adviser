@@ -137,13 +137,14 @@ public class BusinessServiceImpl implements BusinessService {
         return mapper.toFullDto(business);
     }
 
-    public List<BusinessFullDto> findBusinessByServiceAndLocation(String serviceForBusiness,
-                                                              double longitude,
-                                                              double latitude) {
+    public List<BusinessFullDto> findByServiceAndLocation(String serviceForBusiness,
+                                                          double latitude,
+                                                          double longitude,
+                                                          double radius) {
         var clazz = Business.class;
         var bdto = new SearchTextDTO(clazz, "serviceForBusinesses.name", serviceForBusiness);
         var businessQuery = queryGeneratorService.getTextQuery(bdto);
-        var ldto = new SearchSpatialLocationDTO(clazz, "location", 5, latitude, longitude);
+        var ldto = new SearchSpatialLocationDTO(clazz, "location", radius, latitude, longitude);
         var locationQuery = queryGeneratorService.getSpatialQuery(ldto);
         var dto = new SearchCustomDTO(clazz, new ArrayList<>());
         dto.getQueries().add(businessQuery);
