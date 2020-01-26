@@ -29,7 +29,7 @@ spring:
           default:
             directory_provider: filesystem
             indexBase: /var/adviser/indexes/
-          reindex: false
+          reindex: true
   flyway:
     enabled: false
 
