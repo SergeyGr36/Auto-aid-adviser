@@ -36,9 +36,9 @@ aws s3 cp s3://auto-aid-adviser-bucket/build/auto-aid-adviser-main-boot.jar /hom
 
 cd /home/${usr}/
 
-# start spring-boot app in dev mode
-java -jar -Dspring.profiles.active=dev auto-aid-adviser-main-boot.jar
-
 #This magic line (only works with sudo) redirects http from external 443 to internal 8443:
-sudo iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443
+iptables -t nat -I PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443
+
+# start spring-boot app in dev mode
+java -jar auto-aid-adviser-main-boot.jar --spring.profiles.active=dev
 --//

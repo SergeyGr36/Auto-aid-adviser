@@ -29,7 +29,7 @@ spring:
           default:
             directory_provider: filesystem
             indexBase: /var/adviser/indexes/
-          reindex: false
+          reindex: true
   flyway:
     enabled: false
 
@@ -50,7 +50,7 @@ email:
 app:
   jwt:
     secretKey: super-secret-test-key
-    expirationMillis: 3600000
+    expirationMillis: 2592000000
 
 aws:
   s3:
