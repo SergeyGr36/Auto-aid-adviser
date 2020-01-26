@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     }
 
     private String generateKeyFileName(String virtualDirectoryKeyPrefix, String uniqFileName) {
-        return virtualDirectoryKeyPrefix + "/" + uniqFileName;
+        return virtualDirectoryKeyPrefix + File.separator + uniqFileName;
     }
 
     private String generateUniqFileName(MultipartFile file) {
@@ -82,7 +83,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     }
 
     private String generateDirectoryKeyPrefix (Long businessUserId, Long businessId) {
-        return businessUserId.toString() + "/" + businessId.toString();
+        return businessUserId.toString() + File.separator + businessId.toString();
     }
 
     private List<S3FileDTO> createListDTOs (List<MultipartFile> files, String virtualDirectoryKeyPrefix) {

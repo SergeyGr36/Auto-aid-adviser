@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user/profile")
@@ -97,10 +98,8 @@ public class UserProfileController {
     @PutMapping
     public ResponseEntity<SimpleUserDto> updateSimpleUser(@RequestBody final SimpleUserDto userDto, Authentication authentication){
         Long userId = getUserIdFromAuthentication(authentication);
-        if (userId.equals(userDto.getId())) {
-            return new ResponseEntity<SimpleUserDto>(simpleUserService.update(userDto), HttpStatus.OK);
-        }
-        return new ResponseEntity<SimpleUserDto>(HttpStatus.BAD_REQUEST);
+        userDto.setId(userId);
+        return new ResponseEntity<SimpleUserDto>(simpleUserService.update(userDto), HttpStatus.OK);
     }
 
 

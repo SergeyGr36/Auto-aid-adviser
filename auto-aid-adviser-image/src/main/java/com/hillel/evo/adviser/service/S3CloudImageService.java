@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,7 +85,7 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     private void imageToTmpDir(MultipartFile file, String uniqFileName, Path tmpDirPath) throws IOException {
-        Path tmpImagePath = Paths.get(tmpDirPath + "\\" + uniqFileName);
+        Path tmpImagePath = Paths.get(tmpDirPath + File.separator + uniqFileName);
         try {
         file.transferTo(tmpImagePath);
         } catch (IOException ex){
