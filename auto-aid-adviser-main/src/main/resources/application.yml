@@ -48,7 +48,7 @@ email:
 app:
   jwt:
     secretKey: super-secret-test-key
-    expirationMillis: 2592000000
+    expirationMillis: 592000000
 
 aws:
   s3:
