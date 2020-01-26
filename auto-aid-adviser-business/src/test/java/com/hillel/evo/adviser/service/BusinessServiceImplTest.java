@@ -239,7 +239,7 @@ public class BusinessServiceImplTest {
         String serviceName = "balancing";
         double longitude = 50.0;
         double latitude = 50.0;
-        var result = businessService.findBusinessByServiceAndLocation(serviceName, longitude, latitude);
+        var result = businessService.findByServiceAndLocation(serviceName, longitude, latitude, 5.0);
         assertEquals(1, result.size());
     }
 
