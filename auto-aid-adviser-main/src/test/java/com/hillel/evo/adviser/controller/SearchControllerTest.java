@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.controller;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Business;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,19 +27,19 @@ public class SearchControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-//    @Test
-//    public void findByServiceAndLocationDefaultRadiusThenReturnOK() throws Exception {
-//        hibernateSearchConfig.reindex(Business.class);
-//        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0"))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    public void findByServiceAndLocationThenReturnOK() throws Exception {
-//        hibernateSearchConfig.reindex(Business.class);
-//        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0&radius=10.0"))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void findByServiceAndLocationDefaultRadiusThenReturnOK() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void findByServiceAndLocationThenReturnOK() throws Exception {
+        hibernateSearchConfig.reindex(Business.class);
+        mockMvc.perform(get(PATH_SEARCH+"?service=balancing&latitude=50.0&longitude=50.0&radius=10.0"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void findByServiceNotExistAndLocationThenReturnNotFound() throws Exception {

@@ -63,9 +63,6 @@ public class BusinessControllerTest extends BaseTest {
     private String jwt;
 
     @Autowired
-    private HibernateSearchConfig hibernateSearchConfig;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
