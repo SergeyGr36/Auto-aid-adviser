@@ -19,8 +19,8 @@ public class SearchController {
     @GetMapping
     public ResponseEntity<List<BusinessDto>> findByServiceAndLocation(
             @RequestParam String service,
-            @RequestParam double longitude,
             @RequestParam double latitude,
+            @RequestParam double longitude,
             @RequestParam(required = false, defaultValue = "5.0") double radius
     ) {
         var result = businessService.findByServiceAndLocation(service, latitude, longitude, radius);
