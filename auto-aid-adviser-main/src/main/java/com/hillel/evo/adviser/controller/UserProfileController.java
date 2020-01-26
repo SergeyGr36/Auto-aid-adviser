@@ -98,11 +98,8 @@ public class UserProfileController {
     @PutMapping
     public ResponseEntity<SimpleUserDto> updateSimpleUser(@RequestBody final SimpleUserDto userDto, Authentication authentication){
         Long userId = getUserIdFromAuthentication(authentication);
-        if (Objects.nonNull(userId)) {
-            userDto.setId(userId);
-            return new ResponseEntity<SimpleUserDto>(simpleUserService.update(userDto), HttpStatus.OK);
-        }
-        return new ResponseEntity<SimpleUserDto>(HttpStatus.BAD_REQUEST);
+        userDto.setId(userId);
+        return new ResponseEntity<SimpleUserDto>(simpleUserService.update(userDto), HttpStatus.OK);
     }
 
 

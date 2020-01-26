@@ -136,18 +136,6 @@ public class UserProfileControllerTest {
                 .andExpect(jsonPath("$.firstName").value(dto.getFirstName()));
     }
 
-    @Test
-    public void updateSimpleUserThenReturnBedRequest() throws Exception {
-        SimpleUserDto dto = new SimpleUserDto(99L, "TestFName", "TestLName", "45646879");
-        //when
-        mockMvc.perform(put(PATH)
-                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                //then
-                .andExpect(status().isBadRequest());
-    }
-
     /* ============ CAR ============== */
 
     @Test
