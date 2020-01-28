@@ -77,7 +77,6 @@ public class S3CloudImageService implements CloudImageService {
                     tmpDirPath.toFile(),
                     false);
             upload.waitForCompletion();
-            FileUtils.cleanDirectory(tmpDirPath.toFile());
             return true;
         } catch (IOException | SdkClientException | InterruptedException ex){
             log.error(ex.getMessage(), ex);
