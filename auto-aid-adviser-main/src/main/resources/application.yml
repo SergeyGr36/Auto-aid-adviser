@@ -53,9 +53,9 @@ app:
 aws:
   s3:
     bucketName: auto-aid-adviser-bucket
-    expiresIn: 60000
+    expiresIn: 3600000
     region: eu-west-1
-    imageMaxSize: 200000
+    imageMaxSize: 500000
 
 frontend:
   host: http://localhost:8081

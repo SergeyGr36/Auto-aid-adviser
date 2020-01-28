@@ -16,6 +16,7 @@ import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.entity.WorkTime;
 import com.hillel.evo.adviser.exception.CreateResourceException;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
+import com.hillel.evo.adviser.exception.S3ServiceValidationException;
 import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.mapper.ImageMapper;
 import com.hillel.evo.adviser.mapper.ServiceForBusinessMapper;
@@ -43,6 +44,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class BusinessServiceImpl implements BusinessService {
 
     private transient final BusinessMapper mapper;
@@ -113,8 +115,13 @@ public class BusinessServiceImpl implements BusinessService {
     public List<ImageDto> addImages(@NotNull Long userId, @NotNull Long businessId, @NotEmpty List<MultipartFile> files) {
         Business business = businessRepository.findByIdAndBusinessUserId(businessId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Business not found"));
-        List<Image> imageList = imageService.create(userId, businessId, files)
-                .orElseThrow(() -> new CreateResourceException("Image not saved"));
+        List<Image> imageList;
+        try {
+            imageList = imageService.create(userId, businessId, files)
+                    .orElseThrow(() -> new CreateResourceException("Image not saved"));
+        } catch (S3ServiceValidationException ex) {
+            throw new CreateResourceException(String.format("Images not saved coz - %s", ex.getMessage()));
+        }
         business.getImages().addAll(imageList);
         businessRepository.save(business);
         return imageMapper.toListDto(imageList);

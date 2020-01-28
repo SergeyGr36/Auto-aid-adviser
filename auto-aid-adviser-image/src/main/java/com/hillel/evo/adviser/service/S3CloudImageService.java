@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -61,10 +62,12 @@ public class S3CloudImageService implements CloudImageService {
     }
 
     @Override
-    public boolean hasUploadedFileList(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs) {
+    public boolean hasUploadedFileList(String virtualDirectoryKeyPrefix, List<S3FileDTO> s3FileDTOs) throws S3ServiceValidationException{
+        Path tmpDirPath = Path.of(
+                System.getProperty("java.io.tmpdir") + File.separator + "tmp_imgs_" + UUID.randomUUID());
         try {
             s3FileDTOs.stream().map(S3FileDTO::getFile).forEach(this::isValid);
-            Path tmpDirPath = Files.createTempDirectory("tmp-images");
+            Files.createDirectories(tmpDirPath);
             for (S3FileDTO dto : s3FileDTOs) {
                 imageToTmpDir(dto.getFile(), dto.getUniqFileName(), tmpDirPath);
             }
@@ -74,13 +77,19 @@ public class S3CloudImageService implements CloudImageService {
                     tmpDirPath.toFile(),
                     false);
             upload.waitForCompletion();
-            FileUtils.forceDelete(tmpDirPath.toFile());
             return true;
-        } catch (IOException | SdkClientException | S3ServiceValidationException | InterruptedException ex){
+        } catch (IOException | SdkClientException | InterruptedException ex){
             log.error(ex.getMessage(), ex);
             return false;
+        } catch (S3ServiceValidationException ex){
+            log.error(ex.getMessage());
+            throw new S3ServiceValidationException(ex.getMessage());
         } finally {
-            transferManager.shutdownNow();
+            try {
+                FileUtils.forceDelete(tmpDirPath.toFile());
+            } catch (IOException ex) {
+                log.error(ex.getMessage(), ex);
+            }
         }
     }
 
@@ -96,13 +105,14 @@ public class S3CloudImageService implements CloudImageService {
 
     private void isValid (MultipartFile file) throws S3ServiceValidationException {
         if (file.isEmpty()) {
-            throw new S3ServiceValidationException("Image must be not empty: " + file.getOriginalFilename());
+            throw new S3ServiceValidationException(String.format("image %s must be not empty", file.getOriginalFilename()));
         }
         if (file.getSize() > properties.getImageMaxSize()) {
-            throw new S3ServiceValidationException("Image is to big: " + file.getOriginalFilename());
+            throw new S3ServiceValidationException(String.format("image %s is to big", file.getOriginalFilename()));
         }
-        if (!file.getContentType().contains(MediaType.IMAGE_JPEG_VALUE)) {
-            throw new S3ServiceValidationException("Only JPEG image is accepted: " + file.getOriginalFilename());
+        if (!file.getContentType().contains(MediaType.IMAGE_JPEG_VALUE) &&
+            !file.getContentType().contains(MediaType.IMAGE_PNG_VALUE)) {
+            throw new S3ServiceValidationException("only JPEG or PNG image is accepted, but received: " + file.getContentType());
         }
     }
 
