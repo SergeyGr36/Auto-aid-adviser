@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.service;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 import com.hillel.evo.adviser.dto.S3FileDTO;
 import com.hillel.evo.adviser.entity.Image;
+import com.hillel.evo.adviser.exception.S3ServiceValidationException;
 import com.hillel.evo.adviser.repository.ImageRepository;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     }
 
     @Override
-    public Optional<List<Image>> create(Long businessUserId, Long businessId, List<MultipartFile> files) {
+    public Optional<List<Image>> create(Long businessUserId, Long businessId, List<MultipartFile> files) throws S3ServiceValidationException {
         String virtualDirectoryKeyPrefix = generateDirectoryKeyPrefix(businessUserId, businessId);
         List<S3FileDTO> s3FileDTOs = createListDTOs(files, virtualDirectoryKeyPrefix);
         if(cloudService.hasUploadedFileList(virtualDirectoryKeyPrefix, s3FileDTOs)){
@@ -75,7 +76,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     }
 
     private String generateKeyFileName(String virtualDirectoryKeyPrefix, String uniqFileName) {
-        return virtualDirectoryKeyPrefix + File.separator + uniqFileName;
+        return virtualDirectoryKeyPrefix + "/" + uniqFileName;
     }
 
     private String generateUniqFileName(MultipartFile file) {
@@ -83,7 +84,7 @@ public class DefaultImageService implements com.hillel.evo.adviser.service.inter
     }
 
     private String generateDirectoryKeyPrefix (Long businessUserId, Long businessId) {
-        return businessUserId.toString() + File.separator + businessId.toString();
+        return businessUserId.toString() + "/" + businessId.toString();
     }
 
     private List<S3FileDTO> createListDTOs (List<MultipartFile> files, String virtualDirectoryKeyPrefix) {

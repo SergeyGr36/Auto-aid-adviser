@@ -13,6 +13,7 @@ import com.hillel.evo.adviser.configuration.ImageConfigurationProperties;
 import com.hillel.evo.adviser.dto.S3FileDTO;
 import com.hillel.evo.adviser.exception.S3ServiceValidationException;
 import com.hillel.evo.adviser.service.interfaces.CloudImageService;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -57,7 +59,13 @@ class S3CloudImageServiceTest {
             new MockMultipartFile(testFileName, testFileName, MediaType.IMAGE_JPEG_VALUE, new byte[] {1});
 
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws IOException {
+        when(mockFile.getOriginalFilename()).thenReturn(testFileName);
+        when(mockFile.getName()).thenReturn(testFileName);
+        when(mockFile.getBytes()).thenReturn(new byte[] {1});
+        when(mockFile.getSize()).thenReturn(1L);
+        when(mockFile.getContentType()).thenReturn(MediaType.IMAGE_JPEG_VALUE);
+
         when(mockProperties.getExpiresIn()).thenReturn(1L);
         when(mockProperties.getBucketName()).thenReturn(testBucketName);
         when(mockProperties.getImageMaxSize()).thenReturn(5L);
@@ -113,7 +121,7 @@ class S3CloudImageServiceTest {
     @Test
     void whenUploadFileShouldThrowIncorrectFileTypeException() throws S3ServiceValidationException {
         //given
-        when(mockFile.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
+        when(mockFile.getContentType()).thenReturn(MediaType.IMAGE_GIF_VALUE);
         //when
         boolean result = service.hasUploadedFile(testKeyFileName, mockFile);
         //then
@@ -152,11 +160,25 @@ class S3CloudImageServiceTest {
     @Test
     void whenUploadFileListShouldThrowIOException() throws IOException {
         //given
+        when(mockS3FileDTO.getFile()).thenReturn(mockFile);
+        when(mockFile.getBytes()).thenReturn(new byte[] {1});
+        when(mockFile.getSize()).thenReturn(1L);
+        when(mockFile.getContentType()).thenReturn(MediaType.IMAGE_PNG_VALUE);
         doThrow(IOException.class).when(mockFile).transferTo(any(Path.class));
         //when
         boolean result = service.hasUploadedFileList(testDirectoryKeyPrefix, testS3FileDTOs);
         //then
         assertFalse(result);
+    }
+
+    @Test
+    void whenUploadFileListShouldThrowValidationException() throws IOException {
+        //given
+        when(mockS3FileDTO.getFile()).thenReturn(mockFile);
+        when(mockFile.getContentType()).thenReturn(MediaType.IMAGE_GIF_VALUE);
+        doThrow(IOException.class).when(mockFile).transferTo(any(Path.class));
+        //when
+        assertThrows(S3ServiceValidationException.class, () -> {service.hasUploadedFileList(testDirectoryKeyPrefix, testS3FileDTOs);});
     }
 
     @Test
@@ -194,6 +216,10 @@ class S3CloudImageServiceTest {
         //given
         given(mockAmazonS3Client.deleteObjects(any(DeleteObjectsRequest.class)))
                 .willAnswer(invocation -> {throw new SdkClientException("test");});
+        //when
+        boolean result = service.hasDeletedFileList(testKeysToDelete);
+        //then
+        assertFalse(result);
     }
 
     @Test

@@ -12,6 +12,7 @@ import com.hillel.evo.adviser.dto.WorkTimeDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.exception.ResourceNotFoundException;
+import com.hillel.evo.adviser.exception.S3ServiceValidationException;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.ServiceForBusinessRepository;
 import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
@@ -196,6 +197,17 @@ public class BusinessServiceImplTest {
     }
 
     @Test
+    public void whenAddImageThenThrowS3ValidationException() {
+        //given
+        BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
+        List<MultipartFile> list = new ArrayList<>();
+        list.add(badFile);
+        when(mockCloudImageService.hasUploadedFileList(any(), any(List.class))).thenThrow(new S3ServiceValidationException("badFile"));
+        //then
+        assertThrows(Exception.class, () -> businessService.addImages(userId, sourceDto.getId(), list));
+    }
+
+    @Test
     public void whenDeleteImageThenReturnTrue() {
         //given
         BusinessDto sourceDto = businessService.findAllByUser(userId).get(0);
@@ -286,7 +298,7 @@ public class BusinessServiceImplTest {
     }
 
     private MultipartFile getBadMultipartFile() {
-        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        String contentType = MediaType.IMAGE_GIF_VALUE;
         byte[] content = {1, 2, 3, 4, 5};
         return new MockMultipartFile("file", "file.bad", contentType, content);
     }
