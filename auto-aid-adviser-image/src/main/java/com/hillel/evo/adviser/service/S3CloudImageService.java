@@ -66,8 +66,8 @@ public class S3CloudImageService implements CloudImageService {
         Path tmpDirPath = Path.of(
                 System.getProperty("java.io.tmpdir") + File.separator + "tmp_imgs_" + UUID.randomUUID());
         try {
-            Files.createDirectories(tmpDirPath);
             s3FileDTOs.stream().map(S3FileDTO::getFile).forEach(this::isValid);
+            Files.createDirectories(tmpDirPath);
             for (S3FileDTO dto : s3FileDTOs) {
                 imageToTmpDir(dto.getFile(), dto.getUniqFileName(), tmpDirPath);
             }
