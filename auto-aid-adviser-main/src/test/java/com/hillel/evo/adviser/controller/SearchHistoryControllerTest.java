@@ -5,7 +5,7 @@ import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.dto.HistoryPointDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
 import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.mapper.HistoryBusinessMapper;
+import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
 import com.hillel.evo.adviser.service.EncoderService;
@@ -49,26 +49,20 @@ public class SearchHistoryControllerTest {
     @Autowired
     private BusinessRepository businessRepository;
     @Autowired
-    private HistoryBusinessMapper historyBusinessMapper;
+    private BusinessMapper businessMapper;
 
-    public static HistoryPointDto historyPointDto;
-    public static BusinessShortDto businessShortDto;
-    public static List<BusinessShortDto> businessShortDtoList;
-    public static List<Business> businessList;
-    private AdviserUserDetails user;
-    private AdviserUserDetails businessUser;
+    private static HistoryPointDto historyPointDto;
     private String jwt;
 
     @BeforeEach
     public void init() {
         encodeTestUserPassword();
-        user = userRepository.findByEmail(USER_EMAIL).get();
-        businessUser = userRepository.findByEmail(BUSINESS_EMAIL).get();
+        AdviserUserDetails user = userRepository.findByEmail(USER_EMAIL).get();
+        AdviserUserDetails businessUser = userRepository.findByEmail(BUSINESS_EMAIL).get();
         jwt = jwtService.generateAccessToken(user.getId());
 
-        businessList = businessRepository.findAllByBusinessUserId(businessUser.getId());
-        businessShortDtoList = historyBusinessMapper.toBusinessShortDtoList(businessList);
-        businessShortDto = businessShortDtoList.get(0);
+        List<Business> businessList = businessRepository.findAllByBusinessUserId(businessUser.getId());
+        List<BusinessShortDto> businessShortDtoList = businessMapper.toShortDtoList(businessList);
 
         historyPointDto = searchHistoryService.saveHistoryPoint(
                 new HistoryPointDto(user.getId(), businessShortDtoList, LocalDateTime.now()));

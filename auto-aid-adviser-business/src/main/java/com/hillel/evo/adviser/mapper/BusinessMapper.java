@@ -2,6 +2,7 @@ package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessFullDto;
+import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
 import org.mapstruct.Mapper;
@@ -29,6 +30,16 @@ public interface BusinessMapper extends BaseMapper<BusinessFullDto, Business> {
     @Mapping(target = "workTimes", source = "dto.workTimes")
     @Mapping(target = "images", ignore = true)
     Business toEntity(BusinessDto dto, BusinessUser user);
+
+    @Mapping(target = "workTimes", ignore = true)
+    @Mapping(target = "businessUser", ignore = true)
+    @Mapping(target = "serviceForBusinesses", ignore = true)
+    @Mapping(target = "images", ignore = true)
+    Business toEntityShort(BusinessShortDto shortDto);
+
+    BusinessShortDto toShortDto(Business business);
+
+    List<BusinessShortDto> toShortDtoList(List<Business> businesses);
 
     List<BusinessDto> listToDto(List<Business> businesses);
 

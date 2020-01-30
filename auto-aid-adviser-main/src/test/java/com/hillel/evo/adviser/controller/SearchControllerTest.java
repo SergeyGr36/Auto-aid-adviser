@@ -3,22 +3,25 @@ package com.hillel.evo.adviser.controller;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.configuration.HibernateSearchConfig;
 import com.hillel.evo.adviser.entity.Business;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
-@Sql(value = {"/clean-all.sql", "/create-user2.sql", "/create-business.sql", "/create-image.sql", "/create-feedback.sql"},
+@Sql(value = "/create-business.sql",
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@TestExecutionListeners(mergeMode =
+        TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS,
+        listeners = {ResetDatabaseTestExecutionListener.class})
+@SpringBootTest(classes = AdviserStarter.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SearchControllerTest {
 
     private static final String PATH_SEARCH =  "/search";

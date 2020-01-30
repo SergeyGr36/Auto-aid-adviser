@@ -5,8 +5,7 @@ import com.hillel.evo.adviser.SearchHistoryApplication;
 import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.dto.HistoryPointDto;
 import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.entity.HistoryPoint;
-import com.hillel.evo.adviser.mapper.HistoryBusinessMapper;
+import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.mapper.SearchHistoryMapper;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
@@ -40,26 +39,18 @@ public class SearchHistoryServiceTest extends BaseTest {
     @Autowired
     BusinessRepository businessRepository;
     @Autowired
-    HistoryBusinessMapper historyBusinessMapper;
+    BusinessMapper businessMapper;
     @Autowired
     SearchHistoryMapper historyMapper;
 
-    public static HistoryPointDto historyPointDto;
-    private static HistoryPoint historyPoint;
-    public static Long userId;
-    public static BusinessShortDto businessShortDto;
-    public static List<BusinessShortDto> businessShortDtoList;
-    public static List<Business> businessList;
+    private static HistoryPointDto historyPointDto;
 
     @BeforeEach
     public void init() {
-        userId = repository.findByEmail("bvg@mail.com").get().getId();
-        businessList = businessRepository.findAllByBusinessUserId(userId);
-        businessShortDtoList = historyBusinessMapper.toBusinessShortDtoList(businessList);
-        businessShortDto = businessShortDtoList.get(0);
-
+        Long userId = repository.findByEmail("bvg@mail.com").get().getId();
+        List<Business> businessList = businessRepository.findAllByBusinessUserId(userId);
+        List<BusinessShortDto> businessShortDtoList = businessMapper.toShortDtoList(businessList);
         historyPointDto = new HistoryPointDto(userId, businessShortDtoList, LocalDateTime.now());
-        historyPoint = historyMapper.toEntity(historyPointDto);
     }
 
     @Test

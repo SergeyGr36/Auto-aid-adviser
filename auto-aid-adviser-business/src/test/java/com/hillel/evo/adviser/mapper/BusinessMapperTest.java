@@ -1,15 +1,11 @@
 package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.BusinessApplication;
-import com.hillel.evo.adviser.dto.BusinessDto;
-import com.hillel.evo.adviser.dto.BusinessFullDto;
-import com.hillel.evo.adviser.dto.ContactDto;
-import com.hillel.evo.adviser.dto.LocationDto;
-import com.hillel.evo.adviser.dto.ServiceForBusinessShortDto;
+import com.hillel.evo.adviser.dto.*;
 import com.hillel.evo.adviser.entity.Business;
 import com.hillel.evo.adviser.entity.BusinessUser;
+import com.hillel.evo.adviser.entity.ServiceForBusiness;
 import com.hillel.evo.adviser.repository.BusinessUserRepository;
-import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BusinessApplication.class})
@@ -49,8 +46,58 @@ public class BusinessMapperTest {
     }
 
     @Test
+    public void whenToShortDto_SetNullReturnNull() {
+        Assertions.assertNull(businessMapper.toShortDto(null));
+    }
+
+    @Test
+    public void whenToEntityShort_SetNullReturnNull() {
+        Assertions.assertNull(businessMapper.toEntityShort(null));
+    }
+
+    @Test
+    public void whenToShortDtoList_SetNullReturnNull() {
+        Assertions.assertNull(businessMapper.toShortDtoList(null));
+    }
+
+    @Test
+    public void whenToShortDtoList_SetEmptyList() {
+        Assertions.assertEquals(businessMapper.toShortDtoList(new ArrayList<>()).size(), 0);
+    }
+
+    @Test
     public void whenListToDto_SetEmptyList() {
         Assertions.assertEquals(businessMapper.listToDto(new ArrayList<Business>()).size(), 0);
+    }
+
+    @Test
+    public void whenToEntityShort_SetEmptyDto_ReturnEmptyEntity() {
+        //given
+        BusinessShortDto dto = new BusinessShortDto();
+        dto.setContact(null);
+        dto.setLocation(null);
+        //when
+        Business business = businessMapper.toEntityShort(dto);
+        //then
+        Assertions.assertNull(business.getLocation());
+        Assertions.assertNull(business.getContact());
+    }
+
+    @Test
+    public void whenToShortDtoList_SetEmptyEntity_ReturnEmptyShortDtoList() {
+        //given
+        Business business = new Business();
+        business.setContact(null);
+        business.setLocation(null);
+        business.setServiceForBusinesses(new HashSet<>());
+        business.getServiceForBusinesses().add(new ServiceForBusiness());
+        List<Business> businessList = new ArrayList<>();
+        businessList.add(business);
+        //when
+        List<BusinessShortDto> shortDtos = businessMapper.toShortDtoList(businessList);
+        //then
+        Assertions.assertNull(shortDtos.get(0).getLocation());
+        Assertions.assertNull(shortDtos.get(0).getContact());
     }
 
     @Test
