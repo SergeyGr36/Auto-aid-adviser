@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BusinessRepository extends JpaRepository<Business, Long> {
 
     @Query("select b from Business b where b.businessUser.id = :id")
-    List<Business> findAllByBusinessUserId(Long id);
+    List<Business> findAllByBusinessUserId(@Param("id") Long id);
 
     @Query("select distinct b from Business b " +
             "join fetch b.serviceForBusinesses " +

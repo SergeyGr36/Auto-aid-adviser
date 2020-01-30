@@ -33,23 +33,21 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class SearchHistoryMapperTest extends BaseTest {
 
     @Autowired
-    private SearchHistoryMapperImpl historyPointMapper;
+    private SearchHistoryMapper historyPointMapper;
     @Autowired
     private AdviserUserDetailRepository repository;
     @Autowired
     private BusinessRepository businessRepository;
     @Autowired
-    private HistoryBusinessMapper historyBusinessMapper;
+    private BusinessMapper businessMapper;
 
-    public static List<BusinessShortDto> businessDtoList;
-    public static HistoryPointDto historyPointDto;
-    public static HistoryPoint historyPoint;
-    public static Long userId;
+    private static HistoryPointDto historyPointDto;
+    private static HistoryPoint historyPoint;
 
     @BeforeEach
     public void init() {
-        userId = repository.findByEmail("bvg@mail.com").get().getId();
-        businessDtoList = historyBusinessMapper.toBusinessShortDtoList(businessRepository.findAllByBusinessUserId(userId));
+        Long userId = repository.findByEmail("bvg@mail.com").get().getId();
+        List<BusinessShortDto> businessDtoList = businessMapper.toShortDtoList(businessRepository.findAllByBusinessUserId(userId));
         historyPointDto = new HistoryPointDto(2L, 1L, businessDtoList, LocalDateTime.now());
         historyPoint = historyPointMapper.toEntity(historyPointDto);
     }

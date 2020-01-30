@@ -2,17 +2,13 @@ package com.hillel.evo.adviser.service;
 
 import com.hillel.evo.adviser.BaseTest;
 import com.hillel.evo.adviser.SearchHistoryApplication;
-import com.hillel.evo.adviser.dto.BusinessDto;
 import com.hillel.evo.adviser.dto.BusinessShortDto;
 import com.hillel.evo.adviser.dto.HistoryPointDto;
 import com.hillel.evo.adviser.entity.Business;
-import com.hillel.evo.adviser.entity.HistoryPoint;
-import com.hillel.evo.adviser.mapper.HistoryBusinessMapper;
+import com.hillel.evo.adviser.mapper.BusinessMapper;
 import com.hillel.evo.adviser.mapper.SearchHistoryMapper;
-import com.hillel.evo.adviser.mapper.SearchHistoryMapperImpl;
 import com.hillel.evo.adviser.repository.AdviserUserDetailRepository;
 import com.hillel.evo.adviser.repository.BusinessRepository;
-import com.hillel.evo.adviser.service.impl.BusinessServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +21,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.hillel.evo.adviser.mapper.SearchHistoryMapperTest.historyPointDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -43,38 +38,28 @@ public class CheckHistoryInDatabaseServiceTest extends BaseTest {
     @Autowired
     SearchHistoryService searchHistoryService;
     @Autowired
-    private BusinessServiceImpl businessService;
-    @Autowired
     private AdviserUserDetailRepository repository;
     @Autowired
     BusinessRepository businessRepository;
     @Autowired
-    HistoryBusinessMapper historyBusinessMapper;
+    BusinessMapper businessMapper;
     @Autowired
     SearchHistoryMapper historyMapper;
 
-    public static HistoryPointDto historyPointDto;
-    private static HistoryPoint historyPoint;
-    public static Long userId;
-    public static Business business;
-    public static BusinessShortDto businessShortDto;
-    public static List<BusinessShortDto> businessShortDtoList;
-    public static List<Business> businessList;
+    private static HistoryPointDto historyPointDto;
 
     @BeforeEach
     public void init() {
-        userId = repository.findByEmail("bvg@mail.com").get().getId();
-        businessList = businessRepository.findAllByBusinessUserId(userId);
-        businessShortDtoList = historyBusinessMapper.toBusinessShortDtoList(businessList);
-        businessShortDto = businessShortDtoList.get(0);
+        Long userId = repository.findByEmail("bvg@mail.com").get().getId();
+        List<Business> businessList = businessRepository.findAllByBusinessUserId(userId);
+        List<BusinessShortDto> businessShortDtoList = businessMapper.toShortDtoList(businessList);
 
-        business = new Business();
+        Business business = new Business();
         business.setId(businessList.get(0).getId());
         business.setName(businessList.get(0).getName());
         business.setLocation(businessList.get(0).getLocation());
         business.setContact(businessList.get(0).getContact());
         historyPointDto = new HistoryPointDto(userId, businessShortDtoList, LocalDateTime.now());
-        historyPoint = historyMapper.toEntity(historyPointDto);
     }
 
     @Test

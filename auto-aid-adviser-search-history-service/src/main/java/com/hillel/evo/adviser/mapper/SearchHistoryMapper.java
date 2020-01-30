@@ -2,19 +2,15 @@ package com.hillel.evo.adviser.mapper;
 
 import com.hillel.evo.adviser.dto.HistoryPointDto;
 import com.hillel.evo.adviser.entity.HistoryPoint;
-import com.hillel.evo.adviser.repository.BusinessUserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        uses = {HistoryBusinessMapper.class,
-                BusinessUserRepository.class,
-                ServiceForBusinessMapper.class,
-                BusinessTypeMapper.class,
-                ServiceTypeMapper.class,
-                WorkTimeMapper.class})
+        uses = BusinessMapper.class,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface SearchHistoryMapper {
     @Mapping(target = "id", source = "historyPoint.id")
     @Mapping(target = "userId", source = "historyPoint.userId")
