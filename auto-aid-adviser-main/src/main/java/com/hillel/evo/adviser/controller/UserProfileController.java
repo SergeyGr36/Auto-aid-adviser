@@ -1,5 +1,6 @@
 package com.hillel.evo.adviser.controller;
 
+import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.SimpleUserDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.service.SecurityUserDetails;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/user/profile")
@@ -102,9 +102,34 @@ public class UserProfileController {
         return new ResponseEntity<SimpleUserDto>(simpleUserService.update(userDto), HttpStatus.OK);
     }
 
-
     private Long getUserIdFromAuthentication(Authentication authentication) {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();
     }
+
+    // === Images Car ===
+
+    @Secured(ROLE_USER)
+    @PostMapping("/car/{carId}/image")
+    public ImageDto addImageForUserCar(@RequestPart(name = "file") MultipartFile image,
+                                       Authentication authentication,
+                                       @PathVariable("carId") Long carId) {
+        Long userId = getUserIdFromAuthentication(authentication);
+        return userCarService.addImage(userId, carId, image);
+    }
+
+    @Secured(ROLE_USER)
+    @DeleteMapping("/car/{carId}/image/{imageId}")
+    public ResponseEntity<String> addImageForUserCar(Authentication authentication,
+                                       @PathVariable("carId") Long carId,
+                                       @PathVariable("imageId") Long imageId) {
+        Long userId = getUserIdFromAuthentication(authentication);
+        boolean isDeleteImage = userCarService.deleteImage(userId, carId, imageId);
+        if (isDeleteImage) {
+            return new ResponseEntity<>("Image deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Image not deleted", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

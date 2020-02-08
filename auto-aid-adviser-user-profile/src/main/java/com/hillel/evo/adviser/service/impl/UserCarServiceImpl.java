@@ -70,7 +70,9 @@ public class UserCarServiceImpl implements UserCarService {
         images.map(list -> userCar.getImages().addAll(list))
                 .orElseThrow(() -> new CreateResourceException("Image not save"));
 
-        return mapper.toDto(userCar);
+        UserCar savedUserCar = repository.findByCarId(userCar.getId())
+                .orElseThrow(() -> new CreateResourceException("Car not save"));
+        return mapper.toDto(savedUserCar);
     }
 
     @Override

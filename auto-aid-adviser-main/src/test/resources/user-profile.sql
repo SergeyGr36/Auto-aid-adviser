@@ -26,4 +26,9 @@ insert into user_car(release_year, car_model_id, simple_user_user_details_id) va
     (select user_details_id from simple_usr where first_name in('Vasya'))
 );
 
+insert into image(key_file_name, original_file_name, user_car_id)
+select 'asd-QWE-file2.jpg', 'file2.jpg', id from user_car;
+
+insert into image(key_file_name, original_file_name, user_car_id)
+select 'asd-QWE-file2.bad', 'file2.bad', id from user_car;
 
