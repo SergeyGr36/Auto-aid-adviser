@@ -3,6 +3,7 @@ package com.hillel.evo.adviser.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hillel.evo.adviser.AdviserStarter;
 import com.hillel.evo.adviser.dto.CarModelDto;
+import com.hillel.evo.adviser.dto.ImageDto;
 import com.hillel.evo.adviser.dto.SimpleUserDto;
 import com.hillel.evo.adviser.dto.UserCarDto;
 import com.hillel.evo.adviser.entity.AdviserUserDetails;
@@ -49,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = AdviserStarter.class)
 @AutoConfigureMockMvc
 @Sql(value = {"/clean-all.sql",
-        "/create-user2.sql", "/create-business.sql", "/user-profile.sql", "/create-image.sql"},
+        "/create-user2.sql", "/create-business.sql", "/user-profile.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserProfileControllerTest {
 
@@ -218,6 +219,67 @@ public class UserProfileControllerTest {
                 .andExpect(jsonPath("$.releaseYear").value(carDto.getReleaseYear()));
     }
 
+    // ============== IMAGE CAR ===============
+
+    @Test
+    public void whenAddImageReturnImageDto() throws Exception {
+        UserCarDto carDto = userCarService.getByUserId(user.getId()).get(0);
+        MockMultipartFile file = getMultipartOneFile();
+        MockMultipartHttpServletRequestBuilder multipart =
+                MockMvcRequestBuilders.multipart(PATH + "/car/{carId}/image", carDto.getId());
+        mockMvc.perform(multipart
+                .file(file)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
+        )
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.originalFileName").value(file.getOriginalFilename()));
+    }
+
+    @Test
+    public void whenDeleteImageReturnNotFound() throws Exception {
+        UserCarDto carDto = userCarService.getByUserId(user.getId()).get(0);
+        mockMvc.perform(delete(PATH + "/car/{carId}/image/{imageId}", carDto.getId(), 100L)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
+                .contentType(MediaType.APPLICATION_JSON))
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenDeleteImageReturnOk() throws Exception {
+        UserCarDto carDto = userCarService.getByUserId(user.getId()).get(0);
+        List<ImageDto> imagesByUserCarId = userCarService.findImagesByUserCarId(carDto.getId());
+        Long carId = imagesByUserCarId
+                .stream()
+                .filter(dto -> dto.getOriginalFileName().endsWith(".jpg"))
+                .findFirst()
+                .get()
+                .getId();
+        mockMvc.perform(delete(PATH + "/car/{carId}/image/{imageId}", carDto.getId(), carId)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
+                .contentType(MediaType.APPLICATION_JSON))
+                //then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenDeleteImageReturnBadRequest() throws Exception {
+        UserCarDto carDto = userCarService.getByUserId(user.getId()).get(0);
+        List<ImageDto> imagesByUserCarId = userCarService.findImagesByUserCarId(carDto.getId());
+        Long carId = imagesByUserCarId
+                .stream()
+                .filter(dto -> dto.getOriginalFileName().endsWith(".bad"))
+                .findFirst()
+                .get()
+                .getId();
+        mockMvc.perform(delete(PATH + "/car/{carId}/image/{imageId}", carDto.getId(), carId)
+                .header("Authorization", JwtService.TOKEN_PREFIX + jwt)
+                .contentType(MediaType.APPLICATION_JSON))
+                //then
+                .andExpect(status().isBadRequest());
+    }
+
     // test objects
 
     private UserCarDto createCar(){
@@ -235,6 +297,20 @@ public class UserProfileControllerTest {
         String contentType = MediaType.IMAGE_JPEG_VALUE;
         byte[] content = {11, 12, 13, 14, 15};
         return new MockMultipartFile("files", name, contentType, content);
+    }
+
+    private MockMultipartFile getMultipartOneFile() throws IOException {
+        String name = "ny.jpg";
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = {11, 12, 13, 14, 15};
+        return new MockMultipartFile("file", name, contentType, content);
+    }
+
+    private MockMultipartFile getMultipartBadFile() throws IOException {
+        String name = "ny.bad";
+        String contentType = MediaType.IMAGE_JPEG_VALUE;
+        byte[] content = {11, 12, 13, 14, 15};
+        return new MockMultipartFile("file", name, contentType, content);
     }
 
     private MockMultipartFile getPart(String json) {
