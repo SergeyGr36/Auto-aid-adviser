@@ -25,4 +25,6 @@ public class BusinessFullDto {
 
     @NotEmpty
     private List<ServiceForBusinessDto> serviceForBusinesses;
+
+    private Set<ImageDto> images;
 }
