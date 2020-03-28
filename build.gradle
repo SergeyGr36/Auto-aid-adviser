@@ -16,7 +16,7 @@ configure(allprojects) { project ->
     apply from: "${rootProject.projectDir}/buildSrc/dependencies.gradle"
     apply from: "${rootProject.projectDir}/buildSrc/analyze.gradle"
 
-    sourceCompatibility = 11
+    sourceCompatibility = 13
 
     repositories extRepositories
 
